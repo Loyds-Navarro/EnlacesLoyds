@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redes Sociales</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -35,7 +37,7 @@
     .info h2 {
       margin: 5px 0;
       color: white;
-      font-size: 22px; /* Puedes ajustar este valor según lo necesites */
+      font-size: 14px;
     }
 
     .menu {
@@ -50,15 +52,22 @@
       background-color: #0044cc;
       color: white;
       padding: 15px;
-      text-align: center;
+      text-align: left;
       text-decoration: none;
       font-size: 18px;
       border-radius: 10px;
       transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .menu a:hover {
       background-color: #0055ff;
+    }
+
+    .menu a i {
+      font-size: 20px;
     }
   </style>
 </head>
@@ -69,20 +78,32 @@
   </div>
 
   <div class="info">
-    <h2 style="font-size: 14px;">Actuaria: Eva Gabriela Gomez Navarro</h2>
-    <h2 style="font-size: 14px;">Especialista en Seguros y Finanzas personales</h2>
+    <h2>Actuaria: Eva Gabriela Gomez Navarro</h2>
+    <h2>Especialista en Seguros y Finanzas personales</h2>
   </div>
 
   <div class="menu">
-    <a href="https://api.whatsapp.com/send/?phone=525541816260&text=Hola%2C%20me%20interesa%20m%C3%A1s%20informaci%C3%B3n%20de%20seguros&type=phone_number&app_absent=0" target="_blank">Whatsapp</a>
-    <a href="https://instagram.com/" target="_blank">Instagram</a>
-    <a href="https://twitter.com/" target="_blank">Twitter</a>
-    <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
-    <a href="https://youtube.com/" target="_blank">YouTube</a>
+    <a href="https://api.whatsapp.com/send/?phone=525541816260&text=Hola%2C%20me%20interesa%20m%C3%A1s%20informaci%C3%B3n%20de%20seguros&type=phone_number&app_absent=0" target="_blank">
+      <i class="fa-brands fa-whatsapp"></i> Whatsapp
+    </a>
+    <a href="https://instagram.com/" target="_blank">
+      <i class="fa-brands fa-instagram"></i> Instagram
+    </a>
+    <a href="https://twitter.com/" target="_blank">
+      <i class="fa-solid fa-id-card"></i> Cédula profesional
+    </a>
+    <a href="https://linkedin.com/" target="_blank">
+      <i class="fa-brands fa-linkedin"></i> LinkedIn
+    </a>
+    <a href="https://www.youtube.com/@loydsandnavarro" target="_blank">
+      <i class="fa-brands fa-youtube"></i> YouTube
+    </a>
   </div>
+
   <div class="info">
-    <h2 style="font-size: 14px;">Te ayudaremos a preserevar tu futuro financiero</h2>
-    <h2 style="font-size: 14px;">Ponte en contacto con nuestros equipo de asesores</h2>
+    <h2>Te ayudaremos a preservar tu futuro financiero</h2>
+    <h2>Ponte en contacto con nuestro equipo de asesores</h2>
   </div>
+
 </body>
 </html>
