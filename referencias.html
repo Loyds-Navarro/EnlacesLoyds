@@ -25,18 +25,19 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 100px) {
       .container {
         flex-direction: row;
       }
     }
 
-    .image-section {
-      flex: 1;
-      max-height: 400px;
-      overflow: hidden;
-    }
-
+   .image-section img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
     .image-section img {
       width: 100%;
       height: 100%;
@@ -122,10 +123,10 @@
     <h2>Algunos de nuestros clientes</h2>
     <div class="clients-logos">
 	  <img src="cliente1.jpg" alt="Cliente 1">
-      <img src="cliente2.jpg" alt="Cliente 2">
-      <img src="cliente3.jpg" alt="Cliente 3">
-      <img src="cliente4.jpg" alt="Cliente 4">
-      <img src="cliente5.jpg" alt="Cliente 5">
+      <img src="cliente2.jpg" alt="">
+      <img src="cliente3.jpg" alt="">
+      <img src="cliente4.jpg" alt="">
+      <img src="cliente5.jpg" alt="">
     </div>
   </div>
 
