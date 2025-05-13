@@ -8,6 +8,7 @@
     * {
       box-sizing: border-box;
     }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -15,7 +16,7 @@
       background-color: #f4f4f4;
     }
 
-    /* Contenedor principal */
+    /* Contenedor principal en columna por defecto (móvil) */
     .container {
       display: flex;
       flex-direction: column;
@@ -25,28 +26,30 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    @media (min-width: 100px) {
+    /* Diseño horizontal en pantallas más grandes */
+    @media (min-width: 768px) {
       .container {
         flex-direction: row;
       }
+
+      .image-section {
+        flex: 1;
+      }
+
+      .content-section {
+        flex: 2;
+      }
     }
 
-   .image-section img {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-  display: block;
-}
     .image-section img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 400px;
       object-fit: cover;
       display: block;
     }
 
     .content-section {
-      flex: 2;
       padding: 20px 30px;
     }
 
@@ -111,21 +114,19 @@
       <h1>Eva Gabriela Gómez Navarro</h1>
       <h3>Asesor Profesional en Seguros</h3>
       <p>Actuaria financiera con maestría en finanzas y más de 15 años de experiencia, especializada en análisis financiero, planeación estratégica y asesoría en seguros de vida e inversión. Certificada en fondos y crédito, con una sólida trayectoria en evaluación de riesgos, proyecciones económicas y estrategias personalizadas. </p>
-<p>También cuento con más de 10 años ayudando a familias y empresas a proteger su futuro a través de seguros de vida, salud, auto y patrimonio. Mi objetivo es ofrecer soluciones efectivas que protejan tu patrimonio y maximicen el rendimiento de tus recursos, brindando un servicio integral, personalizado y transparente que genere confianza a largo plazo. Combino conocimiento técnico, ética profesional y un trato humano para ofrecer seguridad financiera en cada etapa de tu vida. </p>
-	    <p>
-        ¿Necesitas orientación en tu plan de seguros? Estoy aquí para ayudarte a tomar la mejor decisión.
-      </p>
+      <p>También cuento con más de 10 años ayudando a familias y empresas a proteger su futuro a través de seguros de vida, salud, auto y patrimonio. Mi objetivo es ofrecer soluciones efectivas que protejan tu patrimonio y maximicen el rendimiento de tus recursos, brindando un servicio integral, personalizado y transparente que genere confianza a largo plazo. Combino conocimiento técnico, ética profesional y un trato humano para ofrecer seguridad financiera en cada etapa de tu vida. </p>
+      <p>¿Necesitas orientación en tu plan de seguros? Estoy aquí para ayudarte a tomar la mejor decisión.</p>
     </div>
   </div>
 
   <div class="clients-section">
     <h2>Algunos de nuestros clientes</h2>
     <div class="clients-logos">
-	  <img src="cliente1.jpg" alt="Cliente 1">
-      <img src="cliente2.jpg" alt="">
-      <img src="cliente3.jpg" alt="">
-      <img src="cliente4.jpg" alt="">
-      <img src="cliente5.jpg" alt="">
+      <img src="cliente1.jpg" alt="Cliente 1">
+      <img src="cliente2.jpg" alt="Cliente 2">
+      <img src="cliente3.jpg" alt="Cliente 3">
+      <img src="cliente4.jpg" alt="Cliente 4">
+      <img src="cliente5.jpg" alt="Cliente 5">
     </div>
   </div>
 
