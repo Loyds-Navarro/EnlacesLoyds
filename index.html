@@ -1,125 +1,159 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redes Sociales</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #00112b; /* Azul rey */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 40px;
-      height: 100vh;
-      color: white;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redes Sociales - Actuaria Eva Gabriela Gómez Navarro</title>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #00112b; /* Azul rey */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            min-height: 100vh; /* Usar min-height para que el contenido empuje el body */
+            color: white;
+            box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
+        }
 
-    .logo {
-      margin-bottom: 20px;
-      text-align: center;
-    }
+        .logo {
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-    .logo img {
-      max-width: 200px;
-      height: auto;
-    }
+        .logo img {
+            max-width: 200px;
+            height: auto;
+            display: block; /* Eliminar espacio extra debajo de la imagen */
+            margin: 0 auto; /* Centrar imagen */
+        }
 
-    .info {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+        .info {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 15px; /* Añadir padding para evitar que el texto toque los bordes en móviles */
+        }
 
-    .info h2 {
-      margin: 5px 0;
-      color: white;
-      font-size: 14px;
-    }
+        .info h2 {
+            margin: 5px 0;
+            color: white;
+            font-size: 1.1em; /* Usar em para un tamaño de fuente relativo */
+            line-height: 1.4; /* Mejorar legibilidad */
+        }
 
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 80%;
-      max-width: 250px;
-    }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Reducir ligeramente el gap para optimizar espacio */
+            width: 90%; /* Aumentar el ancho para mejor uso del espacio en móviles */
+            max-width: 350px; /* Aumentar el max-width para pantallas más grandes */
+            padding-bottom: 40px; /* Espacio inferior para el último elemento */
+        }
 
-    .menu a {
-      background-color: #0044cc;
-      color: white;
-      padding: 15px;
-      text-align: left;
-      text-decoration: none;
-      font-size: 18px;
-      border-radius: 10px;
-      transition: background 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .menu a {
+            background-color: #0044cc;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            text-decoration: none;
+            font-size: 1.1em; /* Usar em para tamaño de fuente relativo */
+            border-radius: 10px;
+            transition: background 0.3s ease; /* Transición más suave */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+        }
 
-    .menu a:hover {
-      background-color: #0055ff;
-    }
+        .menu a:hover {
+            background-color: #0055ff;
+            transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+        }
 
-    .menu a i {
-      font-size: 20px;
-    }
-  </style>
+        .menu a i {
+            font-size: 1.2em; /* Usar em para tamaño de icono relativo */
+            min-width: 25px; /* Asegurar que el icono tenga un ancho mínimo para alineación */
+            text-align: center;
+        }
+
+        /* Media Queries para adaptabilidad */
+        @media (max-width: 480px) {
+            body {
+                padding-top: 20px;
+            }
+            .logo img {
+                max-width: 150px;
+            }
+            .info h2 {
+                font-size: 1em;
+            }
+            .menu {
+                width: 95%;
+                gap: 10px;
+            }
+            .menu a {
+                padding: 12px;
+                font-size: 1em;
+            }
+            .menu a i {
+                font-size: 1.1em;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="logo">
-    <img src="logo.png" alt="Logo de la Empresa">
-  </div>
+    <div class="logo">
+        <img src="logo.png" alt="Logo de la Empresa">
+    </div>
 
-  <div class="info">
-    <h2>Actuaria Eva Gabriela Gómez Navarro</h2>
-    <h2>Especialista en Seguros y Finanzas personales</h2>
-  </div>
+    <div class="info">
+        <h2>Actuaria Eva Gabriela Gómez Navarro</h2>
+        <h2>Especialista en Seguros y Finanzas personales</h2>
+    </div>
 
-  <div class="menu">
-    <a href="https://www.youtube.com/watch?v=b0IPXXTIkvE" target="_blank">
-      <i class="fa-brands fa-youtube"></i> Por que elegir a Loyd´s & Navarro </a>
-            <a href="https://loyds-navarro.github.io/EnlacesLoyds/referencias.html">
-  <i class="fa-solid fa-person"></i> Referencias
-</a>
-    <a href="https://api.whatsapp.com/send/?phone=527225886862&text=Hola%2C%20me%20interesa%20m%C3%A1s%20informaci%C3%B3n%20de%20seguros&type=phone_number&app_absent=0" target="_blank">
-      <i class="fa-brands fa-whatsapp"></i> Whatsapp
-    </a>
-   <a href="https://www.instagram.com/lloydsnavarro" target="_blank">
-  <i class="fa-brands fa-instagram"></i> Instagram
-</a>
-<a href="https://www.facebook.com/loydsandnavarro3" target="_blank">
-  <i class="fa-brands fa-facebook"></i> Facebook
-</a>
-    <a href="https://agentesajustadores.cnsf.gob.mx/qr_agente?cedula=Y366997" target="_blank">
-      <i class="fa-solid fa-id-card"></i> Cédula de seguros (CNSF)
-    </a>
-    <a href="https://www.linkedin.com/in/act-gabriela-navarro-ab6b48344/" target="_blank">
-      <i class="fa-brands fa-linkedin"></i> LinkedIn
-    </a>
-    <a href="https://www.youtube.com/@loydsandnavarro" target="_blank">
-      <i class="fa-brands fa-youtube"></i> YouTube
-    </a>
-<a href="mailto:reservamatematica@gmail.com">
-  <i class="fa-solid fa-envelope"></i> Correo electrónico
-</a>
-<a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3LYB_3Dz3pgloorODn9XUZ3WHCmP_pgc3ithe4tHf-6YaSwVf9AzTKfRko1L33AKq5OSHF2rSf?gv=true" 
-   target="_blank" 
-   style="display:inline-block;padding:10px 20px;background:#4285F4;color:white;border-radius:8px;text-decoration:none;">
-  📅 Reservar Cita
-</a>
-  </div>
+    <div class="menu">
+        <a href="https://www.youtube.com/watch?v=b0IPXXTIkvE" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-youtube"></i> Por qué elegir a Lloyd's & Navarro
+        </a>
+        <a href="https://loyds-navarro.github.io/EnlacesLoyds/referencias.html" rel="noopener noreferrer">
+            <i class="fa-solid fa-person"></i> Referencias
+        </a>
+        <a href="https://api.whatsapp.com/send/?phone=527225886862&text=Hola%2C%20me%20interesa%20m%C3%A1s%20informaci%C3%B3n%20de%20seguros&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-whatsapp"></i> Whatsapp
+        </a>
+        <a href="https://www.instagram.com/lloydsnavarro" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-instagram"></i> Instagram
+        </a>
+        <a href="https://www.facebook.com/loydsandnavarro3" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-facebook"></i> Facebook
+        </a>
+        <a href="https://agentesajustadores.cnsf.gob.mx/qr_agente?cedula=Y366997" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-id-card"></i> Cédula de seguros (CNSF)
+        </a>
+        <a href="https://www.linkedin.com/in/act-gabriela-navarro-ab6b48344/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="https://www.youtube.com/@loydsandnavarro" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-youtube"></i> YouTube
+        </a>
+        <a href="mailto:reservamatematica@gmail.com">
+            <i class="fa-solid fa-envelope"></i> Correo electrónico
+        </a>
+        <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3LYB_3Dz3pgloorODn9XUZ3WHCmP_pgc3ithe4tHf-6YaSwVf9AzTKfRko1L33AKq5OSHF2rSf?gv=true" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px;background:#4285F4;color:white;border-radius:10px;text-decoration:none;font-size:1.1em;width: calc(100% - 30px); /* Ajustar el ancho para que el padding no lo desborde */ text-align: left; /* Alinear texto a la izquierda como los otros botones */">
+            <i class="fa-solid fa-calendar-days"></i> Reservar Cita
+        </a>
+    </div>
 
-  <div class="info">
-    <h2>Te ayudaremos a preservar tu futuro financiero</h2>
-    <h2>Ponte en contacto con nuestro equipo de asesores</h2>
-  </div>
+    <div class="info">
+        <h2>Te ayudaremos a preservar tu futuro financiero</h2>
+        <h2>Ponte en contacto con nuestro equipo de asesores</h2>
+    </div>
 
 </body>
 </html>
