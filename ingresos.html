@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capacidad de ahorro detallada</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      background: #007BFF;
+      color: white;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #btnWhatsapp {
+      background-color: #25D366;
+      margin-top: 10px;
+    }
+    .resultado {
+      margin-top: 30px;
+      padding: 20px;
+      background: #e6f4ea;
+      border: 2px solid #34a853;
+      border-radius: 8px;
+      color: #155724;
+      font-weight: 700;
+      font-size: 18px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>Registro de ingresos y egresos</h1>
+  <form id="formulario">
+    <label for="nombre">Nombre del prospecto:</label>
+    <input type="text" id="nombre" required />
+
+    <label for="ingresos">Ingresos mensuales totales ($):</label>
+    <input type="number" id="ingresos" min="0" step="0.01" required />
+
+    <h3>Egresos mensuales detallados ($):</h3>
+
+    <label for="renta">Renta / Hipoteca:</label>
+    <input type="number" id="renta" min="0" step="0.01" value="0" required />
+
+    <label for="internet">Internet y telefonía:</label>
+    <input type="number" id="internet" min="0" step="0.01" value="0" required />
+
+    <label for="alimentacion">Alimentación y supermercado:</label>
+    <input type="number" id="alimentacion" min="0" step="0.01" value="0" required />
+
+    <label for="transporte">Transporte (gasolina, pasajes):</label>
+    <input type="number" id="transporte" min="0" step="0.01" value="0" required />
+
+    <label for="entretenimiento">Entretenimiento (streaming, salidas):</label>
+    <input type="number" id="entretenimiento" min="0" step="0.01" value="0" required />
+
+    <label for="ahorro_imprevistos">Ahorro para gastos imprevistos:</label>
+    <input type="number" id="ahorro_imprevistos" min="0" step="0.01" value="0" required />
+
+    <label for="otros">Otros egresos:</label>
+    <input type="number" id="otros" min="0" step="0.01" value="0" required />
+
+    <button type="submit">Calcular capacidad de ahorro</button>
+  </form>
+
+  <div id="resultado" class="resultado" style="display:none;"></div>
+  <button id="btnWhatsapp" style="display:none;">Enviar por WhatsApp</button>
+
+  <script>
+    document.getElementById("formulario").addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const nombre = document.getElementById("nombre").value.trim();
+      const ingresos = parseFloat(document.getElementById("ingresos").value);
+      const renta = parseFloat(document.getElementById("renta").value);
+      const internet = parseFloat(document.getElementById("internet").value);
+      const alimentacion = parseFloat(document.getElementById("alimentacion").value);
+      const transporte = parseFloat(document.getElementById("transporte").value);
+      const entretenimiento = parseFloat(document.getElementById("entretenimiento").value);
+      const ahorro_imprevistos = parseFloat(document.getElementById("ahorro_imprevistos").value);
+      const otros = parseFloat(document.getElementById("otros").value);
+
+      if ([ingresos, renta, internet, alimentacion, transporte, entretenimiento, ahorro_imprevistos, otros].some(v => isNaN(v) || v < 0)) {
+        alert("Por favor ingresa números válidos y positivos en todos los campos.");
+        return;
+      }
+
+      const total_egresos = renta + internet + alimentacion + transporte + entretenimiento + ahorro_imprevistos + otros;
+      const capacidad_ahorro = ingresos - total_egresos;
+
+      let mensaje = `Nombre: ${nombre}\nIngresos: $${ingresos.toFixed(2)}\nTotal egresos: $${total_egresos.toFixed(2)}\n\n`;
+
+      if (capacidad_ahorro <= 0) {
+        mensaje += `Actualmente no tienes capacidad de ahorro disponible. Revisa tus gastos o considera otras opciones de seguro.`;
+      } else if (capacidad_ahorro < 2000) {
+        mensaje += `Tu capacidad de ahorro mensual es de $${capacidad_ahorro.toFixed(2)}. Puedes optar por seguros básicos o de bajo costo ajustados a tu presupuesto.`;
+      } else if (capacidad_ahorro < 5000) {
+        mensaje += `Tu capacidad de ahorro mensual es de $${capacidad_ahorro.toFixed(2)}. Puedes considerar seguros con coberturas medias.`;
+      } else {
+        mensaje += `Tu capacidad de ahorro mensual es de $${capacidad_ahorro.toFixed(2)}. Puedes acceder a seguros con coberturas completas y beneficios amplios.`;
+      }
+
+      const divResultado = document.getElementById("resultado");
+      divResultado.style.display = "block";
+      divResultado.textContent = mensaje;
+
+      enviarTelegram(mensaje);
+      enviarWhatsApp(mensaje);
+    });
+
+    function enviarTelegram(mensaje) {
+      const BOT_TOKEN = '7963597602:AAGFXEKMva1k9L2yFVL2UoLX_1SUkp9j9h4';
+      const CHAT_ID = '-4643509012';
+
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+      const data = {
+        chat_id: CHAT_ID,
+        text: mensaje,
+        parse_mode: 'HTML'
+      };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error('Telegram error:', data.description);
+          alert('Error al enviar mensaje a Telegram: ' + data.description);
+        }
+      })
+      .catch(err => {
+        console.error('Telegram error:', err);
+        alert('Error de conexión con Telegram: ' + err);
+      });
+    }
+
+    function enviarWhatsApp(mensaje) {
+      const telefono = '525541816260';  // Número de México en formato internacional
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      const url = `https://wa.me/${telefono}?text=${mensajeCodificado}`;
+
+      const btnWhatsapp = document.getElementById("btnWhatsapp");
+      btnWhatsapp.style.display = "block";
+      btnWhatsapp.onclick = () => {
+        window.open(url, "_blank");
+      };
+    }
+  </script>
+</body>
+</html>

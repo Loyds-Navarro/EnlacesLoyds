@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Proyección de UDIs</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0d47a1;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header img {
+      height: 40px;
+      margin-right: 15px;
+    }
+    header h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+    main {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label {
+      color: #0d47a1;
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #90caf9;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #0d47a1;
+    }
+    .resultado {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #90caf9;
+      border-radius: 5px;
+      background: #f4faff;
+      font-family: monospace;
+      font-size: 15px;
+      white-space: pre;
+      line-height: 1.5;
+    }
+    .ahorro {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo" />
+    <h1>Proyección de Ahorro en UDIs</h1>
+  </header>
+
+  <main>
+    <div class="ahorro" id="ahorroTexto">Ahorro aproximado: $0.00</div>
+
+    <label for="udi">Valor actual de la UDI:</label>
+    <input id="udi" type="number" step="any" placeholder="Ej. 7.89" />
+
+    <label for="udis">Cantidad de UDIs a ahorrar:</label>
+    <input id="udis" type="number" step="any" />
+
+    <label for="anios">Años a proyectar:</label>
+    <input id="anios" type="number" />
+
+    <label for="tasa">Tasa de inflación anual (%):</label>
+    <input id="tasa" type="number" value="4.0" step="any" />
+
+    <button onclick="calcularProyeccion()">Calcular Proyección</button>
+
+    <div class="resultado" id="resultado"></div>
+  </main>
+
+  <script>
+    function calcularProyeccion() {
+      const udi = parseFloat(document.getElementById("udi").value);
+      const udis = parseFloat(document.getElementById("udis").value);
+      const anios = parseInt(document.getElementById("anios").value);
+      const tasa = parseFloat(document.getElementById("tasa").value) / 100;
+      const resultado = document.getElementById("resultado");
+      const ahorroTexto = document.getElementById("ahorroTexto");
+
+      if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa)) {
+        alert("Por favor ingresa todos los valores correctamente.");
+        return;
+      }
+
+      let total = 0, valor = udi;
+      let out = "Año    UDI proyectada    Equivalente en pesos\n";
+      out += "--------------------------------------------------\n";
+
+      for (let i = 1; i <= anios; i++) {
+        if (i > 1) valor *= (1 + tasa);
+        const pesos = udis * valor;
+        total += pesos;
+
+        const strPesos = `$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+        out += `${i}`.padEnd(6) + `${valor.toFixed(4)}`.padEnd(18) + strPesos + "\n";
+      }
+
+      resultado.textContent = out;
+      ahorroTexto.textContent = `Ahorro aproximado: $${total.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+    }
+  </script>
+
+</body>
+</html>
