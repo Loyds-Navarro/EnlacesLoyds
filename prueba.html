@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Proyección de UDIs</title>
+  <title>Calculadora UDI</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f0f4f8;
@@ -20,85 +16,71 @@
     header {
       background-color: #00183c;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .logo-container {
-      margin-bottom: 10px;
+      padding: 20px;
     }
 
     .logo {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0 auto 10px;
       overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      border: 5px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.1);
-      margin: 0 auto;
+      border: 4px solid rgba(255, 255, 255, 0.2);
     }
 
     .logo img {
-      max-width: 90%;
-      max-height: 90%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      transition: transform 0.5s ease;
-    }
-
-    .logo:hover img {
-      transform: scale(1.05);
-    }
-
-    header h1 {
-      font-size: 1.4rem;
-      margin: 0;
     }
 
     main {
       max-width: 700px;
       margin: 30px auto;
+      padding: 20px;
+    }
+
+    section {
       background: white;
-      padding: 30px;
+      padding: 25px;
+      margin-bottom: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    label {
+    h2 {
       color: #0d47a1;
-      font-weight: bold;
-      margin-top: 10px;
+      margin-top: 0;
+    }
+
+    label {
       display: block;
-      font-size: 1rem;
+      font-weight: bold;
+      margin-top: 15px;
+      color: #0d47a1;
     }
 
     input {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      margin-bottom: 15px;
       border: 1px solid #90caf9;
       border-radius: 5px;
       font-size: 1rem;
     }
 
     button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
       background-color: #1976d2;
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 1.05rem;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
     }
 
     button:hover {
@@ -106,130 +88,115 @@
     }
 
     .resultado {
-      width: 100%;
       margin-top: 20px;
       padding: 15px;
-      border: 1px solid #90caf9;
-      border-radius: 5px;
-      background: #f4faff;
+      background: #e3f2fd;
+      border-left: 5px solid #1976d2;
       font-family: monospace;
-      font-size: 0.95rem;
       white-space: pre-wrap;
-      line-height: 1.5;
     }
 
-    .ahorro {
+    .subtitulo {
       text-align: center;
-      font-size: 1.25rem;
-      font-weight: bold;
+      font-size: 1.1rem;
       color: #1976d2;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 768px) {
-      main {
-        margin: 20px;
-        padding: 20px;
-      }
-
-      header h1 {
-        font-size: 1.2rem;
-      }
-
-      label, input, button {
-        font-size: 1rem;
-      }
-
-      .ahorro {
-        font-size: 1.1rem;
-      }
-
-      .resultado {
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header h1 {
-        font-size: 1rem;
-      }
-
-      .ahorro {
-        font-size: 1rem;
-      }
-
-      button {
-        font-size: 0.95rem;
-      }
-
-      .resultado {
-        font-size: 0.85rem;
-      }
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo-container">
-      <div class="logo">
-        <img src="logo.png" alt="Lloyd's & Navarro" />
-      </div>
-    </div>
-    <h1>Proyección de Ahorro en UDIs</h1>
-  </header>
+<header>
+  <div class="logo">
+    <img src="logo.png" alt="Logo" />
+  </div>
+  <h1>Calculadora de Ahorro en UDIs</h1>
+</header>
 
-  <main>
-    <div class="ahorro" id="ahorroTexto">Ahorro aproximado: $0.00</div>
+<main>
+  <!-- Sección 1: Convertir pesos a UDIs -->
+  <section>
+    <h2>Conversor de pesos a UDIs</h2>
+    <label for="montoAnual">Monto anual a ahorrar (pesos):</label>
+    <input type="number" id="montoAnual" placeholder="Ej. 25000" step="any" />
 
-    <label for="udi">Valor actual de la UDI:</label>
-    <input id="udi" type="number" step="any" placeholder="Ej. 7.89" />
+    <label for="valorUdi">Valor actual de la UDI:</label>
+    <input type="number" id="valorUdi" placeholder="Ej. 8.52" step="any" />
 
-    <label for="udis">Cantidad de UDIs a ahorrar:</label>
-    <input id="udis" type="number" step="any" />
+    <button onclick="calcularUdis()">Calcular UDIs</button>
+
+    <div class="resultado" id="resultadoUdis"></div>
+  </section>
+
+  <!-- Sección 2: Proyección futura con UDIs -->
+  <section>
+    <h2>Proyección de ahorro futuro con UDIs</h2>
+    <div class="subtitulo">Ingresa manualmente las UDIs</div>
+
+    <label for="udiProy">Valor actual de la UDI:</label>
+    <input id="udiProy" type="number" step="any" placeholder="Ej. 8.52" />
+
+    <label for="udisProy">Cantidad de UDIs:</label>
+    <input id="udisProy" type="number" step="any" placeholder="Ej. 2934.2" />
 
     <label for="anios">Años a proyectar:</label>
-    <input id="anios" type="number" />
+    <input id="anios" type="number" placeholder="Ej. 5" />
 
     <label for="tasa">Tasa de inflación anual (%):</label>
     <input id="tasa" type="number" value="4.0" step="any" />
 
     <button onclick="calcularProyeccion()">Calcular Proyección</button>
 
-    <div class="resultado" id="resultado"></div>
-  </main>
+    <div class="resultado" id="resultadoProyeccion"></div>
+  </section>
+</main>
 
-  <script>
-    function calcularProyeccion() {
-      const udi = parseFloat(document.getElementById("udi").value);
-      const udis = parseFloat(document.getElementById("udis").value);
-      const anios = parseInt(document.getElementById("anios").value);
-      const tasa = parseFloat(document.getElementById("tasa").value) / 100;
-      const resultado = document.getElementById("resultado");
-      const ahorroTexto = document.getElementById("ahorroTexto");
+<script>
+  // Sección 1: Convertir pesos a UDIs
+  function calcularUdis() {
+    const monto = parseFloat(document.getElementById('montoAnual').value);
+    const udi = parseFloat(document.getElementById('valorUdi').value);
+    const resultadoDiv = document.getElementById('resultadoUdis');
 
-      if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa)) {
-        alert("Por favor ingresa todos los valores correctamente.");
-        return;
-      }
-
-      let total = 0, valor = udi;
-      let out = "Año    UDI proyectada    Equivalente en pesos\n";
-      out += "--------------------------------------------------\n";
-
-      for (let i = 1; i <= anios; i++) {
-        if (i > 1) valor *= (1 + tasa);
-        const pesos = udis * valor;
-        total += pesos;
-
-        const strPesos = `$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
-        out += `${i}`.padEnd(6) + `${valor.toFixed(4)}`.padEnd(18) + strPesos + "\n";
-      }
-
-      resultado.textContent = out;
-      ahorroTexto.textContent = `Ahorro aproximado: $${total.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+    if (isNaN(monto) || isNaN(udi) || udi === 0) {
+      resultadoDiv.textContent = 'Por favor, ingresa valores válidos.';
+      return;
     }
-  </script>
+
+    const udis = monto / udi;
+    resultadoDiv.textContent = `Con $${monto.toLocaleString('es-MX')} pesos al año, ahorrarás aproximadamente ${udis.toFixed(4)} UDIs.`;
+  }
+
+  // Sección 2: Proyección de ahorro
+  function calcularProyeccion() {
+    const udi = parseFloat(document.getElementById("udiProy").value);
+    const udis = parseFloat(document.getElementById("udisProy").value);
+    const anios = parseInt(document.getElementById("anios").value);
+    const tasa = parseFloat(document.getElementById("tasa").value) / 100;
+    const resultado = document.getElementById("resultadoProyeccion");
+
+    if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa)) {
+      alert("Por favor completa todos los campos correctamente.");
+      return;
+    }
+
+    let total = 0, valor = udi;
+    let out = "Año    UDI proyectada    Equivalente en pesos\n";
+    out += "----------------------------------------------\n";
+
+    for (let i = 1; i <= anios; i++) {
+      if (i > 1) valor *= (1 + tasa);
+      const pesos = udis * valor;
+      total += pesos;
+
+      const strPesos = `$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+      out += `${i}`.padEnd(6) + `${valor.toFixed(4)}`.padEnd(18) + strPesos + "\n";
+    }
+
+    out += "\nTotal estimado en pesos: $" + total.toLocaleString("es-MX", { minimumFractionDigits: 2 });
+    resultado.textContent = out;
+  }
+</script>
 
 </body>
 </html>
