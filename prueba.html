@@ -18,6 +18,8 @@
       --border-radius: 8px;
       --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       --transition: all 0.2s ease;
+      --positive: #2e7d32;
+      --negative: #d32f2f;
     }
 
     * {
@@ -49,28 +51,32 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
 
     .logo {
-      width: 60px;
-      height: 60px;
+      width: 100px; /* Aumentado de 60px a 100px */
+      height: 100px; /* Aumentado de 60px a 100px */
       border-radius: 50%;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.15);
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 3px solid rgba(255, 255, 255, 0.2); /* Borde más grueso */
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 5px; /* Espacio adicional debajo del logo */
     }
 
-    .logo i {
-      font-size: 28px;
-      color: white;
+    .logo img {
+      max-width: 80%; /* La imagen ocupa el 80% del contenedor */
+      max-height: 80%; /* La imagen ocupa el 80% del contenedor */
+      display: block;
+      object-fit: contain; /* Asegura que la imagen mantenga sus proporciones */
     }
 
     h1 {
       font-size: 1.4rem;
+      margin-top: 5px; /* Espacio adicional encima del título */
     }
 
     .subtitle {
@@ -330,12 +336,86 @@
       font-size: 0.9rem;
     }
     
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    
+    .comparison-card {
+      background: #f0f7ff;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #d1e4fa;
+      text-align: center;
+    }
+    
+    .comparison-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .comparison-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    
+    .difference-card {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+      text-align: center;
+      border-left: 3px solid var(--primary-light);
+    }
+    
+    .difference-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+    
+    .positive {
+      color: var(--positive);
+    }
+    
+    .negative {
+      color: var(--negative);
+    }
+    
+    .percentage {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+    
+    .positive-bg {
+      background-color: rgba(46, 125, 50, 0.1);
+    }
+    
+    .negative-bg {
+      background-color: rgba(211, 47, 47, 0.1);
+    }
+    
     @media (max-width: 480px) {
       .frecuencia-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+      .comparison-container {
+        grid-template-columns: 1fr;
+      }
       section {
         padding: 12px;
+      }
+      .logo {
+        width: 85px;
+        height: 85px;
       }
     }
   </style>
@@ -345,7 +425,8 @@
 <header>
   <div class="header-content">
     <div class="logo">
-      <i class="fas fa-calculator"></i>
+      <!-- Logo más grande y centrado -->
+      <img src="logo.png" alt="Logo Calculadora UDIs">
     </div>
     <h1>Calculadora Integral de UDIs</h1>
     <p class="subtitle">Herramienta profesional para conversión, proyección y recuperación</p>
@@ -450,6 +531,22 @@
       <div id="recuperacionResult"></div>
     </div>
   </section>
+  
+  <!-- Nueva Sección: Comparación Proyección vs Recuperación -->
+  <section>
+    <h2><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h2>
+    
+    <p style="margin-bottom: 15px; font-size: 0.9rem;">Calcula la diferencia entre la Proyección de Ahorro y la Recuperación en Pesos</p>
+    
+    <button onclick="calcularDiferencia()">
+      <i class="fas fa-calculator"></i> Calcular Diferencia
+    </button>
+    
+    <div class="resultado" id="resultadoComparacion">
+      <div class="result-title"><i class="fas fa-balance-scale"></i> Resultado:</div>
+      <div id="comparacionResult"></div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -457,6 +554,10 @@
 </footer>
 
 <script>
+  // Variables para almacenar resultados
+  let proyeccionTotal = 0;
+  let recuperacionTotal = 0;
+  
   // Sección 1: Conversión de Pesos a UDIs con aportaciones periódicas y pesos
   function calcularUdis() {
     const monto = parseFloat(document.getElementById('montoAnual').value);
@@ -587,6 +688,9 @@
     
     proyeccionResult.innerHTML = html;
     resultadoDiv.classList.add('active');
+    
+    // Guardar el resultado para la comparación
+    proyeccionTotal = total;
   }
 
   // Función para obtener el valor de la UDI desde Banxico (hoy 15/07/2025)
@@ -694,6 +798,64 @@
       <div class="compact-result">
         <i class="fas fa-piggy-bank"></i> Total: 
         <span>$${valorTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+      </div>
+    `;
+    
+    resultadoDiv.classList.add('active');
+    
+    // Guardar el resultado para la comparación
+    recuperacionTotal = valorTotal;
+  }
+
+  // Nueva función: Calcular diferencia entre proyección y recuperación
+  function calcularDiferencia() {
+    const resultadoDiv = document.getElementById("resultadoComparacion");
+    const comparacionResult = document.getElementById("comparacionResult");
+    
+    if (proyeccionTotal === 0 || recuperacionTotal === 0) {
+      comparacionResult.innerHTML = `
+        <div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;">
+          <i class="fas fa-exclamation-circle"></i> Debe calcular primero la Proyección de Ahorro y la Recuperación
+        </div>
+      `;
+      resultadoDiv.classList.add('active');
+      return;
+    }
+    
+    // Calcular diferencia
+    const diferencia = proyeccionTotal - recuperacionTotal;
+    const porcentaje = (Math.abs(diferencia) / Math.max(proyeccionTotal, recuperacionTotal)) * 100;
+    
+    // Determinar si es positivo o negativo
+    const esPositivo = diferencia <= 0;
+    const colorClase = esPositivo ? 'positive' : 'negative';
+    const bgClase = esPositivo ? 'positive-bg' : 'negative-bg';
+    const signo = esPositivo ? '+' : '-';
+    
+    comparacionResult.innerHTML = `
+      <div class="comparison-container">
+        <div class="comparison-card">
+          <div class="comparison-title">Proyección de Ahorro</div>
+          <div class="comparison-value">$${proyeccionTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
+        </div>
+        
+        <div class="comparison-card">
+          <div class="comparison-title">Recuperación</div>
+          <div class="comparison-value">$${recuperacionTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
+        </div>
+      </div>
+      
+      <div class="difference-card">
+        <div>Diferencia:</div>
+        <div class="difference-value ${colorClase}">${signo}$${Math.abs(diferencia).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
+        <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}%</div>
+      </div>
+      
+      <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem;">
+        <i class="fas fa-info-circle"></i> 
+        ${esPositivo ? 
+          'La proyección de ahorro es mayor que la recuperación' : 
+          'La recuperación es mayor que la proyección de ahorro'}
       </div>
     `;
     
