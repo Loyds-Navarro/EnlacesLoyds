@@ -823,11 +823,11 @@
     }
     
     // Calcular diferencia
-    const diferencia = proyeccionTotal - recuperacionTotal;
+    const diferencia =  recuperacionTotal - proyeccionTotal;
     const porcentaje = (Math.abs(diferencia) / Math.max(proyeccionTotal, recuperacionTotal)) * 100;
     
     // Determinar si es positivo o negativo
-    const esPositivo = diferencia <= 0;
+    const esPositivo = diferencia >= 0;
     const colorClase = esPositivo ? 'positive' : 'negative';
     const bgClase = esPositivo ? 'positive-bg' : 'negative-bg';
     const signo = esPositivo ? '+' : '-';
