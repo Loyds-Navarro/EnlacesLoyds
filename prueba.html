@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora UDI</title>
+  <title>Calculadora Integral de UDIs</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f0f4f8;
       margin: 0;
       padding: 0;
-      font-size: 16px;
     }
 
     header {
@@ -21,9 +20,9 @@
     }
 
     .logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      border-radius: 80%;
       margin: 0 auto 10px;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.1);
@@ -37,17 +36,23 @@
     }
 
     main {
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
     }
 
     section {
       background: white;
       padding: 25px;
-      margin-bottom: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex: 1 1 360px;
+      min-width: 340px;
+      max-width: 400px;
     }
 
     h2 {
@@ -62,7 +67,7 @@
       color: #0d47a1;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -98,9 +103,22 @@
 
     .subtitulo {
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #1976d2;
       margin-bottom: 10px;
+    }
+
+    #udiHoy {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background-color: #0077cc;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      z-index: 999;
     }
   </style>
 </head>
@@ -110,92 +128,163 @@
   <div class="logo">
     <img src="logo.png" alt="Logo" />
   </div>
-  <h1>Calculadora de Ahorro en UDIs</h1>
+  <h1>Calculadora Integral de UDIs</h1>
 </header>
 
-<main>
-  <!-- Sección 1: Convertir pesos a UDIs -->
-  <section>
-    <h2>Conversor de pesos a UDIs</h2>
-    <label for="montoAnual">Monto anual a ahorrar (pesos):</label>
-    <input type="number" id="montoAnual" placeholder="Ej. 25000" step="any" />
+<div id="udiHoy">Consultando UDI...</div>
 
-    <label for="valorUdi">Valor actual de la UDI:</label>
-    <input type="number" id="valorUdi" placeholder="Ej. 8.52" step="any" />
+<main>
+  <!-- Sección 1 -->
+  <section>
+    <h2>Conversor de Pesos a UDIs</h2>
+	<label for="valorUdi">Valor actual de la UDI:</label>
+    <input type="number" id="valorUdi" step="any" />
+    <label for="montoAnual">Monto anual a ahorrar (pesos):</label>
+    <input type="number" id="montoAnual" step="any" />
 
     <button onclick="calcularUdis()">Calcular UDIs</button>
 
     <div class="resultado" id="resultadoUdis"></div>
   </section>
 
-  <!-- Sección 2: Proyección futura con UDIs -->
+  <!-- Sección 2 -->
   <section>
-    <h2>Proyección de ahorro futuro con UDIs</h2>
-    <div class="subtitulo">Ingresa manualmente las UDIs</div>
+    <h2>Proyección de ahorro con UDIs</h2>
 
     <label for="udiProy">Valor actual de la UDI:</label>
-    <input id="udiProy" type="number" step="any" placeholder="Ej. 8.52" />
+    <input id="udiProy" type="number" step="any" />
 
     <label for="udisProy">Cantidad de UDIs:</label>
-    <input id="udisProy" type="number" step="any" placeholder="Ej. 2934.2" />
+    <input id="udisProy" type="number" step="any" />
 
     <label for="anios">Años a proyectar:</label>
-    <input id="anios" type="number" placeholder="Ej. 5" />
+    <input id="anios" type="number" />
 
     <label for="tasa">Tasa de inflación anual (%):</label>
-    <input id="tasa" type="number" value="4.0" step="any" />
+    <input id="tasa" type="number" value="4.5" step="any" />
 
     <button onclick="calcularProyeccion()">Calcular Proyección</button>
 
     <div class="resultado" id="resultadoProyeccion"></div>
   </section>
+
+  <!-- Sección 3 -->
+  <section>
+    <h2>Recuperación en Pesos</h2>
+
+    <label for="udiActual">Valor actual de la UDI (MXN):</label>
+    <input type="number" id="udiActual" step="0.000001" />
+
+    <label for="inflacion">Inflación anual (%)</label>
+    <input type="number" value="4.5" id="inflacion" step="0.01" />
+
+    <label for="anio">Años a proyectar:</label>
+    <select id="anio"></select>
+
+    <label for="cantidadUdis">Cantidad de UDIs a multiplicar:</label>
+    <input type="number" id="cantidadUdis" step="0.01" />
+
+    <button onclick="calcularAuto()">Calcular</button>
+
+    <div class="resultado" id="resultado" style="display:none;"></div>
+  </section>
 </main>
 
 <script>
-  // Sección 1: Convertir pesos a UDIs
+  // Sección 1
   function calcularUdis() {
     const monto = parseFloat(document.getElementById('montoAnual').value);
     const udi = parseFloat(document.getElementById('valorUdi').value);
     const resultadoDiv = document.getElementById('resultadoUdis');
-
     if (isNaN(monto) || isNaN(udi) || udi === 0) {
       resultadoDiv.textContent = 'Por favor, ingresa valores válidos.';
       return;
     }
-
     const udis = monto / udi;
     resultadoDiv.textContent = `Con $${monto.toLocaleString('es-MX')} pesos al año, ahorrarás aproximadamente ${udis.toFixed(4)} UDIs.`;
   }
 
-  // Sección 2: Proyección de ahorro
+  // Sección 2
   function calcularProyeccion() {
     const udi = parseFloat(document.getElementById("udiProy").value);
     const udis = parseFloat(document.getElementById("udisProy").value);
     const anios = parseInt(document.getElementById("anios").value);
     const tasa = parseFloat(document.getElementById("tasa").value) / 100;
     const resultado = document.getElementById("resultadoProyeccion");
-
     if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa)) {
       alert("Por favor completa todos los campos correctamente.");
       return;
     }
-
     let total = 0, valor = udi;
     let out = "Año    UDI proyectada    Equivalente en pesos\n";
     out += "----------------------------------------------\n";
-
     for (let i = 1; i <= anios; i++) {
       if (i > 1) valor *= (1 + tasa);
       const pesos = udis * valor;
       total += pesos;
-
       const strPesos = `$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
       out += `${i}`.padEnd(6) + `${valor.toFixed(4)}`.padEnd(18) + strPesos + "\n";
     }
-
     out += "\nTotal estimado en pesos: $" + total.toLocaleString("es-MX", { minimumFractionDigits: 2 });
     resultado.textContent = out;
   }
+
+  // Sección 3
+async function obtenerValorUDI() {
+  try {
+    const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+    const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const datoRaw = data.bmx.series[0].datos[0].dato;
+    const fecha = data.bmx.series[0].datos[0].fecha;
+    const valorStr = datoRaw.replace(",", ".");
+    const valorUDI = parseFloat(valorStr);
+
+    document.getElementById("udiHoy").innerText = `UDI actual (${fecha}): $${valorUDI.toFixed(4)}`;
+
+    // Asignar el valor a los tres inputs que necesitan la UDI actual
+    document.getElementById("udiActual").value = valorUDI.toFixed(4);
+    document.getElementById("valorUdi").value = valorUDI.toFixed(4);
+    document.getElementById("udiProy").value = valorUDI.toFixed(4);
+  } catch (error) {
+    console.error("Error al obtener la UDI:", error);
+    document.getElementById("udiHoy").innerText = "No se pudo consultar la UDI";
+  }
+}
+
+  function calcularAuto() {
+    const udiActual = parseFloat(document.getElementById("udiActual").value);
+    const inflacion = parseFloat(document.getElementById("inflacion").value);
+    const anios = parseInt(document.getElementById("anio").value);
+    const cantidadUdis = parseFloat(document.getElementById("cantidadUdis").value);
+    if (isNaN(udiActual) || isNaN(inflacion) || isNaN(anios) || isNaN(cantidadUdis)) {
+      alert("Por favor llena todos los campos correctamente.");
+      return;
+    }
+    const udiProyectada = udiActual * Math.pow(1 + inflacion / 100, anios - 1);
+    const valorTotal = udiProyectada * cantidadUdis;
+
+    const resultadoDiv = document.getElementById("resultado");
+    resultadoDiv.style.display = "block";
+    resultadoDiv.innerHTML = `
+      <strong>Proyección a ${anios} año${anios > 1 ? "s" : ""}:</strong><br>
+      UDI proyectada: $${udiProyectada.toFixed(4)} MXN<br>
+      Valor total (${cantidadUdis.toLocaleString(undefined, { maximumFractionDigits: 2 })} UDIs): 
+      <strong>$${valorTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</strong>
+    `;
+  }
+
+  // Población inicial de combo de años
+  const selectAnio = document.getElementById("anio");
+  for (let i = 1; i <= 40; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i + " año" + (i > 1 ? "s" : "");
+    selectAnio.appendChild(option);
+  }
+
+  obtenerValorUDI();
 </script>
 
 </body>
