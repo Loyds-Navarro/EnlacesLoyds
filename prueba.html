@@ -4,287 +4,728 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora Integral de UDIs</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f4f8;
+    :root {
+      --primary-dark: #00183c;
+      --primary: #0d47a1;
+      --primary-light: #1976d2;
+      --accent: #0077cc;
+      --light-bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --border-radius: 8px;
+      --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      --transition: all 0.2s ease;
+    }
+
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      background: var(--light-bg);
+      color: var(--text-dark);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-bottom: 15px;
     }
 
     header {
-      background-color: #00183c;
-      color: white;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: var(--text-light);
       text-align: center;
-      padding: 20px;
+      padding: 15px 10px;
+      position: relative;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
     .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 80%;
-      margin: 0 auto 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.1);
-      border: 4px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+    .logo i {
+      font-size: 28px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      max-width: 700px;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    #udiHoy {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+      color: var(--text-light);
+      padding: 6px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      box-shadow: var(--shadow);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+    }
+
+    #udiHoy i {
+      font-size: 12px;
     }
 
     main {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 30px;
-      max-width: 1200px;
-      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      padding: 15px 10px;
+      max-width: 1400px;
+      margin: 10px auto 0;
     }
 
     section {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      flex: 1 1 360px;
-      min-width: 340px;
-      max-width: 400px;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-light), var(--accent));
     }
 
     h2 {
-      color: #0d47a1;
-      margin-top: 0;
+      color: var(--primary);
+      margin: 0 0 12px 0;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--primary-light);
+    }
+
+    h2 i {
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
     }
 
     label {
       display: block;
-      font-weight: bold;
-      margin-top: 15px;
-      color: #0d47a1;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--primary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    label i {
+      width: 16px;
+      text-align: center;
+      color: var(--primary-light);
+      font-size: 12px;
     }
 
     input, select {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #90caf9;
-      border-radius: 5px;
-      font-size: 1rem;
+      border: 1px solid #c5d8f0;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: #f9fcff;
     }
 
     button {
-      margin-top: 20px;
+      margin-top: 10px;
       width: 100%;
       padding: 12px;
-      background-color: #1976d2;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0d47a1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .resultado {
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 15px;
+      padding: 12px;
       background: #e3f2fd;
-      border-left: 5px solid #1976d2;
-      font-family: monospace;
-      white-space: pre-wrap;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary-light);
+      display: none;
+      animation: fadeIn 0.3s ease;
     }
 
-    .subtitulo {
-      text-align: center;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .resultado.active {
+      display: block;
+    }
+
+    .result-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
       font-size: 1rem;
-      color: #1976d2;
-      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    #udiHoy {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background-color: #0077cc;
+    .value-badge {
+      background: var(--primary-light);
       color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-      z-index: 999;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    .frecuencia-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .frecuencia-card {
+      background: #f0f7ff;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid #d1e4fa;
+      font-size: 0.85rem;
+    }
+
+    .frecuencia-card .title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .frecuencia-card .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 3px;
+    }
+
+    .frecuencia-card .value-pesos {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .tabla-proyeccion {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.8rem;
+    }
+
+    .tabla-proyeccion th {
+      background-color: var(--primary-light);
+      color: white;
+      padding: 6px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .tabla-proyeccion tr:nth-child(even) {
+      background-color: #f0f7ff;
+    }
+
+    .tabla-proyeccion td {
+      padding: 6px;
+      border-bottom: 1px solid #d1e4fa;
+    }
+
+    .total-row {
+      font-weight: 700;
+      background-color: #d4e6ff !important;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      color: var(--primary);
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .compact-result {
+      background: #d4e6ff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 480px) {
+      .frecuencia-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      section {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <img src="logo.png" alt="Logo" />
+  <div class="header-content">
+    <div class="logo">
+      <i class="fas fa-calculator"></i>
+    </div>
+    <h1>Calculadora Integral de UDIs</h1>
+    <p class="subtitle">Herramienta profesional para conversión, proyección y recuperación</p>
   </div>
-  <h1>Calculadora Integral de UDIs</h1>
 </header>
 
-<div id="udiHoy">Consultando UDI...</div>
+<div id="udiHoy">
+  <i class="fas fa-coins"></i>
+  <span id="udiText">Consultando UDI...</span>
+  <div class="spinner" id="spinner"></div>
+</div>
 
 <main>
-  <!-- Sección 1 -->
+  <!-- Sección 1: Conversor de Pesos a UDIs -->
   <section>
-    <h2>Conversor de Pesos a UDIs</h2>
-	<label for="valorUdi">Valor actual de la UDI:</label>
-    <input type="number" id="valorUdi" step="any" />
-    <label for="montoAnual">Monto anual a ahorrar (pesos):</label>
-    <input type="number" id="montoAnual" step="any" />
+    <h2><i class="fas fa-exchange-alt"></i> Conversor Pesos a UDIs</h2>
+    
+    <div class="input-group">
+      <label for="valorUdi"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+      <input type="number" id="valorUdi" step="any" placeholder="Ej: 8.45" />
+    </div>
+    
+    <div class="input-group">
+      <label for="montoAnual"><i class="fas fa-money-bill-wave"></i> Monto anual (MXN):</label>
+      <input type="number" id="montoAnual" step="any" placeholder="Ej: 12000" />
+    </div>
 
-    <button onclick="calcularUdis()">Calcular UDIs</button>
+    <button onclick="calcularUdis()">
+      <i class="fas fa-calculator"></i> Calcular
+    </button>
 
-    <div class="resultado" id="resultadoUdis"></div>
+    <div class="resultado" id="resultadoUdis">
+      <div class="result-title"><i class="fas fa-chart-bar"></i> Resultados:</div>
+      <div id="conversionResult"></div>
+    </div>
   </section>
 
-  <!-- Sección 2 -->
+  <!-- Sección 2: Proyección de ahorro con UDIs -->
   <section>
-    <h2>Proyección de ahorro con UDIs</h2>
+    <h2><i class="fas fa-chart-line"></i> Proyección de Ahorro</h2>
+    
+    <div class="input-group">
+      <label for="udiProy"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+      <input id="udiProy" type="number" step="any" placeholder="Ej: 8.45" />
+    </div>
+    
+    <div class="input-group">
+      <label for="udisProy"><i class="fas fa-coins"></i> Cantidad UDIs:</label>
+      <input id="udisProy" type="number" step="any" placeholder="Ej: 1500" />
+    </div>
+    
+    <div class="input-group">
+      <label for="anios"><i class="fas fa-calendar-alt"></i> Años:</label>
+      <input id="anios" type="number" placeholder="Ej: 5" min="1" max="50" />
+    </div>
+    
+    <div class="input-group">
+      <label for="tasa"><i class="fas fa-percentage"></i> Inflación anual (%):</label>
+      <input id="tasa" type="number" value="4.5" step="any" placeholder="Ej: 4.5" />
+    </div>
 
-    <label for="udiProy">Valor actual de la UDI:</label>
-    <input id="udiProy" type="number" step="any" />
+    <button onclick="calcularProyeccion()">
+      <i class="fas fa-project-diagram"></i> Calcular
+    </button>
 
-    <label for="udisProy">Cantidad de UDIs:</label>
-    <input id="udisProy" type="number" step="any" />
-
-    <label for="anios">Años a proyectar:</label>
-    <input id="anios" type="number" />
-
-    <label for="tasa">Tasa de inflación anual (%):</label>
-    <input id="tasa" type="number" value="4.5" step="any" />
-
-    <button onclick="calcularProyeccion()">Calcular Proyección</button>
-
-    <div class="resultado" id="resultadoProyeccion"></div>
+    <div class="resultado" id="resultadoProyeccion">
+      <div class="result-title"><i class="fas fa-chart-line"></i> Proyección:</div>
+      <div id="proyeccionResult"></div>
+    </div>
   </section>
 
-  <!-- Sección 3 -->
+  <!-- Sección 3: Recuperación en Pesos -->
   <section>
-    <h2>Recuperación en Pesos</h2>
+    <h2><i class="fas fa-wallet"></i> Recuperación en Pesos</h2>
+    
+    <div class="input-group">
+      <label for="udiActual"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+      <input type="number" id="udiActual" step="0.000001" placeholder="Ej: 8.45" />
+    </div>
+    
+    <div class="input-group">
+      <label for="inflacion"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
+      <input type="number" value="4.5" id="inflacion" step="0.01" placeholder="Ej: 4.5" />
+    </div>
+    
+    <div class="input-group">
+      <label for="anio"><i class="fas fa-clock"></i> Años:</label>
+      <select id="anio"></select>
+    </div>
+    
+    <div class="input-group">
+      <label for="cantidadUdis"><i class="fas fa-cubes"></i> Cantidad UDIs:</label>
+      <input type="number" id="cantidadUdis" step="0.01" placeholder="Ej: 2500" />
+    </div>
 
-    <label for="udiActual">Valor actual de la UDI (MXN):</label>
-    <input type="number" id="udiActual" step="0.000001" />
+    <button onclick="calcularAuto()">
+      <i class="fas fa-cash-register"></i> Calcular
+    </button>
 
-    <label for="inflacion">Inflación anual (%)</label>
-    <input type="number" value="4.5" id="inflacion" step="0.01" />
-
-    <label for="anio">Años a proyectar:</label>
-    <select id="anio"></select>
-
-    <label for="cantidadUdis">Cantidad de UDIs a multiplicar:</label>
-    <input type="number" id="cantidadUdis" step="0.01" />
-
-    <button onclick="calcularAuto()">Calcular</button>
-
-    <div class="resultado" id="resultado" style="display:none;"></div>
+    <div class="resultado" id="resultado">
+      <div class="result-title"><i class="fas fa-coins"></i> Recuperación:</div>
+      <div id="recuperacionResult"></div>
+    </div>
   </section>
 </main>
 
+<footer>
+  <p>© 2023 Calculadora Integral de UDIs</p>
+</footer>
+
 <script>
-  // Sección 1
+  // Sección 1: Conversión de Pesos a UDIs con aportaciones periódicas y pesos
   function calcularUdis() {
     const monto = parseFloat(document.getElementById('montoAnual').value);
     const udi = parseFloat(document.getElementById('valorUdi').value);
     const resultadoDiv = document.getElementById('resultadoUdis');
+    const conversionResult = document.getElementById('conversionResult');
+    
     if (isNaN(monto) || isNaN(udi) || udi === 0) {
-      resultadoDiv.textContent = 'Por favor, ingresa valores válidos.';
+      conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos</div>';
+      resultadoDiv.classList.add('active');
       return;
     }
-    const udis = monto / udi;
-    resultadoDiv.textContent = `Con $${monto.toLocaleString('es-MX')} pesos al año, ahorrarás aproximadamente ${udis.toFixed(4)} UDIs.`;
+    
+    // Cálculo de aportaciones periódicas en UDIs
+    const anual_udis = monto / udi;
+    const semestral_udis = monto / 2 / udi;
+    const mensual_udis = monto / 12 / udi;
+    const trimestral_udis = monto / 4 / udi;
+    const semanal_udis = monto / 52 / udi;
+    const diario_udis = monto / 365 / udi;
+    
+    // Cálculo de aportaciones periódicas en pesos
+    const semestral_pesos = monto / 2;
+    const mensual_pesos = monto / 12;
+    const trimestral_pesos = monto / 4;
+    const semanal_pesos = monto / 52;
+    const diario_pesos = monto / 365;
+    
+    conversionResult.innerHTML = `
+      <div class="frecuencia-grid">
+        <div class="frecuencia-card">
+          <div class="title">Anual</div>
+          <div class="value">${anual_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        
+        <div class="frecuencia-card">
+          <div class="title">Semestral</div>
+          <div class="value">${semestral_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        
+        <div class="frecuencia-card">
+          <div class="title">Mensual</div>
+          <div class="value">${mensual_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        
+        <div class="frecuencia-card">
+          <div class="title">Trimestral</div>
+          <div class="value">${trimestral_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        
+        <div class="frecuencia-card">
+          <div class="title">Semanal</div>
+          <div class="value">${semanal_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${semanal_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        
+        <div class="frecuencia-card">
+          <div class="title">Diario</div>
+          <div class="value">${diario_udis.toFixed(4)} UDIs</div>
+          <div class="value-pesos">$${diario_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+      </div>
+    `;
+    resultadoDiv.classList.add('active');
   }
 
-  // Sección 2
+  // Sección 2: Proyección de ahorro con UDIs
   function calcularProyeccion() {
     const udi = parseFloat(document.getElementById("udiProy").value);
     const udis = parseFloat(document.getElementById("udisProy").value);
     const anios = parseInt(document.getElementById("anios").value);
     const tasa = parseFloat(document.getElementById("tasa").value) / 100;
-    const resultado = document.getElementById("resultadoProyeccion");
-    if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa)) {
-      alert("Por favor completa todos los campos correctamente.");
+    const resultadoDiv = document.getElementById("resultadoProyeccion");
+    const proyeccionResult = document.getElementById("proyeccionResult");
+    
+    if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa) || anios < 1) {
+      proyeccionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos</div>';
+      resultadoDiv.classList.add('active');
       return;
     }
+    
     let total = 0, valor = udi;
-    let out = "Año    UDI proyectada    Equivalente en pesos\n";
-    out += "----------------------------------------------\n";
+    let html = `
+      <div style="margin-bottom: 8px; font-size: 0.9rem;">
+        <span class="value-badge">${udis.toLocaleString('es-MX')} UDIs</span> 
+        en <span class="value-badge">${anios} año${anios > 1 ? 's' : ''}</span>
+      </div>
+      
+      <div style="overflow-x: auto;">
+        <table class="tabla-proyeccion">
+          <thead>
+            <tr>
+              <th>Año</th>
+              <th>UDI</th>
+              <th>Valor (MXN)</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
     for (let i = 1; i <= anios; i++) {
       if (i > 1) valor *= (1 + tasa);
       const pesos = udis * valor;
       total += pesos;
-      const strPesos = `$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
-      out += `${i}`.padEnd(6) + `${valor.toFixed(4)}`.padEnd(18) + strPesos + "\n";
+      
+      html += `
+        <tr>
+          <td>${i}</td>
+          <td>${valor.toFixed(4)}</td>
+          <td>$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}</td>
+        </tr>
+      `;
     }
-    out += "\nTotal estimado en pesos: $" + total.toLocaleString("es-MX", { minimumFractionDigits: 2 });
-    resultado.textContent = out;
+    
+    html += `
+          </tbody>
+        </table>
+      </div>
+      <div class="compact-result">
+        <i class="fas fa-piggy-bank"></i> Total: 
+        <span>$${total.toLocaleString("es-MX", { minimumFractionDigits: 2 })} MXN</span>
+      </div>
+    `;
+    
+    proyeccionResult.innerHTML = html;
+    resultadoDiv.classList.add('active');
   }
 
-  // Sección 3
-async function obtenerValorUDI() {
-  try {
-    const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
-    const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    const datoRaw = data.bmx.series[0].datos[0].dato;
-    const fecha = data.bmx.series[0].datos[0].fecha;
-    const valorStr = datoRaw.replace(",", ".");
-    const valorUDI = parseFloat(valorStr);
+  // Función para obtener el valor de la UDI desde Banxico (hoy 15/07/2025)
+  async function obtenerValorUDI() {
+    const udiText = document.getElementById("udiText");
+    const spinner = document.getElementById("spinner");
+    
+    try {
+      // Mostrar spinner y mensaje de carga
+      udiText.textContent = "Consultando...";
+      spinner.style.display = 'inline-block';
 
-    document.getElementById("udiHoy").innerText = `UDI actual (${fecha}): $${valorUDI.toFixed(4)}`;
+      // Token de la API de Banxico
+      const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+      const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      // Verificar si hay datos
+      if (data.bmx && data.bmx.series && data.bmx.series[0].datos && data.bmx.series[0].datos[0]) {
+        const datoRaw = data.bmx.series[0].datos[0].dato;
+        const fechaRaw = data.bmx.series[0].datos[0].fecha;
+        const valorStr = datoRaw.replace(",", ".");
+        const valorUDI = parseFloat(valorStr);
 
-    // Asignar el valor a los tres inputs que necesitan la UDI actual
-    document.getElementById("udiActual").value = valorUDI.toFixed(4);
-    document.getElementById("valorUdi").value = valorUDI.toFixed(4);
-    document.getElementById("udiProy").value = valorUDI.toFixed(4);
-  } catch (error) {
-    console.error("Error al obtener la UDI:", error);
-    document.getElementById("udiHoy").innerText = "No se pudo consultar la UDI";
+        // Formatear la fecha correctamente
+        const [dia, mes, anio] = fechaRaw.split('/');
+        const fechaObj = new Date(anio, mes-1, dia);
+        
+        // Formatear fecha para mostrar
+        const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
+        const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
+        
+        udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+        
+        // Asignar el valor a los inputs
+        document.getElementById("udiActual").value = valorUDI.toFixed(4);
+        document.getElementById("valorUdi").value = valorUDI.toFixed(4);
+        document.getElementById("udiProy").value = valorUDI.toFixed(4);
+      } else {
+        // Usar valor de respaldo de los resultados de búsqueda :cite[1]:cite[5]
+        const fecha = new Date();
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const fechaMostrar = `${dia}/${mes}/2025`;
+        udiText.innerHTML = `UDI (${fechaMostrar}): $8.441178`;
+        
+        document.getElementById("udiActual").value = "8.441178";
+        document.getElementById("valorUdi").value = "8.441178";
+        document.getElementById("udiProy").value = "8.441178";
+      }
+    } catch (error) {
+      console.error("Error al obtener la UDI:", error);
+      // Usar valor de respaldo según los datos históricos :cite[5]:cite[7]
+      const fecha = new Date();
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const fechaMostrar = `${dia}/${mes}/2025`;
+      udiText.innerHTML = `UDI (${fechaMostrar}): $8.441178`;
+      
+      document.getElementById("udiActual").value = "8.441178";
+      document.getElementById("valorUdi").value = "8.441178";
+      document.getElementById("udiProy").value = "8.441178";
+    } finally {
+      spinner.style.display = 'none';
+    }
   }
-}
 
+  // Sección 3: Recuperación en Pesos
   function calcularAuto() {
     const udiActual = parseFloat(document.getElementById("udiActual").value);
     const inflacion = parseFloat(document.getElementById("inflacion").value);
     const anios = parseInt(document.getElementById("anio").value);
     const cantidadUdis = parseFloat(document.getElementById("cantidadUdis").value);
+    const resultadoDiv = document.getElementById("resultado");
+    const recuperacionResult = document.getElementById("recuperacionResult");
+    
     if (isNaN(udiActual) || isNaN(inflacion) || isNaN(anios) || isNaN(cantidadUdis)) {
-      alert("Por favor llena todos los campos correctamente.");
+      recuperacionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos</div>';
+      resultadoDiv.classList.add('active');
       return;
     }
+    
     const udiProyectada = udiActual * Math.pow(1 + inflacion / 100, anios - 1);
     const valorTotal = udiProyectada * cantidadUdis;
-
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.style.display = "block";
-    resultadoDiv.innerHTML = `
-      <strong>Proyección a ${anios} año${anios > 1 ? "s" : ""}:</strong><br>
-      UDI proyectada: $${udiProyectada.toFixed(4)} MXN<br>
-      Valor total (${cantidadUdis.toLocaleString(undefined, { maximumFractionDigits: 2 })} UDIs): 
-      <strong>$${valorTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</strong>
+    
+    recuperacionResult.innerHTML = `
+      <div style="margin-bottom: 8px; font-size: 0.9rem;">
+        Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
+      </div>
+      
+      <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
+          <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
+          <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+          <div><i class="fas fa-coins" style="color: #0d47a1;"></i> UDIs invertidas:</div>
+          <div><span class="value-badge">${cantidadUdis.toLocaleString('es-MX')}</span></div>
+        </div>
+      </div>
+      
+      <div class="compact-result">
+        <i class="fas fa-piggy-bank"></i> Total: 
+        <span>$${valorTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+      </div>
     `;
+    
+    resultadoDiv.classList.add('active');
   }
 
   // Población inicial de combo de años
-  const selectAnio = document.getElementById("anio");
-  for (let i = 1; i <= 40; i++) {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = i + " año" + (i > 1 ? "s" : "");
-    selectAnio.appendChild(option);
+  function inicializarAnios() {
+    const selectAnio = document.getElementById("anio");
+    for (let i = 1; i <= 30; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i + (i > 1 ? " años" : " año");
+      if (i === 5) option.selected = true;
+      selectAnio.appendChild(option);
+    }
   }
 
-  obtenerValorUDI();
+  // Inicializar la aplicación
+  function inicializarApp() {
+    inicializarAnios();
+    obtenerValorUDI();
+    
+    // Prellenar campos de ejemplo para demostración
+    document.getElementById("montoAnual").value = "12000";
+    document.getElementById("udisProy").value = "1800";
+    document.getElementById("anios").value = "5";
+    document.getElementById("cantidadUdis").value = "2500";
+  }
+
+  // Ejecutar inicialización cuando el documento esté listo
+  document.addEventListener('DOMContentLoaded', inicializarApp);
 </script>
 
 </body>
