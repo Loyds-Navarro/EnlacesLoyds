@@ -6,7 +6,7 @@
     <title>Calculadora Integral de UDIs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos generales */
+        /* Estilos generales (aplicables a la página principal y la ventana emergente) */
         :root {
             --primary-dark: #00183c;
             --primary: #0d47a1;
@@ -38,7 +38,7 @@
             padding-bottom: 15px;
         }
 
-        /* Encabezado */
+        /* Encabezado Principal */
         header {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             color: var(--text-light);
@@ -127,7 +127,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Contenido principal */
+        /* Contenido principal de la calculadora */
         main {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -225,7 +225,7 @@
             opacity: 0.9;
         }
 
-        /* Resultados */
+        /* Resultados individuales de la calculadora */
         .resultado {
             margin-top: 15px;
             padding: 12px;
@@ -407,7 +407,7 @@
             background-color: rgba(211, 47, 47, 0.1);
         }
         
-        /* Pie de página */
+        /* Pie de página principal */
         footer {
             text-align: center;
             margin-top: 20px;
@@ -434,15 +434,128 @@
             }
         }
 
-        /* Estilos para impresión (PDF) - Importante para saltos de página y evitar cortes */
-        .page-break {
-            page-break-before: always;
-            break-before: page;
+        /* ========================================================= */
+        /* ESTILOS PARA LA VENTANA EMERGENTE DE REPORTE HTML */
+        /* Estos estilos se inyectarán en la nueva ventana para su apariencia */
+        /* Se usan clases específicas para no afectar el CSS de la página principal */
+        /* ========================================================= */
+        .report-body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif; /* Asegurar la fuente deseada */
+            margin: 0;
+            color: var(--text-dark);
+            background-color: var(--light-bg); /* Fondo claro similar al principal */
         }
-        .avoid-break {
-            break-inside: avoid;
-            page-break-inside: avoid;
+        .report-container {
+            max-width: 850px; /* Un poco más ancho para el reporte */
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
         }
+
+        /* Encabezado del Reporte (con fondo #00183c) */
+        .report-header-section { 
+            background: var(--primary-dark); /* Color #00183c */
+            color: var(--text-light); /* Texto blanco para contraste */
+            text-align: center;
+            padding: 25px 0;
+            /* Ajuste de márgenes para que el header se extienda por todo el ancho del contenedor */
+            margin: -30px -30px 25px -30px; 
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2); /* Sombra interna para profundidad */
+        }
+        .report-logo { 
+            width: 80px; /* Tamaño del logo en el reporte */
+            height: 80px;
+            border-radius: 50%; 
+            border: 3px solid rgba(255, 255, 255, 0.4); /* Borde más visible */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px; /* Centrar y espacio */
+            overflow: hidden; /* Asegurar que la imagen no se salga del círculo */
+        }
+        .report-logo img {
+            max-width: 70%;
+            max-height: 70%;
+            display: block;
+            object-fit: contain;
+        }
+        .report-main-title { 
+            font-size: 2.2rem; /* Título principal más grande */
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .report-sub-title { 
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 8px;
+            line-height: 1.4;
+        }
+        .report-date-info {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        hr.report-section-divider { 
+            border: none;
+            border-top: 1px dashed #ccc; /* Línea divisoria punteada */
+            margin: 30px 0;
+        }
+
+        /* Contenedores de las secciones de resultados en el reporte */
+        .report-section-card { 
+            background: var(--card-bg); /* Fondo blanco */
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow); 
+            border-left: 4px solid var(--primary); /* Borde lateral */
+            margin-bottom: 30px; /* Espacio entre secciones */
+        }
+        .report-section-card:last-child {
+            margin-bottom: 0; /* No hay margen después de la última sección */
+        }
+
+        .report-section-card h3 { /* Título de cada sección en el reporte */
+            color: var(--primary);
+            margin: 0 0 15px 0;
+            font-size: 1.6rem; /* Título de sección más grande */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--primary-light);
+        }
+        .report-section-card h3 i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        /* Reutilizamos las clases de resultados de la página principal para consistencia */
+        /* Estas clases ya tienen los estilos que te gustan */
+        .frecuencia-grid, .frecuencia-card, .frecuencia-card .title, .frecuencia-card .value, .frecuencia-card .value-pesos,
+        .tabla-proyeccion, .tabla-proyeccion th, .tabla-proyeccion tr:nth-child(even), .tabla-proyeccion td,
+        .compact-result, .comparison-container, .comparison-card, .comparison-title, .comparison-value,
+        .difference-card, .difference-value, .positive, .negative, .percentage, .positive-bg, .negative-bg, .value-badge {
+            /* Inherit all styles from main page CSS */
+        }
+        
+        /* Pie de página del reporte */
+        .report-footer-section { 
+            text-align: center; 
+            margin-top: 40px; 
+            padding: 15px; 
+            font-size: 0.8rem; 
+            color: var(--primary); 
+            opacity: 0.8;
+            border-top: 1px solid var(--light-bg);
+        }
+
+        /* Sin media queries @media print, ya que la impresión es nativa y el diseño es el mismo para visualización */
+
     </style>
 </head>
 <body>
@@ -567,7 +680,7 @@
             <i class="fas fa-calculator"></i> Calcular Diferencia
         </button>
         
-        <button onclick="generarPDF()" style="
+        <button onclick="generarReporteHTML()" style="
             background-color: #0d47a1;
             color: white;
             border: none;
@@ -579,7 +692,7 @@
             display: block;
             cursor: pointer;
         ">
-            <i class="fas fa-file-pdf"></i> Generar Reporte en PDF
+            <i class="fas fa-file-alt"></i> Ver Reporte HTML
         </button>
         
         <div class="resultado" id="resultadoComparacion">
@@ -593,28 +706,13 @@
     <p>© 2023 Calculadora Integral de UDIs</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-<div id="pdfContenido" style="display:none; font-family: 'Segoe UI', sans-serif; padding: 30px;">
-    <h1 style="text-align:center; color:#0d47a1;">Reporte Integral de Cálculos UDI</h1>
-    <p style="text-align:center; font-size:14px; color:gray;" id="fechaGeneracion"></p>
-    <hr style="margin:20px 0; border: none; border-top: 1px solid #eee;">
-
-    <div class="avoid-break" style="margin-bottom: 20px;" id="seccion1pdf"></div>
-    <div class="avoid-break page-break" style="margin-bottom: 20px;" id="seccion2pdf"></div>
-    <div class="avoid-break page-break" style="margin-bottom: 20px;" id="seccion3pdf"></div>
-    <div class="avoid-break page-break" style="margin-bottom: 20px;" id="seccion4pdf"></div>
-</div>
-
 <script>
     // Variables para almacenar resultados (esenciales para la sección de Comparación)
     let proyeccionTotal = 0;
     let recuperacionTotal = 0;
 
-    // --- Función para generar el PDF ---
-    function generarPDF() {
+    // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en una nueva ventana ---
+    function generarReporteHTML() {
         const nombre = document.getElementById('nombre').value.trim();
 
         // Validar que todos los cálculos necesarios se hayan realizado
@@ -623,84 +721,219 @@
             !document.getElementById('resultado').classList.contains('active') ||
             !document.getElementById('resultadoComparacion').classList.contains('active')) {
             alert('¡Atención! Para generar el reporte completo, debes realizar los cálculos de "Conversor Pesos a UDIs", "Proyección de Ahorro", "Recuperación en Pesos" y "Comparación Proyección vs Recuperación".');
-            return; // Detener la ejecución si faltan cálculos
+            return; 
         }
 
-        // Obtener el HTML interno de los contenedores de resultado
-        const seccion1Html = document.getElementById('conversionResult').innerHTML;
-        const seccion2Html = document.getElementById('proyeccionResult').innerHTML;
-        const seccion3Html = document.getElementById('recuperacionResult').innerHTML;
-        const seccion4Html = document.getElementById('comparacionResult').innerHTML;
+        // Clonar el contenido de los resultados para mantener los estilos originales
+        const seccion1Content = document.getElementById('conversionResult').cloneNode(true);
+        const seccion2Content = document.getElementById('proyeccionResult').cloneNode(true);
+        const seccion3Content = document.getElementById('recuperacionResult').cloneNode(true);
+        const seccion4Content = document.getElementById('comparacionResult').cloneNode(true);
 
-        // Rellenar el contenedor oculto con los resultados.
-        // Se añaden estilos inline para que html2canvas los interprete mejor en el PDF
-        document.getElementById('seccion1pdf').innerHTML = `
-            <div style="background:#e3f2fd; padding:15px; border-radius:8px; border-left: 3px solid #1976d2; margin-bottom: 20px;">
-                <h2 style="color:#0d47a1; margin-bottom: 10px; font-size: 1.2rem;">1. Conversión de Pesos a UDIs</h2>
-                ${seccion1Html}
-            </div>
+        // Obtener la fecha y hora actuales en Texcoco, Estado de México, México
+        const options = { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            timeZone: 'America/Mexico_City', 
+            hour12: false 
+        };
+        const fechaActual = new Date();
+        const fechaTexto = fechaActual.toLocaleString('es-MX', options);
+
+        const nombreReporte = nombre ? `Reporte UDI de ${nombre}` : 'Reporte Integral de Cálculos UDI';
+
+        // Estilos para la ventana emergente - Se inyectan para asegurar que se apliquen
+        const popupStyles = `
+            <style>
+                body { 
+                    font-family: 'Segoe UI', 'Poppins', sans-serif; /* Asegurar la fuente deseada */
+                    margin: 0; 
+                    color: var(--text-dark); 
+                    background-color: var(--light-bg); 
+                }
+                .report-container {
+                    max-width: 850px;
+                    margin: 20px auto;
+                    background-color: white;
+                    padding: 30px;
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow);
+                }
+
+                .report-header-section { 
+                    background: var(--primary-dark); 
+                    color: var(--text-light); 
+                    text-align: center;
+                    padding: 25px 0;
+                    margin: -30px -30px 25px -30px; 
+                    border-top-left-radius: var(--border-radius);
+                    border-top-right-radius: var(--border-radius);
+                    box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2); 
+                }
+                .report-logo { 
+                    width: 80px; 
+                    height: 80px;
+                    border-radius: 50%; 
+                    border: 3px solid rgba(255, 255, 255, 0.4); 
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 12px; 
+                    overflow: hidden; 
+                }
+                .report-logo img {
+                    max-width: 70%;
+                    max-height: 70%;
+                    display: block;
+                    object-fit: contain;
+                }
+                .report-main-title { 
+                    font-size: 2.2rem; 
+                    margin-bottom: 8px;
+                    font-weight: 700;
+                }
+                .report-sub-title { 
+                    font-size: 1rem;
+                    opacity: 0.9;
+                    max-width: 600px;
+                    margin: 0 auto 8px;
+                    line-height: 1.4;
+                }
+                .report-date-info {
+                    font-size: 0.8rem;
+                    opacity: 0.7;
+                }
+
+                hr.report-section-divider { 
+                    border: none;
+                    border-top: 1px dashed #ccc; 
+                    margin: 30px 0;
+                }
+
+                .report-section-card { 
+                    background: var(--card-bg); 
+                    padding: 20px;
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow); 
+                    border-left: 4px solid var(--primary); 
+                    margin-bottom: 30px; 
+                }
+                .report-section-card:last-child {
+                    margin-bottom: 0; 
+                }
+
+                .report-section-card h3 { 
+                    color: var(--primary);
+                    margin: 0 0 15px 0;
+                    font-size: 1.6rem; 
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid var(--primary-light);
+                }
+                .report-section-card h3 i {
+                    color: var(--accent);
+                    font-size: 1.2rem;
+                }
+
+                /* Incluir todos los estilos de los paneles de resultados de la página principal */
+                /* Aseguramos que se copien los estilos que te gustan */
+                ${document.querySelector('style').innerHTML}
+
+                /* Sobrescribir solo lo necesario para el reporte */
+                .resultado { /* Esconder los resultados del panel principal */
+                    display: block !important; /* Asegurar que se muestre en el reporte */
+                    background: none; /* Quitar el fondo adicional para que el section-card maneje el estilo */
+                    border: none; /* Quitar el borde adicional */
+                    padding: 0; /* Quitar padding adicional */
+                }
+                .result-title {
+                    display: none; /* Ocultar el título "Resultados:" duplicado */
+                }
+
+                .report-footer-section { 
+                    text-align: center; 
+                    margin-top: 40px; 
+                    padding: 15px; 
+                    font-size: 0.8rem; 
+                    color: var(--primary); 
+                    opacity: 0.8;
+                    border-top: 1px solid var(--light-bg);
+                }
+            </style>
         `;
 
-        document.getElementById('seccion2pdf').innerHTML = `
-            <div style="background:#e3f2fd; padding:15px; border-radius:8px; border-left: 3px solid #1976d2; margin-bottom: 20px;">
-                <h2 style="color:#0d47a1; margin-bottom: 10px; font-size: 1.2rem;">2. Proyección de Ahorro</h2>
-                ${seccion2Html}
-            </div>
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${nombreReporte}</title>
+                ${popupStyles}
+            </head>
+            <body>
+                <div class="report-container">
+                    <header class="report-header-section">
+                        <div class="report-logo">
+                            <img src="logo.png" alt="Logo Calculadora UDIs">
+                        </div>
+                        <h1 class="report-main-title">${nombreReporte}</h1>
+                        <p class="report-sub-title">Herramienta profesional para conversión, proyección y recuperación</p>
+                        <p class="report-date-info">${fechaTexto}</p>
+                    </header>
+                    <hr class="report-section-divider">
+
+                    <div class="report-section-card">
+                        <h3 class="report-section-title"><i class="fas fa-exchange-alt"></i> Conversión de Pesos a UDIs</h3>
+                        ${seccion1Content.innerHTML}
+                    </div>
+                    <div class="report-section-card">
+                        <h3 class="report-section-title"><i class="fas fa-chart-line"></i> Proyección de Ahorro</h3>
+                        ${seccion2Content.innerHTML}
+                    </div>
+                    <div class="report-section-card">
+                        <h3 class="report-section-title"><i class="fas fa-wallet"></i> Recuperación en Pesos</h3>
+                        ${seccion3Content.innerHTML}
+                    </div>
+                    <div class="report-section-card">
+                        <h3 class="report-section-title"><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h3>
+                        ${seccion4Content.innerHTML}
+                    </div>
+
+                    <footer class="report-footer-section">
+                        <p>&copy; 2023 Calculadora Integral de UDIs. Reporte generado con fines informativos.</p>
+                    </footer>
+                </div>
+            </body>
+            </html>
         `;
 
-        document.getElementById('seccion3pdf').innerHTML = `
-            <div style="background:#e3f2fd; padding:15px; border-radius:8px; border-left: 3px solid #1976d2; margin-bottom: 20px;">
-                <h2 style="color:#0d47a1; margin-bottom: 10px; font-size: 1.2rem;">3. Recuperación en Pesos</h2>
-                ${seccion3Html}
-            </div>
-        `;
+        // Abrir una nueva ventana y escribir el contenido
+        const reportWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+        if (!reportWindow) {
+            alert('El bloqueo de ventanas emergentes de tu navegador impidió abrir el reporte. Por favor, desactívalo para este sitio o revisa la configuración de tu navegador.');
+            return;
+        }
 
-        document.getElementById('seccion4pdf').innerHTML = `
-            <div style="background:#e3f2fd; padding:15px; border-radius:8px; border-left: 3px solid #1976d2; margin-bottom: 20px;">
-                <h2 style="color:#0d47a1; margin-bottom: 10px; font-size: 1.2rem;">4. Comparación Proyección vs Recuperación</h2>
-                ${seccion4Html}
-            </div>
-        `;
+        reportWindow.document.open();
+        reportWindow.document.write(htmlContent);
+        reportWindow.document.close();
 
-        // Añadir la fecha y hora de generación
-        const fecha = new Date();
-        const fechaTexto = fecha.toLocaleString('es-MX', { dateStyle: 'full', timeStyle: 'short' });
-        document.getElementById('fechaGeneracion').innerText = `Generado el ${fechaTexto} (Hora de Texcoco, Estado de México, México)`;
-
-        const contenido = document.getElementById('pdfContenido');
-        contenido.style.display = 'block'; // Hacer visible para html2canvas
-
-        // Opciones de html2pdf.js con configuraciones para optimizar rendimiento en móviles
-        const opciones = {
-            margin:        [0.5, 0.2, 0.5, 0.2], // Margen en pulgadas [top, right, bottom, left]
-            filename:      nombre ? `Reporte_UDI_${nombre.replace(/\s+/g, '_')}_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.pdf` : `Reporte_UDI_${new Date().toLocaleDateString('es-MX').replace(/\//g, '-')}.pdf`,
-            image:         { type: 'jpeg', quality: 0.7 }, // Reducir calidad a 0.7 para menor tamaño y consumo
-            html2canvas:   { 
-                scale: 1.2, // Reducir escala a 1.2-1.5 para mejor rendimiento en móviles
-                useCORS: true, 
-                logging: false, // Desactivar logs para un rendimiento marginalmente mejor
-                // ignoreElements: (element) => { // Puedes ignorar elementos no esenciales si causan problemas
-                //     return element.id === 'udiHoy';
-                // }
-            }, 
-            jsPDF:         { 
-                unit: 'in', 
-                format: 'letter', 
-                orientation: 'portrait',
-                compress: true // Habilitar compresión del PDF final
-            },
-            pagebreak:     { mode: ['css', 'legacy'] } // Usa CSS para saltos de página preferentemente
+        // Opcional: enfocar la ventana o dar un pequeño mensaje al usuario
+        reportWindow.onload = () => {
+             reportWindow.focus(); // Enfocar la nueva ventana una vez cargada
         };
 
-        // Generar y guardar el PDF
-        html2pdf().set(opciones).from(contenido).save().then(() => {
-            contenido.style.display = 'none'; // Ocultar el contenedor después de generar el PDF
-            alert('¡PDF generado con éxito!');
-        }).catch(error => {
-            console.error("Error al generar el PDF:", error);
-            alert("Hubo un error al generar el PDF. Esto puede deberse a la memoria del dispositivo móvil o a un problema de renderizado. Por favor, intenta de nuevo o prueba en otro dispositivo.");
-            contenido.style.display = 'none'; // Asegurarse de ocultar si hay error
-        });
+        // Manejo de errores si la ventana no se abre o falla la carga
+        reportWindow.onerror = (e) => {
+            console.error("Error al abrir o cargar la ventana del reporte:", e);
+            alert("No se pudo preparar el reporte HTML. Intenta de nuevo.");
+            if (!reportWindow.closed) {
+                reportWindow.close();
+            }
+        };
     }
     
     // --- Sección 1: Conversión de Pesos a UDIs ---
@@ -836,8 +1069,8 @@
     async function obtenerValorUDI() {
         const udiText = document.getElementById("udiText");
         const spinner = document.getElementById("spinner");
-        const fallbackValue = "8.441178"; // Valor predeterminado en caso de fallo de API
-        const fallbackDate = new Date(); // Fecha actual para el fallback
+        const fallbackValue = "8.5205"; // Valor de la imagen proporcionada
+        const fallbackDate = new Date(2025, 0, 1); // 1 de enero de 2025 para el fallback
         
         try {
             udiText.textContent = "Consultando...";
@@ -938,16 +1171,14 @@
         
         if (proyeccionTotal === 0 || recuperacionTotal === 0) {
             comparacionResult.innerHTML = `
-                <div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;">
-                    <i class="fas fa-exclamation-circle"></i> Debes calcular primero la **Proyección de Ahorro** y la **Recuperación en Pesos** para realizar la comparación.
-                </div>
+                <div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Debes calcular primero la **Proyección de Ahorro** y la **Recuperación en Pesos** para realizar la comparación.</div>
             `;
             resultadoDiv.classList.add('active');
             return;
         }
         
         const diferencia =  recuperacionTotal - proyeccionTotal;
-        const divisor = Math.max(Math.abs(proyeccionTotal), Math.abs(recuperacionTotal)); // Usar valor absoluto para evitar problemas con 0 o negativos
+        const divisor = Math.max(Math.abs(proyeccionTotal), Math.abs(recuperacionTotal)); 
         const porcentaje = divisor !== 0 ? (Math.abs(diferencia) / divisor) * 100 : 0;
         
         const esPositivo = diferencia >= 0;
