@@ -57,9 +57,9 @@
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border-radius: 100%;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.15);
             border: 3px solid rgba(255, 255, 255, 0.2);
@@ -70,8 +70,8 @@
         }
 
         .logo img {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 90%;
+            max-height: 90%;
             display: block;
             object-fit: contain;
         }
@@ -429,8 +429,8 @@
                 padding: 12px;
             }
             .logo {
-                width: 85px;
-                height: 85px;
+                width: 150px;
+                height: 150px;
             }
         }
 
@@ -466,9 +466,9 @@
             box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2); /* Sombra interna para profundidad */
         }
         .report-logo-html { 
-            width: 80px; /* Tamaño del logo en el reporte */
-            height: 80px;
-            border-radius: 50%; 
+            width: 110px; /* Tamaño del logo en el reporte */
+            height: 110px;
+            border-radius: 100%; 
             border: 3px solid rgba(255, 255, 255, 0.4); /* Borde más visible */
             display: flex;
             align-items: center;
@@ -477,8 +477,8 @@
             overflow: hidden; /* Asegurar que la imagen no se salga del círculo */
         }
         .report-logo-html img {
-            max-width: 70%;
-            max-height: 70%;
+            max-width: 100%;
+            max-height: 100%;
             display: block;
             object-fit: contain;
         }
@@ -783,7 +783,7 @@
         const fechaTexto = fechaActual.toLocaleString('es-MX', options);
 
         const nombreReporteArchivo = nombre ? `Reporte_UDI_${nombre.replace(/\s+/g, '_')}` : 'Reporte_Integral_UDI';
-        const tituloReporte = nombre ? `Reporte UDI de ${nombre}` : 'Reporte Integral de Cálculos UDI';
+        const tituloReporte = nombre ? `Calculo para ${nombre}` : 'Reporte Integral de Cálculos UDI';
 
         // Estilos para la ventana emergente - Se inyectan para asegurar que se apliquen
         const popupStyles = `
@@ -818,9 +818,9 @@
                     box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2); 
                 }
                 .report-logo-html { 
-                    width: 120px; /* Incrementado 20% más grande */
-                    height: 120px; /* Incrementado 20% más grande */
-                    border-radius: 50%; 
+                    width: 100px; /* Incrementado 20% más grande */
+                    height: 100px; /* Incrementado 20% más grande */
+                    border-radius: 100%; 
                     border: 3px solid rgba(255, 255, 255, 0.4); 
                     display: flex;
                     align-items: center;
@@ -829,8 +829,8 @@
                     overflow: hidden; 
                 }
                 .report-logo-html img {
-                    max-width: 70%;
-                    max-height: 70%;
+                    max-width: 100%;
+                    max-height: 100%;
                     display: block;
                     object-fit: contain;
                 }
@@ -999,7 +999,7 @@
                             <img src="logo.png" alt="Logo Calculadora UDIs">
                         </div>
                         <h1 class="report-main-title-html">${tituloReporte}</h1>
-                        <p class="report-sub-title-html">Herramienta profesional para conversión, proyección y recuperación</p>
+                        <p class="report-sub-title-html">Loyd´s & Navarro Preservando tu futuro finaciero</p>
                         <p class="report-date-info-html">${fechaTexto}</p>
                     </header>
                     <hr class="report-section-divider-html">
