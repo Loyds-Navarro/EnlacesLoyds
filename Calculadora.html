@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1163,6 +1164,9 @@
         }
         
         let total = 0, valor = udi;
+        // Calculation for "Cantidad UDIs por Años"
+        const totalUdisPorAnios = udis * anios; 
+
         let html = `
             <div style="margin-bottom: 8px; font-size: 0.9rem;">
                 <span class="value-badge">${udis.toLocaleString('es-MX')} UDIs</span> 
@@ -1200,6 +1204,10 @@
                 </table>
             </div>
             <div class="compact-result">
+                <i class="fas fa-coins"></i> UDIs contradas en su plan de ahorro: 
+                <span>${totalUdisPorAnios.toLocaleString("es-MX", { minimumFractionDigits: 0 })} </span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-piggy-bank"></i> Total Proyectado: 
                 <span>$${total.toLocaleString("es-MX", { minimumFractionDigits: 2 })} MXN</span>
             </div>
@@ -1207,14 +1215,14 @@
         
         proyeccionResult.innerHTML = html;
         resultadoDiv.classList.add('active');
-        proyeccionTotal = total; // Almacenar para la comparación
+        proyeccionTotal = total; // Store for comparison
     }
 
-    // --- Función para obtener el valor de la UDI desde Banxico ---
+    // --- Function to get UDI value from Banxico ---
     async function obtenerValorUDI() {
         const udiText = document.getElementById("udiText");
         const spinner = document.getElementById("spinner");
-        const fallbackValue = "8.5205"; // Valor de la imagen proporcionada
+        const fallbackValue = "8.5205"; // Provided fallback value
         const fallbackDate = new Date(2025, 0, 1); 
         
         try {
@@ -1306,7 +1314,7 @@
         `;
         
         resultadoDiv.classList.add('active');
-        recuperacionTotal = valorTotal; // Almacenar para la comparación
+        recuperacionTotal = valorTotal; // Store for comparison
     }
 
     // --- Sección 4: Comparación Proyección vs Recuperación ---
@@ -1329,7 +1337,7 @@
         const esPositivo = diferencia >= 0;
         const colorClase = esPositivo ? 'positive' : 'negative';
         const bgClase = esPositivo ? 'positive-bg' : 'negative-bg';
-        const signo = esPositivo ? '+' : '-';
+        const signo = esPositivo ? '+' : ''; // Changed from '+' to empty string to avoid showing +0.00
         
         comparacionResult.innerHTML = `
             <div class="comparison-container">
@@ -1346,14 +1354,14 @@
             
             <div class="difference-card">
                 <div>Diferencia:</div>
-                <div class="difference-value ${colorClase}">${signo}$${Math.abs(diferencia).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
+                <div class="difference-value ${colorClase}">${signo}${(Math.abs(diferencia)).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
                 <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}%</div>
             </div>
             
             <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem;">
                 <i class="fas fa-info-circle"></i> 
                 ${esPositivo ? 
-                    '<i class="fas fa-thumbs-up" style="color: green; margin-right: 5px;"></i>¡Excelente! La Recuperación es mayor que la proyección de ahorro, lo que indica un buen rendimiento.' : 
+                    '<i class="fas fa-thumbs-up" style="color: green; margin-right: 5px;"></i>¡Excelente! La Recuperación es mayor o igual que la proyección de ahorro, lo que indica un buen rendimiento.' : 
                     '<i class="fas fa-thumbs-down" style="color: red; margin-right: 5px;"></i>Ten en cuenta que la proyección de ahorro es mayor que la recuperación. Considera revisar tus parámetros.'}
             </div>
         `;
@@ -1361,7 +1369,7 @@
         resultadoDiv.classList.add('active');
     }
 
-    // --- Inicialización del selector de años y valores predeterminados ---
+    // --- Initialization of year selector and default values ---
     function inicializarAnios() {
         const selectAnio = document.getElementById("anio");
         for (let i = 1; i <= 30; i++) {
@@ -1373,18 +1381,18 @@
         }
     }
 
-    // Función para inicializar la aplicación al cargar el DOM
+    // Function to initialize the application when the DOM is loaded
     function inicializarApp() {
         inicializarAnios();
-        obtenerValorUDI(); // Obtener UDI al cargar la página
-        // Valores iniciales para facilitar pruebas al usuario
+        obtenerValorUDI(); // Get UDI on page load
+        // Initial values to facilitate user testing
         document.getElementById("montoAnual").value = "12000";
         document.getElementById("udisProy").value = "1800";
         document.getElementById("anios").value = "5";
         document.getElementById("cantidadUdis").value = "2500";
     }
 
-    // Ejecutar al cargar el DOM
+    // Execute on DOM load
     document.addEventListener('DOMContentLoaded', inicializarApp);
 </script>
 
