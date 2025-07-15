@@ -684,23 +684,23 @@
         <h2><i class="fas fa-wallet"></i> Recuperación en Pesos</h2>
         
         <div class="input-group">
-            <label for="udiActual"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
-            <input type="number" id="udiActual" step="0.000001" placeholder="Ej: 8.45" />
+            <label for="udiActualRecuperacion"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+            <input type="number" id="udiActualRecuperacion" step="0.000001" placeholder="Ej: 8.45" />
         </div>
         
         <div class="input-group">
-            <label for="inflacion"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
-            <input type="number" value="4.5" id="inflacion" step="0.01" placeholder="Ej: 4.5" />
+            <label for="inflacionRecuperacion"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
+            <input type="number" value="4.5" id="inflacionRecuperacion" step="0.01" placeholder="Ej: 4.5" />
         </div>
         
         <div class="input-group">
-            <label for="anio"><i class="fas fa-clock"></i> Años:</label>
-            <select id="anio"></select>
+            <label for="anioRecuperacion"><i class="fas fa-clock"></i> Años:</label>
+            <select id="anioRecuperacion"></select>
         </div>
         
         <div class="input-group">
-            <label for="cantidadUdis"><i class="fas fa-cubes"></i> Cantidad UDIs:</label>
-            <input type="number" id="cantidadUdis" step="0.01" placeholder="Ej: 2500" />
+            <label for="cantidadUdisRecuperacion"><i class="fas fa-cubes"></i> Cantidad UDIs:</label>
+            <input type="number" id="cantidadUdisRecuperacion" step="0.01" placeholder="Ej: 2500" />
         </div>
 
         <button onclick="calcularAuto()">
@@ -710,6 +710,49 @@
         <div class="resultado" id="resultado">
             <div class="result-title"><i class="fas fa-coins"></i> Recuperación:</div>
             <div id="recuperacionResult"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-shield-alt"></i> Suma Asegurada</h2>
+        
+        <div class="input-group">
+            <label for="udiActualSumaAsegurada"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+            <input type="number" id="udiActualSumaAsegurada" step="0.000001" placeholder="Ej: 8.45" />
+        </div>
+        
+        <div class="input-group">
+            <label for="inflacionSumaAsegurada"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
+            <input type="number" value="4.5" id="inflacionSumaAsegurada" step="0.01" placeholder="Ej: 4.5" />
+        </div>
+        
+        <div class="input-group">
+            <label for="aniosSumaAsegurada"><i class="fas fa-clock"></i> Años:</label>
+            <select id="aniosSumaAsegurada"></select>
+        </div>
+        
+        <div class="input-group">
+            <label for="cantidadUdisFallecimiento"><i class="fas fa-cross"></i> Cantidad UDIs por fallecimiento:</label>
+            <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" />
+        </div>
+        
+        <div class="input-group">
+            <label for="cantidadUdisInvalidez"><i class="fas fa-wheelchair"></i> Cantidad UDIs por Invalidez:</label>
+            <input type="number" id="cantidadUdisInvalidez" step="0.01" placeholder="Ej: 8000" />
+        </div>
+        
+        <div class="input-group">
+            <label for="cantidadUdisEnfermedadTerminal"><i class="fas fa-hospital-alt"></i> Cantidad UDIs por enfermedad terminal:</label>
+            <input type="number" id="cantidadUdisEnfermedadTerminal" step="0.01" placeholder="Ej: 5000" />
+        </div>
+
+        <button onclick="calcularSumaAseguradaDetallada()">
+            <i class="fas fa-calculator"></i> Calcular Suma Asegurada
+        </button>
+
+        <div class="resultado" id="resultadoSumaAseguradaDetallada">
+            <div class="result-title"><i class="fas fa-hand-holding-usd"></i> Suma Asegurada Calculada:</div>
+            <div id="sumaAseguradaDetalladaResult"></div>
         </div>
     </section>
     
@@ -749,9 +792,15 @@
 </footer>
 
 <script>
-    // Variables para almacenar resultados (esenciales para la sección de Comparación)
+    // Variables para almacenar resultados (esenciales para la sección de Comparación y Reporte)
     let proyeccionTotal = 0;
     let recuperacionTotal = 0;
+    // Variables para la nueva sección
+    let montoFallecimiento = 0;
+    let montoFallecimientoTercero = 0;
+    let montoInvalidez = 0;
+    let montoEnfermedadTerminal = 0;
+
 
     // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en una nueva ventana con opciones de descarga ---
     function generarReporteYDescargar() {
@@ -761,8 +810,9 @@
         if (!document.getElementById('resultadoUdis').classList.contains('active') ||
             !document.getElementById('resultadoProyeccion').classList.contains('active') ||
             !document.getElementById('resultado').classList.contains('active') ||
+            !document.getElementById('resultadoSumaAseguradaDetallada').classList.contains('active') || 
             !document.getElementById('resultadoComparacion').classList.contains('active')) {
-            alert('¡Atención! Para generar el reporte completo, debes realizar los cálculos de "Conversor Pesos a UDIs", "Proyección de Ahorro", "Recuperación en Pesos" y "Comparación Proyección vs Recuperación".');
+            alert('¡Atención! Para generar el reporte completo, debes realizar los cálculos de "Conversor Pesos a UDIs", "Proyección de Ahorro", "Recuperación en Pesos", "Suma Asegurada" y "Comparación Proyección vs Recuperación".');
             return; 
         }
 
@@ -770,7 +820,8 @@
         const seccion1ContentHtml = document.getElementById('conversionResult').outerHTML;
         const seccion2ContentHtml = document.getElementById('proyeccionResult').outerHTML;
         const seccion3ContentHtml = document.getElementById('recuperacionResult').outerHTML;
-        const seccion4ContentHtml = document.getElementById('comparacionResult').outerHTML;
+        const seccion4ContentHtml = document.getElementById('sumaAseguradaDetalladaResult').outerHTML; // Contenido de la nueva sección
+        const seccion5ContentHtml = document.getElementById('comparacionResult').outerHTML;
 
         // Obtener la fecha y hora actuales en Texcoco, Estado de México, México
         const options = { 
@@ -1017,8 +1068,12 @@
                         <div class="report-results-inner">${seccion3ContentHtml}</div>
                     </div>
                     <div class="report-section-card-html">
-                        <h3 class="report-section-title-html"><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h3>
+                        <h3 class="report-section-title-html"><i class="fas fa-shield-alt"></i> Suma Asegurada</h3>
                         <div class="report-results-inner">${seccion4ContentHtml}</div>
+                    </div>
+                    <div class="report-section-card-html">
+                        <h3 class="report-section-title-html"><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h3>
+                        <div class="report-results-inner">${seccion5ContentHtml}</div>
                     </div>
 
                     <footer class="report-footer-section-html">
@@ -1246,15 +1301,20 @@
                 
                 udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
                 
-                document.getElementById("udiActual").value = valorUDI.toFixed(4);
+                // Update all UDI input fields
+                document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
+                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4); // For new section
                 document.getElementById("valorUdi").value = valorUDI.toFixed(4);
                 document.getElementById("udiProy").value = valorUDI.toFixed(4);
+
             } else {
                 console.warn("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
                 const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
                 udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
                 
-                document.getElementById("udiActual").value = fallbackValue;
+                // Update all UDI input fields with fallback
+                document.getElementById("udiActualRecuperacion").value = fallbackValue;
+                document.getElementById("udiActualSumaAsegurada").value = fallbackValue; // For new section
                 document.getElementById("valorUdi").value = fallbackValue;
                 document.getElementById("udiProy").value = fallbackValue;
             }
@@ -1263,7 +1323,9 @@
             const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
             udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
             
-            document.getElementById("udiActual").value = fallbackValue;
+            // Update all UDI input fields with fallback on error
+            document.getElementById("udiActualRecuperacion").value = fallbackValue;
+            document.getElementById("udiActualSumaAsegurada").value = fallbackValue; // For new section
             document.getElementById("valorUdi").value = fallbackValue;
             document.getElementById("udiProy").value = fallbackValue;
         } finally {
@@ -1273,10 +1335,10 @@
 
     // --- Sección 3: Recuperación en Pesos ---
     function calcularAuto() {
-        const udiActual = parseFloat(document.getElementById("udiActual").value);
-        const inflacion = parseFloat(document.getElementById("inflacion").value);
-        const anios = parseInt(document.getElementById("anio").value);
-        const cantidadUdis = parseFloat(document.getElementById("cantidadUdis").value);
+        const udiActual = parseFloat(document.getElementById("udiActualRecuperacion").value);
+        const inflacion = parseFloat(document.getElementById("inflacionRecuperacion").value);
+        const anios = parseInt(document.getElementById("anioRecuperacion").value);
+        const cantidadUdis = parseFloat(document.getElementById("cantidadUdisRecuperacion").value);
         const resultadoDiv = document.getElementById("resultado");
         const recuperacionResult = document.getElementById("recuperacionResult");
         
@@ -1316,7 +1378,64 @@
         recuperacionTotal = valorTotal; // Store for comparison
     }
 
-    // --- Sección 4: Comparación Proyección vs Recuperación ---
+    // --- Sección 4: Suma Asegurada Detallada ---
+    function calcularSumaAseguradaDetallada() {
+        const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
+        const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value);
+        const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
+        const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
+        const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
+        const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
+        const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
+        const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
+
+        if (isNaN(udiActual) || isNaN(inflacion) || isNaN(anios) || 
+            isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal) || anios < 1) {
+            sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos y años mayor que cero.</div>';
+            resultadoDiv.classList.add('active');
+            return;
+        }
+
+        const udiProyectada = udiActual * Math.pow(1 + inflacion / 100, anios - 1);
+        
+        montoFallecimiento = udiProyectada * cantidadUdisFallecimiento;
+        montoFallecimientoTercero = montoFallecimiento * 2; // Multiplica por 2 el monto por fallecimiento
+        montoInvalidez = udiProyectada * cantidadUdisInvalidez;
+        montoEnfermedadTerminal = udiProyectada * cantidadUdisEnfermedadTerminal;
+
+        sumaAseguradaDetalladaResult.innerHTML = `
+            <div style="margin-bottom: 8px; font-size: 0.9rem;">
+                Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
+            </div>
+            
+            <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
+                    <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
+                    <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+                </div>
+            </div>
+
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-cross"></i> Por fallecimiento (monto en pesos): 
+                <span>$${montoFallecimiento.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-crosshairs"></i> Por fallecimiento provocado por un tercero (x2): 
+                <span>$${montoFallecimientoTercero.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-wheelchair"></i> Por Invalidez (monto en pesos): 
+                <span>$${montoInvalidez.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-hospital-alt"></i> Por enfermedad terminal (monto en pesos): 
+                <span>$${montoEnfermedadTerminal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+        `;
+        resultadoDiv.classList.add('active');
+    }
+
+    // --- Sección 5: Comparación Proyección vs Recuperación ---
     function calcularDiferencia() {
         const resultadoDiv = document.getElementById("resultadoComparacion");
         const comparacionResult = document.getElementById("comparacionResult");
@@ -1370,13 +1489,24 @@
 
     // --- Initialization of year selector and default values ---
     function inicializarAnios() {
-        const selectAnio = document.getElementById("anio");
+        // For Recuperación en Pesos
+        const selectAnioRecuperacion = document.getElementById("anioRecuperacion");
         for (let i = 1; i <= 30; i++) {
             const option = document.createElement("option");
             option.value = i;
             option.textContent = i + (i > 1 ? " años" : " año");
             if (i === 5) option.selected = true;
-            selectAnio.appendChild(option);
+            selectAnioRecuperacion.appendChild(option);
+        }
+
+        // For Suma Asegurada Detallada
+        const selectAnioSumaAsegurada = document.getElementById("aniosSumaAsegurada");
+        for (let i = 1; i <= 30; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = i + (i > 1 ? " años" : " año");
+            if (i === 5) option.selected = true;
+            selectAnioSumaAsegurada.appendChild(option);
         }
     }
 
@@ -1388,7 +1518,11 @@
         document.getElementById("montoAnual").value = "25000";
         document.getElementById("udisProy").value = "2500";
         document.getElementById("anios").value = "10";
-        document.getElementById("cantidadUdis").value = "20000";
+        
+        document.getElementById("cantidadUdisRecuperacion").value = "20000"; // For Recuperación
+        document.getElementById("cantidadUdisFallecimiento").value = "10000"; // For new section
+        document.getElementById("cantidadUdisInvalidez").value = "8000"; // For new section
+        document.getElementById("cantidadUdisEnfermedadTerminal").value = "5000"; // For new section
     }
 
     // Execute on DOM load
