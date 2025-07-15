@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1337,7 +1336,7 @@
         const esPositivo = diferencia >= 0;
         const colorClase = esPositivo ? 'positive' : 'negative';
         const bgClase = esPositivo ? 'positive-bg' : 'negative-bg';
-        const signo = esPositivo ? '+' : ''; // Changed from '+' to empty string to avoid showing +0.00
+        const signo = esPositivo ? '+' : '-'; // Changed from '+' to empty string to avoid showing +0.00
         
         comparacionResult.innerHTML = `
             <div class="comparison-container">
@@ -1386,10 +1385,10 @@
         inicializarAnios();
         obtenerValorUDI(); // Get UDI on page load
         // Initial values to facilitate user testing
-        document.getElementById("montoAnual").value = "12000";
-        document.getElementById("udisProy").value = "1800";
-        document.getElementById("anios").value = "5";
-        document.getElementById("cantidadUdis").value = "2500";
+        document.getElementById("montoAnual").value = "25000";
+        document.getElementById("udisProy").value = "2500";
+        document.getElementById("anios").value = "10";
+        document.getElementById("cantidadUdis").value = "20000";
     }
 
     // Execute on DOM load
