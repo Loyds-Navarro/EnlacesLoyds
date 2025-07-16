@@ -714,7 +714,7 @@
     </section>
 
     <section>
-        <h2><i class="fas fa-shield-alt"></i> Suma Asegurada</h2>
+        <h2><i class="fas fa-shield-alt"></i> Suma Asegurada Protección y Beneficios</h2>
         
         <div class="input-group">
             <label for="udiActualSumaAsegurada"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
@@ -834,7 +834,7 @@
         const fechaTexto = fechaActual.toLocaleString('es-MX', options);
 
         const nombreReporteArchivo = nombre ? `Reporte_UDI_${nombre.replace(/\s+/g, '_')}` : 'Reporte_Integral_UDI';
-        const tituloReporte = nombre ? `Resumen cálculo para ${nombre}` : 'Reporte Integral de Cálculos UDI';
+        const tituloReporte = nombre ? `Propuesta de cálculo para ${nombre}` : 'Reporte Integral de Cálculos UDI';
 
         // Estilos para la ventana emergente - Se inyectan para asegurar que se apliquen
         const popupStyles = `
@@ -1068,7 +1068,7 @@
                         <div class="report-results-inner">${seccion3ContentHtml}</div>
                     </div>
                     <div class="report-section-card-html">
-                        <h3 class="report-section-title-html"><i class="fas fa-shield-alt"></i> Suma Asegurada</h3>
+                        <h3 class="report-section-title-html"><i class="fas fa-shield-alt"></i> Suma Asegurada Proteción y Beneficios</h3>
                         <div class="report-results-inner">${seccion4ContentHtml}</div>
                     </div>
                     <div class="report-section-card-html">
@@ -1084,28 +1084,8 @@
                 <div class="download-buttons-container-html">
                     <button class="download-button-html pdf" onclick="window.print()">
                         <i class="fas fa-file-pdf"></i> Descargar PDF (Imprimir)
-                    </button>
-                    <button class="download-button-html docx" onclick="downloadDocx('${nombreReporteArchivo}')">
-                        <i class="fas fa-file-word"></i> Descargar Word
-                    </button>
                 </div>
 
-                <script>
-                    function downloadDocx(filename) {
-                        const content = document.getElementById('reportContentToDownload').outerHTML;
-                        const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Document</title></head><body>";
-                        const footer = "</body></html>";
-                        const sourceHTML = header + content + footer;
-                        
-                        const file = new Blob([sourceHTML], { type: 'application/msword' });
-                        const a = document.createElement('a');
-                        a.href = URL.createObjectURL(file);
-                        a.download = filename + '.doc';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }
-                <\/script>
             </body>
             </html>
         `;
@@ -1152,14 +1132,14 @@
         
         const anual_udis = monto / udi;
         const semestral_udis = monto / 2 / udi;
+		const trimestral_udis = monto / 4 / udi;
         const mensual_udis = monto / 12 / udi;
-        const trimestral_udis = monto / 4 / udi;
         const semanal_udis = monto / 52 / udi;
         const diario_udis = monto / 365 / udi;
         
         const semestral_pesos = monto / 2;
+		const trimestral_pesos = monto / 4;
         const mensual_pesos = monto / 12;
-        const trimestral_pesos = monto / 4;
         const semanal_pesos = monto / 52;
         const diario_pesos = monto / 365;
         const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#0d47a1;">${nombre}</span></div>` : '';
@@ -1177,15 +1157,15 @@
                 <div class="value">${semestral_udis.toFixed(4)} UDIs</div>
                 <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
+			<div class="frecuencia-card">
+                <div class="title">Trimestral</div>
+                <div class="value">${trimestral_udis.toFixed(4)} UDIs</div>
+                <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+            </div>
             <div class="frecuencia-card">
                 <div class="title">Mensual</div>
                 <div class="value">${mensual_udis.toFixed(4)} UDIs</div>
                 <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-            <div class="frecuencia-card">
-                <div class="title">Trimestral</div>
-                <div class="value">${trimestral_udis.toFixed(4)} UDIs</div>
-                <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Semanal</div>
@@ -1414,21 +1394,26 @@
                     <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
                 </div>
             </div>
+			<div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
+                    <div><i class="fas fa-sticky-note" style="color: #0d47a1;"></i>Los valores proyectados en el cálculo se basan en una estimación del valor de la UDI de su plan de ahorro. Estos pueden modificarse de acuerdo con el valor real de la UDI en el año en que ocurra el evento.</div>
+                </div>
+            </div>
 
             <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-cross"></i> Por fallecimiento: 
+                <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
                 <span>$${montoFallecimiento.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-crosshairs"></i> Por fallecimiento provocado por un tercero (x2): 
+                <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
                 <span>$${montoFallecimientoTercero.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-wheelchair"></i> Por Invalidez permanete: 
+                <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
                 <span>$${montoInvalidez.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-hospital-alt"></i> Por enfermedad terminal: 
+                <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
                 <span>$${montoEnfermedadTerminal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
         `;
