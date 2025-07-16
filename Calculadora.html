@@ -597,7 +597,76 @@
         .download-button-html.docx:hover {
             background: #218838;
         }
-
+        
+        /* ====================================================== */
+        /* ESTILOS PARA LA VENTANA EMERGENTE MODAL */
+        /* ====================================================== */
+        #reportModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border: none;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .close {
+            color: #fff;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            z-index: 10;
+            opacity: 0.8;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 1;
+        }
+        
+        #modalReportContent {
+            overflow-y: auto;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .modal-title {
+            color: white;
+            margin: 0;
+            font-size: 1.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -791,6 +860,17 @@
     <p>© 2023 Calculadora Integral de UDIs</p>
 </footer>
 
+<!-- Modal para el reporte -->
+<div id="reportModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Reporte Completo</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div id="modalReportContent"></div>
+    </div>
+</div>
+
 <script>
     // Variables para almacenar resultados (esenciales para la sección de Comparación y Reporte)
     let proyeccionTotal = 0;
@@ -802,7 +882,7 @@
     let montoEnfermedadTerminal = 0;
 
 
-    // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en una nueva ventana con opciones de descarga ---
+    // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en el modal ---
     function generarReporteYDescargar() {
         const nombre = document.getElementById('nombre').value.trim();
 
@@ -1084,34 +1164,31 @@
                 <div class="download-buttons-container-html">
                     <button class="download-button-html pdf" onclick="window.print()">
                         <i class="fas fa-file-pdf"></i> Descargar PDF (Imprimir)
+                    </button>
                 </div>
 
             </body>
             </html>
         `;
 
-        // Abrir una nueva ventana y escribir el contenido
-        const reportWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-        if (!reportWindow) {
-            alert('El bloqueo de ventanas emergentes de tu navegador impidió abrir el reporte. Por favor, desactívalo para este sitio o revisa la configuración de tu navegador.');
-            return;
-        }
-
-        reportWindow.document.open();
-        reportWindow.document.write(htmlContent);
-        reportWindow.document.close();
-
-        // Opcional: enfocar la ventana o dar un pequeño mensaje al usuario
-        reportWindow.onload = () => {
-             reportWindow.focus(); // Enfocar la nueva ventana una vez cargada
+        // Mostrar el contenido en el modal
+        const modal = document.getElementById("reportModal");
+        const modalContent = document.getElementById("modalReportContent");
+        modalContent.innerHTML = htmlContent;
+        
+        // Mostrar el modal
+        modal.style.display = "block";
+        
+        // Botón para cerrar el modal
+        const closeBtn = document.querySelector(".close");
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
         };
-
-        // Manejo de errores si la ventana no se abre o falla la carga
-        reportWindow.onerror = (e) => {
-            console.error("Error al abrir o cargar la ventana del reporte:", e);
-            alert("No se pudo preparar el reporte HTML. Intenta de nuevo.");
-            if (!reportWindow.closed) {
-                reportWindow.close();
+        
+        // Cerrar el modal si se hace clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         };
     }
