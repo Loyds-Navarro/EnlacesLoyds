@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora Integral de UDIs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         /* Estilos generales */
         :root {
@@ -417,6 +419,20 @@
             opacity: 0.8;
         }
 
+        /* Estilos para gráficas */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 50px 0;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
         /* Media queries para responsividad */
         @media (max-width: 480px) {
             .frecuencia-grid {
@@ -431,6 +447,9 @@
             .logo {
                 width: 150px;
                 height: 150px;
+            }
+            .chart-container {
+                height: 250px;
             }
         }
 
@@ -597,6 +616,21 @@
         .download-button-html.docx:hover {
             background: #218838;
         }
+        
+        /* Estilos para gráficas en el reporte */
+        .report-chart-container {
+            position: relative;
+            height: 350px;
+            margin: 25px 0;
+        }
+        
+        .report-chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
 
     </style>
 </head>
@@ -677,6 +711,11 @@
         <div class="resultado" id="resultadoProyeccion">
             <div class="result-title"><i class="fas fa-chart-line"></i> Proyección:</div>
             <div id="proyeccionResult"></div>
+            <!-- Gráfica de Proyección -->
+            <div class="chart-container">
+                <div class="chart-title">Evolución del Valor de las UDIs</div>
+                <canvas id="proyeccionChart"></canvas>
+            </div>
         </div>
     </section>
 
@@ -783,6 +822,11 @@
         <div class="resultado" id="resultadoComparacion">
             <div class="result-title"><i class="fas fa-balance-scale"></i> Resultado:</div>
             <div id="comparacionResult"></div>
+            <!-- Gráfica de Comparación -->
+            <div class="chart-container">
+                <div class="chart-title">Comparación Proyección vs Recuperación</div>
+                <canvas id="comparacionChart"></canvas>
+            </div>
         </div>
     </section>
 </main>
@@ -800,6 +844,12 @@
     let montoFallecimientoTercero = 0;
     let montoInvalidez = 0;
     let montoEnfermedadTerminal = 0;
+    
+    // Variables para las gráficas
+    let proyeccionChart;
+    let comparacionChart;
+    let proyeccionData = [];
+    let proyeccionLabels = [];
 
 
     // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en una nueva ventana con opciones de descarga ---
@@ -822,6 +872,21 @@
         const seccion3ContentHtml = document.getElementById('recuperacionResult').outerHTML;
         const seccion4ContentHtml = document.getElementById('sumaAseguradaDetalladaResult').outerHTML; // Contenido de la nueva sección
         const seccion5ContentHtml = document.getElementById('comparacionResult').outerHTML;
+        
+        // Obtener las gráficas como imágenes base64
+        const proyeccionChartCanvas = document.getElementById('proyeccionChart');
+        const comparacionChartCanvas = document.getElementById('comparacionChart');
+        
+        let proyeccionChartImage = '';
+        let comparacionChartImage = '';
+        
+        if (proyeccionChartCanvas) {
+            proyeccionChartImage = proyeccionChartCanvas.toDataURL('image/png');
+        }
+        
+        if (comparacionChartCanvas) {
+            comparacionChartImage = comparacionChartCanvas.toDataURL('image/png');
+        }
 
         // Obtener la fecha y hora actuales en Texcoco, Estado de México, México
         const options = { 
@@ -996,6 +1061,27 @@
                     background: #218838;
                 }
                 
+                /* Estilos para gráficas en el reporte */
+                .report-chart-container {
+                    position: relative;
+                    height: 350px;
+                    margin: 25px 0;
+                }
+                
+                .report-chart-title {
+                    text-align: center;
+                    font-weight: 600;
+                    color: var(--primary);
+                    margin-bottom: 15px;
+                    font-size: 1.1rem;
+                }
+                
+                .report-chart-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+                
                 /* Estilos para impresión nativa del navegador */
                 @media print {
                     .download-buttons-container-html {
@@ -1059,21 +1145,37 @@
                         <h3 class="report-section-title-html"><i class="fas fa-exchange-alt"></i> Conversión de Pesos a UDIs</h3>
                         <div class="report-results-inner">${seccion1ContentHtml}</div>
                     </div>
+                    
                     <div class="report-section-card-html">
                         <h3 class="report-section-title-html"><i class="fas fa-chart-line"></i> Proyección de Ahorro</h3>
                         <div class="report-results-inner">${seccion2ContentHtml}</div>
+                        ${proyeccionChartImage ? `
+                            <div class="report-chart-container">
+                                <div class="report-chart-title">Evolución del Valor de las UDIs</div>
+                                <img src="${proyeccionChartImage}" class="report-chart-img" alt="Gráfica de Proyección">
+                            </div>
+                        ` : ''}
                     </div>
+                    
                     <div class="report-section-card-html">
                         <h3 class="report-section-title-html"><i class="fas fa-wallet"></i> Recuperación en Pesos</h3>
                         <div class="report-results-inner">${seccion3ContentHtml}</div>
                     </div>
+                    
                     <div class="report-section-card-html">
                         <h3 class="report-section-title-html"><i class="fas fa-shield-alt"></i> Suma Asegurada Proteción y Beneficios</h3>
                         <div class="report-results-inner">${seccion4ContentHtml}</div>
                     </div>
+                    
                     <div class="report-section-card-html">
                         <h3 class="report-section-title-html"><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h3>
                         <div class="report-results-inner">${seccion5ContentHtml}</div>
+                        ${comparacionChartImage ? `
+                            <div class="report-chart-container">
+                                <div class="report-chart-title">Comparación Proyección vs Recuperación</div>
+                                <img src="${comparacionChartImage}" class="report-chart-img" alt="Gráfica de Comparación">
+                            </div>
+                        ` : ''}
                     </div>
 
                     <footer class="report-footer-section-html">
@@ -1200,7 +1302,21 @@
         let total = 0, valor = udi;
         // Calculation for "Cantidad UDIs por Años"
         const totalUdisPorAnios = udis * anios; 
-
+        
+        // Datos para la gráfica
+        proyeccionData = [];
+        proyeccionLabels = [];
+        
+        for (let i = 1; i <= anios; i++) {
+            if (i > 1) valor *= (1 + tasa);
+            const pesos = udis * valor;
+            total += pesos;
+            
+            // Almacenar datos para la gráfica
+            proyeccionLabels.push(`Año ${i}`);
+            proyeccionData.push(pesos);
+        }
+        
         let html = `
             <div style="margin-bottom: 8px; font-size: 0.9rem;">
                 <span class="value-badge">${udis.toLocaleString('es-MX')} UDIs</span> 
@@ -1219,10 +1335,11 @@
                     <tbody>
         `;
         
+        // Recalculamos para la tabla (podríamos optimizar esto)
+        valor = udi;
         for (let i = 1; i <= anios; i++) {
             if (i > 1) valor *= (1 + tasa);
             const pesos = udis * valor;
-            total += pesos;
             
             html += `
                 <tr>
@@ -1250,6 +1367,61 @@
         proyeccionResult.innerHTML = html;
         resultadoDiv.classList.add('active');
         proyeccionTotal = total; // Store for comparison
+        
+        // Crear o actualizar la gráfica de proyección
+        crearGraficaProyeccion();
+    }
+    
+    // Función para crear la gráfica de proyección
+    function crearGraficaProyeccion() {
+        const ctx = document.getElementById('proyeccionChart').getContext('2d');
+        
+        // Destruir gráfica anterior si existe
+        if (proyeccionChart) {
+            proyeccionChart.destroy();
+        }
+        
+        proyeccionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: proyeccionLabels,
+                datasets: [{
+                    label: 'Valor Proyectado (MXN)',
+                    data: proyeccionData,
+                    backgroundColor: 'rgba(13, 71, 161, 0.2)',
+                    borderColor: 'rgba(13, 71, 161, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `$${context.parsed.y.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return `$${value.toLocaleString('es-MX')}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     // --- Function to get UDI value from Banxico ---
@@ -1470,7 +1642,76 @@
         `;
         
         resultadoDiv.classList.add('active');
+        
+        // Crear o actualizar la gráfica de comparación
+        crearGraficaComparacion();
     }
+    
+    // Función para crear la gráfica de comparación
+function crearGraficaComparacion() {
+    const ctx = document.getElementById('comparacionChart').getContext('2d');
+    
+    if (comparacionChart) comparacionChart.destroy();
+    
+    comparacionChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Proyección', 'Recuperación'],
+            datasets: [{
+                label: 'Monto (MXN)',
+                data: [proyeccionTotal, recuperacionTotal],
+                backgroundColor: [
+                    'rgba(13, 71, 161, 0.7)',
+                    'rgba(25, 118, 210, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(13, 71, 161, 1)',
+                    'rgba(25, 118, 210, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.parsed.y.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN`;
+                        }
+                    }
+                },
+                // --- NUEVO: Configuración para mostrar valores ---
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: (value) => `$${value.toLocaleString('es-MX', {minimumFractionDigits: 2})}`,
+                    color: '#333',
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+                // --- FIN DE NUEVA CONFIGURACIÓN ---
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return `$${value.toLocaleString('es-MX')}`;
+                        }
+                    }
+                }
+            }
+        },
+        // --- NUEVO: Registra el plugin ---
+        plugins: [ChartDataLabels]
+    });
+}
 
     // --- Initialization of year selector and default values ---
     function inicializarAnios() {
@@ -1512,6 +1753,7 @@
 
     // Execute on DOM load
     document.addEventListener('DOMContentLoaded', inicializarApp);
+	 
 </script>
 
 </body>
