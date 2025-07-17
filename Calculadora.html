@@ -1607,7 +1607,7 @@
         
         const diferencia =  recuperacionTotal - proyeccionTotal;
         // Cambio en la fórmula del porcentaje: ahora es (Proyección / Recuperación) * 100
-        const porcentaje = (proyeccionTotal / recuperacionTotal) * 100;
+        const porcentaje = (diferencia / proyeccionTotal) * 100;
         
         const esPositivo = diferencia >= 0;
         const colorClase = esPositivo ? 'positive' : 'negative';
