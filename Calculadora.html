@@ -1593,7 +1593,7 @@
     }
 
     // --- Sección 5: Comparación Proyección vs Recuperación ---
-    function calcularDiferencia() {
+ function calcularDiferencia() {
         const resultadoDiv = document.getElementById("resultadoComparacion");
         const comparacionResult = document.getElementById("comparacionResult");
         
@@ -1606,13 +1606,13 @@
         }
         
         const diferencia =  recuperacionTotal - proyeccionTotal;
-        const divisor = Math.max(Math.abs(proyeccionTotal), Math.abs(recuperacionTotal)); 
-        const porcentaje = divisor !== 0 ? (Math.abs(diferencia) / divisor) * 100 : 0;
+        // Cambio en la fórmula del porcentaje: ahora es (Proyección / Recuperación) * 100
+        const porcentaje = (proyeccionTotal / recuperacionTotal) * 100;
         
         const esPositivo = diferencia >= 0;
         const colorClase = esPositivo ? 'positive' : 'negative';
         const bgClase = esPositivo ? 'positive-bg' : 'negative-bg';
-        const signo = esPositivo ? '+' : '-'; // Changed from '+' to empty string to avoid showing +0.00
+        const signo = esPositivo ? '+' : '-';
         
         comparacionResult.innerHTML = `
             <div class="comparison-container">
@@ -1630,7 +1630,7 @@
             <div class="difference-card">
                 <div>Diferencia:</div>
                 <div class="difference-value ${colorClase}">${signo}${(Math.abs(diferencia)).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</div>
-                <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}%</div>
+                <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}% de la Recuperación</div>
             </div>
             
             <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem;">
