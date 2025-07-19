@@ -4,15 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Editor de Imágenes Profesional</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary: #00183c;
-      --secondary: #00183c;
+      --secondary: #003366;
       --dark: #1d3557;
-      --light: #00183c;
+      --light: #f5f7fa;
       --gray: #6c757d;
       --danger: #e63946;
       --success: #2a9d8f;
+      --warning: #f4a261;
+      --panel-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
     }
     
     * {
@@ -26,7 +31,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       min-height: 100vh;
-      padding: 10px;
+      padding: 15px;
       color: #333;
       touch-action: manipulation;
     }
@@ -39,11 +44,13 @@
     header {
       display: flex;
       align-items: center;
-      background: #00183c;
-      padding: 12px 15px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
+      justify-content: space-between;
+      background: var(--primary);
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     
     .logo-container {
@@ -65,6 +72,11 @@
       color: white;
     }
     
+    .header-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
     .app-title {
       font-size: 22px;
       font-weight: 700;
@@ -74,25 +86,46 @@
     
     .app-subtitle {
       font-size: 12px;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
       margin-top: 2px;
+    }
+    
+    .device-indicator {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     
     .main-content {
       display: flex;
+      gap: 20px;
       flex-direction: column;
-      gap: 15px;
+    }
+    
+    /* Layout para pantallas grandes */
+    @media (min-width: 992px) {
+      .main-content {
+        flex-direction: row;
+      }
+      
+      .tools-panel {
+        width: 320px;
+      }
     }
     
     .tools-panel {
-      background: white;
-      width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      padding: 15px;
+      background: var(--panel-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       height: fit-content;
     }
     
@@ -100,9 +133,16 @@
       font-size: 16px;
       font-weight: 600;
       color: var(--dark);
-      padding-bottom: 8px;
+      padding-bottom: 10px;
       border-bottom: 2px solid #f0f0f0;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .panel-title i {
+      font-size: 18px;
     }
     
     .file-upload {
@@ -122,11 +162,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     
-    .file-input-label:active {
+    .file-input-label:hover {
       background: var(--secondary);
-      transform: scale(0.98);
     }
     
     .file-input {
@@ -136,13 +179,13 @@
     .tool-section {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 15px;
     }
     
     .color-picker {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
     
     .color-label {
@@ -154,17 +197,17 @@
     .tool-control {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
     
     .slider-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     
     .slider-label {
-      min-width: 70px;
+      min-width: 80px;
       font-weight: 500;
       color: var(--gray);
       font-size: 14px;
@@ -186,10 +229,15 @@
       background: var(--primary);
       border-radius: 50%;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
     }
     
     .slider-value {
-      min-width: 40px;
+      min-width: 45px;
       text-align: center;
       font-weight: 600;
       color: var(--dark);
@@ -199,7 +247,7 @@
     .buttons-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
     
     .btn {
@@ -212,6 +260,10 @@
       cursor: pointer;
       transition: all 0.2s ease;
       font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     
     .btn-primary {
@@ -219,9 +271,8 @@
       color: white;
     }
     
-    .btn-primary:active {
+    .btn-primary:hover {
       background: var(--secondary);
-      transform: scale(0.98);
     }
     
     .btn-secondary {
@@ -229,9 +280,8 @@
       color: var(--gray);
     }
     
-    .btn-secondary:active {
+    .btn-secondary:hover {
       background: #dee2e6;
-      transform: scale(0.98);
     }
     
     .btn-danger {
@@ -239,17 +289,21 @@
       color: white;
     }
     
-    .btn-danger:active {
+    .btn-danger:hover {
       opacity: 0.9;
-      transform: scale(0.98);
+    }
+    
+    .btn-warning {
+      background: var(--warning);
+      color: white;
     }
     
     .preview-area {
       flex: 1;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      padding: 15px;
+      background: var(--panel-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
       display: flex;
       flex-direction: column;
     }
@@ -260,10 +314,10 @@
       justify-content: center;
       align-items: center;
       overflow: auto;
-      background: #f8f9fa;
+      background: var(--light);
       border-radius: 8px;
       border: 1px solid #e0e0e0;
-      min-height: 300px;
+      min-height: 400px;
       position: relative;
       touch-action: none;
     }
@@ -271,7 +325,7 @@
     canvas {
       max-width: 100%;
       max-height: 100%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       cursor: crosshair;
       touch-action: none;
     }
@@ -280,17 +334,19 @@
       color: var(--gray);
       font-style: italic;
       text-align: center;
-      padding: 15px;
-      font-size: 15px;
+      padding: 20px;
+      font-size: 16px;
     }
     
     .status-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0 5px;
-      font-size: 13px;
+      padding: 15px 0 5px;
+      font-size: 14px;
       color: var(--gray);
+      flex-wrap: wrap;
+      gap: 10px;
     }
     
     .mode-indicator {
@@ -308,35 +364,39 @@
     
     .instructions {
       background: #e7f5ff;
-      padding: 12px;
+      padding: 15px;
       border-radius: 8px;
-      margin-top: 15px;
-      font-size: 13px;
+      margin-top: 20px;
+      font-size: 14px;
       color: var(--dark);
     }
     
     .instructions h4 {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       color: var(--primary);
-      font-size: 14px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .instructions ul {
-      padding-left: 18px;
+      padding-left: 20px;
     }
     
     .instructions li {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      line-height: 1.5;
     }
     
     /* Zoom controls */
     .zoom-controls {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
+      bottom: 20px;
+      right: 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       z-index: 10;
     }
     
@@ -352,35 +412,68 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       transition: all 0.2s;
-      user-select: none;
     }
     
-    .zoom-btn:active {
+    .zoom-btn:hover {
       background: var(--secondary);
-      transform: scale(0.95);
+      transform: scale(1.05);
     }
     
     .zoom-level {
       background: white;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 13px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-size: 14px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       text-align: center;
-      min-width: 55px;
+      min-width: 60px;
     }
     
-    /* Mobile optimizations */
-    @media (max-width: 480px) {
+    /* Mobile Toolbar */
+    .mobile-toolbar {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      gap: 8px;
+    }
+    
+    .mobile-tool-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .mobile-tool-btn.active {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
       header {
-        padding: 10px 12px;
+        padding: 10px 15px;
       }
       
       .logo {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         font-size: 18px;
       }
       
@@ -392,10 +485,67 @@
         font-size: 11px;
       }
       
+      .device-indicator {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+      
+      .panel-title {
+        font-size: 15px;
+      }
+      
       .btn {
         padding: 12px 8px;
         font-size: 14px;
         min-width: 100px;
+      }
+      
+      .slider-label {
+        min-width: 65px;
+        font-size: 13px;
+      }
+      
+      .slider-value {
+        min-width: 35px;
+        font-size: 13px;
+      }
+      
+      .canvas-container {
+        min-height: 350px;
+      }
+      
+      .mobile-toolbar {
+        display: flex;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .tools-panel {
+        padding: 15px;
+      }
+      
+      .preview-area {
+        padding: 15px;
+      }
+      
+      .file-input-label {
+        padding: 12px 15px;
+        font-size: 14px;
+      }
+      
+      .btn {
+        min-width: 90px;
+        font-size: 13px;
+        padding: 10px 6px;
+      }
+      
+      .slider::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
       }
       
       .zoom-btn {
@@ -404,14 +554,38 @@
         font-size: 18px;
       }
       
-      .slider-label {
-        min-width: 60px;
-        font-size: 13px;
+      .mobile-tool-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
       }
       
-      .slider-value {
-        min-width: 35px;
+      .instructions {
+        padding: 12px;
         font-size: 13px;
+      }
+    }
+    
+    /* Touch device specific */
+    @media (hover: none) and (pointer: coarse) {
+      .btn:hover, .file-input-label:hover, .zoom-btn:hover {
+        transform: none !important;
+      }
+      
+      .slider::-webkit-slider-thumb {
+        width: 26px;
+        height: 26px;
+      }
+      
+      .mobile-toolbar {
+        display: flex;
+      }
+    }
+    
+    /* Print mode */
+    @media print {
+      .tools-panel, .mobile-toolbar, .zoom-controls {
+        display: none;
       }
     }
   </style>
@@ -420,35 +594,41 @@
   <div class="container">
     <header>
       <div class="logo-container">
-        <img src="logo.png" alt="Logo Editor Profesional" class="logo">
-        <div>
-          <h1 class="app-title">Editor Profesional</h1>
-          <p class="app-subtitle">Herramientas avanzadas de edición de imágenes</p>
+        <div class="logo">
+          <i class="fas fa-image"></i>
         </div>
+        <div class="header-text">
+          <h1 class="app-title">Editor Profesional</h1>
+          <p class="app-subtitle">Herramientas avanzadas de edición</p>
+        </div>
+      </div>
+      <div class="device-indicator" id="deviceIndicator">
+        <i class="fas fa-desktop"></i> <span>Modo Escritorio</span>
       </div>
     </header>
     
     <div class="main-content">
       <div class="tools-panel">
         <div class="tool-section">
-          <h3 class="panel-title">Cargar Archivo</h3>
+          <h3 class="panel-title"><i class="fas fa-upload"></i> Cargar Archivo</h3>
           <div class="file-upload">
-            <label for="fileLoader" class="file-input-label">Seleccionar Imagen o PDF</label>
+            <label for="fileLoader" class="file-input-label">
+              <i class="fas fa-folder-open"></i> Seleccionar Imagen o PDF
+            </label>
             <input type="file" id="fileLoader" accept="image/*,application/pdf" class="file-input">
           </div>
         </div>
         
         <div class="tool-section">
-          <h3 class="panel-title">Herramientas de Ocultamiento</h3>
+          <h3 class="panel-title"><i class="fas fa-magic"></i> Herramientas de Ocultamiento</h3>
           <div class="color-picker">
             <span class="color-label">Color:</span>
-            <input type="color" id="colorPicker" value="#000000">
+            <input type="color" id="colorPicker" value="#00183c">
           </div>
         </div>
         
         <div class="tool-section">
-          <h3 class="panel-title">Ajustes de Imagen</h3>
-          
+          <h3 class="panel-title"><i class="fas fa-sliders-h"></i> Ajustes de Imagen</h3>
           <div class="tool-control">
             <div class="slider-container">
               <span class="slider-label">Brillo:</span>
@@ -471,12 +651,20 @@
         </div>
         
         <div class="tool-section">
-          <h3 class="panel-title">Acciones</h3>
+          <h3 class="panel-title"><i class="fas fa-tools"></i> Acciones</h3>
           <div class="buttons-container">
-            <button class="btn btn-primary" id="downloadBtn">Descargar Imagen</button>
-            <button class="btn btn-secondary" id="resetRectsBtn">Borrar Rectángulos</button>
-            <button class="btn btn-secondary" id="cropBtn">Recortar Imagen</button>
-            <button class="btn btn-danger" id="resetFiltersBtn">Resetear Filtros</button>
+            <button class="btn btn-primary" id="downloadBtn">
+              <i class="fas fa-download"></i> Descargar
+            </button>
+            <button class="btn btn-secondary" id="resetRectsBtn">
+              <i class="fas fa-eraser"></i> Borrar
+            </button>
+            <button class="btn btn-warning" id="cropBtn">
+              <i class="fas fa-crop"></i> Recortar
+            </button>
+            <button class="btn btn-danger" id="resetFiltersBtn">
+              <i class="fas fa-redo"></i> Resetear
+            </button>
           </div>
         </div>
       </div>
@@ -485,6 +673,7 @@
         <div class="canvas-container" id="canvasContainer">
           <canvas id="mainCanvas"></canvas>
           <div class="canvas-message" id="canvasMessage">
+            <i class="fas fa-cloud-upload-alt"></i><br>
             Seleccione una imagen o PDF para comenzar a editar
           </div>
           <div class="zoom-controls">
@@ -503,10 +692,10 @@
         </div>
         
         <div class="instructions">
-          <h4>Instrucciones de uso:</h4>
+          <h4><i class="fas fa-info-circle"></i> Instrucciones de uso:</h4>
           <ul>
             <li>Seleccione una imagen o PDF para comenzar a editar</li>
-            <li>Dibuje áreas rectangulares para ocultar información sensible</li>
+            <li>Dibuje áreas rectangulares para ocultar información</li>
             <li>Ajuste brillo, contraste y nitidez para mejorar la imagen</li>
             <li>Utilice el recorte para enfocar áreas importantes</li>
             <li>Descargue el resultado cuando termine de editar</li>
@@ -516,8 +705,43 @@
     </div>
   </div>
 
+  <!-- Mobile toolbar for touch devices -->
+  <div class="mobile-toolbar" id="mobileToolbar">
+    <div class="mobile-tool-btn" id="mobileDrawBtn" title="Dibujar">
+      <i class="fas fa-square"></i>
+    </div>
+    <div class="mobile-tool-btn" id="mobileCropBtn" title="Recortar">
+      <i class="fas fa-crop-alt"></i>
+    </div>
+    <div class="mobile-tool-btn" id="mobileDownloadBtn" title="Descargar">
+      <i class="fas fa-download"></i>
+    </div>
+    <div class="mobile-tool-btn" id="mobileResetBtn" title="Resetear">
+      <i class="fas fa-trash"></i>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
+    // Detectar dispositivo y actualizar indicador
+    function detectDevice() {
+      const indicator = document.getElementById('deviceIndicator');
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints;
+      
+      if (window.innerWidth <= 768) {
+        if (isTouchDevice) {
+          indicator.innerHTML = '<i class="fas fa-mobile-alt"></i> <span>Modo Móvil</span>';
+        } else {
+          indicator.innerHTML = '<i class="fas fa-tablet-alt"></i> <span>Modo Tablet</span>';
+        }
+      } else if (isTouchDevice) {
+        indicator.innerHTML = '<i class="fas fa-tablet-alt"></i> <span>Modo Pantalla Táctil</span>';
+      } else {
+        indicator.innerHTML = '<i class="fas fa-desktop"></i> <span>Modo Escritorio</span>';
+      }
+    }
+    
+    // Elementos DOM
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const fileLoader = document.getElementById('fileLoader');
@@ -538,7 +762,12 @@
     const resetRectsBtn = document.getElementById('resetRectsBtn');
     const cropBtn = document.getElementById('cropBtn');
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+    const mobileDrawBtn = document.getElementById('mobileDrawBtn');
+    const mobileCropBtn = document.getElementById('mobileCropBtn');
+    const mobileDownloadBtn = document.getElementById('mobileDownloadBtn');
+    const mobileResetBtn = document.getElementById('mobileResetBtn');
     
+    // Variables de estado
     let rectangles = [];
     let currentRect = null;
     let startX, startY, isDrawing = false;
@@ -552,52 +781,88 @@
     let originalCanvasWidth = 800;
     let originalCanvasHeight = 400;
     
-    // Inicializar valores de los sliders
-    brightnessValue.textContent = brightnessSlider.value + '%';
-    contrastValue.textContent = contrastSlider.value + '%';
-    sharpnessValue.textContent = sharpnessSlider.value + '%';
-    zoomLevel.textContent = Math.round(zoom * 100) + '%';
+    // Inicialización
+    function init() {
+      detectDevice();
+      updateSliderValues();
+      setupEventListeners();
+      initCanvas();
+      
+      // Actualizar indicador de dispositivo cuando cambia el tamaño de la ventana
+      window.addEventListener('resize', detectDevice);
+    }
     
-    // Eventos para los sliders
-    brightnessSlider.addEventListener('input', function() {
-      brightnessValue.textContent = this.value + '%';
-      applyImageFilters();
-    });
+    function updateSliderValues() {
+      brightnessValue.textContent = brightnessSlider.value + '%';
+      contrastValue.textContent = contrastSlider.value + '%';
+      sharpnessValue.textContent = sharpnessSlider.value + '%';
+      zoomLevel.textContent = Math.round(zoom * 100) + '%';
+    }
     
-    contrastSlider.addEventListener('input', function() {
-      contrastValue.textContent = this.value + '%';
-      applyImageFilters();
-    });
+    function setupEventListeners() {
+      // Eventos para los sliders
+      brightnessSlider.addEventListener('input', function() {
+        brightnessValue.textContent = this.value + '%';
+        applyImageFilters();
+      });
+      
+      contrastSlider.addEventListener('input', function() {
+        contrastValue.textContent = this.value + '%';
+        applyImageFilters();
+      });
+      
+      sharpnessSlider.addEventListener('input', function() {
+        sharpnessValue.textContent = this.value + '%';
+        applyImageFilters();
+      });
+      
+      // Eventos para el zoom
+      zoomInBtn.addEventListener('click', function() {
+        zoom *= 1.2;
+        updateZoom();
+      });
+      
+      zoomOutBtn.addEventListener('click', function() {
+        zoom /= 1.2;
+        if (zoom < 0.1) zoom = 0.1;
+        updateZoom();
+      });
+      
+      // Eventos para los botones
+      downloadBtn.addEventListener('click', descargarImagen);
+      resetRectsBtn.addEventListener('click', resetRects);
+      cropBtn.addEventListener('click', activarRecorte);
+      resetFiltersBtn.addEventListener('click', resetFilters);
+      
+      // Eventos para los botones móviles
+      mobileDrawBtn.addEventListener('click', () => {
+        isCropping = false;
+        modeIndicator.textContent = "Modo: Dibujar áreas";
+        updateMobileButtons();
+      });
+      
+      mobileCropBtn.addEventListener('click', activarRecorte);
+      mobileDownloadBtn.addEventListener('click', descargarImagen);
+      mobileResetBtn.addEventListener('click', () => {
+        resetRects();
+        resetFilters();
+      });
+      
+      // Evento para cargar archivos
+      fileLoader.addEventListener('change', handleFileUpload);
+    }
     
-    sharpnessSlider.addEventListener('input', function() {
-      sharpnessValue.textContent = this.value + '%';
-      applyImageFilters();
-    });
-    
-    // Eventos para el zoom
-    zoomInBtn.addEventListener('click', function() {
-      zoom *= 1.2;
-      updateZoom();
-    });
-    
-    zoomOutBtn.addEventListener('click', function() {
-      zoom /= 1.2;
-      if (zoom < 0.1) zoom = 0.1;
-      updateZoom();
-    });
-    
-    // Eventos para los botones
-    downloadBtn.addEventListener('click', descargarImagen);
-    resetRectsBtn.addEventListener('click', resetRects);
-    cropBtn.addEventListener('click', activarRecorte);
-    resetFiltersBtn.addEventListener('click', resetFilters);
+    function updateMobileButtons() {
+      mobileDrawBtn.classList.toggle('active', !isCropping);
+      mobileCropBtn.classList.toggle('active', isCropping);
+    }
     
     function updateZoom() {
       zoomLevel.textContent = Math.round(zoom * 100) + '%';
       redrawCanvas();
     }
     
-    fileLoader.addEventListener('change', async (e) => {
+    async function handleFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
       
@@ -651,7 +916,7 @@
         };
         originalImage.src = dataUrl;
       }
-    });
+    }
     
     function applyImageFilters() {
       if (!originalImage.complete || originalImage.width === 0) return;
@@ -739,6 +1004,7 @@
           aplicarRecorte(currentRect);
           isCropping = false;
           modeIndicator.textContent = "Modo: Dibujar áreas";
+          updateMobileButtons();
         } else {
           rectangles.push({ ...currentRect, color: colorPicker.value });
         }
@@ -758,6 +1024,7 @@
     canvas.addEventListener('touchstart', handleStart, { passive: false });
     canvas.addEventListener('touchmove', handleMove, { passive: false });
     canvas.addEventListener('touchend', handleEnd, { passive: false });
+    canvas.addEventListener('touchcancel', handleEnd, { passive: false });
     
     function redrawCanvas(showCurrent = false) {
       // Ajustar tamaño del canvas según el zoom
@@ -836,6 +1103,7 @@
       
       isCropping = true;
       modeIndicator.textContent = "Modo: Recortar imagen (seleccione área)";
+      updateMobileButtons();
     }
     
     function aplicarRecorte(rect) {
@@ -882,15 +1150,19 @@
       }
     }
     
-    // Inicializar canvas con un mensaje
-    canvas.width = originalCanvasWidth;
-    canvas.height = originalCanvasHeight;
-    ctx.fillStyle = '#f8f9fa';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = '18px Arial';
-    ctx.fillStyle = '#6c757d';
-    ctx.textAlign = 'center';
-    ctx.fillText('Seleccione una imagen o PDF para comenzar', canvas.width/2, canvas.height/2);
+    function initCanvas() {
+      canvas.width = originalCanvasWidth;
+      canvas.height = originalCanvasHeight;
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = '18px Arial';
+      ctx.fillStyle = '#6c757d';
+      ctx.textAlign = 'center';
+      ctx.fillText('Seleccione una imagen o PDF para comenzar', canvas.width/2, canvas.height/2);
+    }
+    
+    // Inicializar la aplicación
+    init();
   </script>
 </body>
 </html>
