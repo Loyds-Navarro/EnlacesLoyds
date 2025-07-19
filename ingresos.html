@@ -465,6 +465,30 @@
       transform: scale(1.1);
     }
     
+    /* History buttons */
+    .history-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .history-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #e9ecef;
+      color: var(--gray);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .history-btn:hover {
+      background: #dee2e6;
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 768px) {
       header {
@@ -517,6 +541,11 @@
       .mobile-toolbar {
         display: flex;
       }
+      
+      /* Larger dotted line for mobile */
+      .dotted-rect {
+        border: 3px dashed #ff0000 !important;
+      }
     }
     
     @media (max-width: 480px) {
@@ -564,6 +593,11 @@
         padding: 12px;
         font-size: 13px;
       }
+      
+      /* Larger dotted line for small mobile */
+      .dotted-rect {
+        border: 4px dashed #ff0000 !important;
+      }
     }
     
     /* Touch device specific */
@@ -579,6 +613,11 @@
       
       .mobile-toolbar {
         display: flex;
+      }
+      
+      /* Larger dotted line for touch devices */
+      .dotted-rect {
+        border: 4px dashed #ff0000 !important;
       }
     }
     
@@ -622,8 +661,17 @@
         <div class="tool-section">
           <h3 class="panel-title"><i class="fas fa-magic"></i> Herramientas de Ocultamiento</h3>
           <div class="color-picker">
-            <span class="color-label">Color:</span>
-            <input type="color" id="colorPicker" value="#00183c">
+            <span class="color-label">Color de ocultamiento:</span>
+            <input type="color" id="colorPicker" value="#ffffff" disabled>
+            <span>Blanco</span>
+          </div>
+          <div class="history-controls">
+            <button class="history-btn" id="undoBtn">
+              <i class="fas fa-undo"></i> Deshacer
+            </button>
+            <button class="history-btn" id="redoBtn">
+              <i class="fas fa-redo"></i> Rehacer
+            </button>
           </div>
         </div>
         
@@ -695,7 +743,8 @@
           <h4><i class="fas fa-info-circle"></i> Instrucciones de uso:</h4>
           <ul>
             <li>Seleccione una imagen o PDF para comenzar a editar</li>
-            <li>Dibuje áreas rectangulares para ocultar información</li>
+            <li>Dibuje áreas rectangulares para ocultar información (color blanco)</li>
+            <li>Utilice los botones Deshacer/Rehacer para corregir errores</li>
             <li>Ajuste brillo, contraste y nitidez para mejorar la imagen</li>
             <li>Utilice el recorte para enfocar áreas importantes</li>
             <li>Descargue el resultado cuando termine de editar</li>
@@ -713,11 +762,11 @@
     <div class="mobile-tool-btn" id="mobileCropBtn" title="Recortar">
       <i class="fas fa-crop-alt"></i>
     </div>
+    <div class="mobile-tool-btn" id="mobileUndoBtn" title="Deshacer">
+      <i class="fas fa-undo"></i>
+    </div>
     <div class="mobile-tool-btn" id="mobileDownloadBtn" title="Descargar">
       <i class="fas fa-download"></i>
-    </div>
-    <div class="mobile-tool-btn" id="mobileResetBtn" title="Resetear">
-      <i class="fas fa-trash"></i>
     </div>
   </div>
 
@@ -745,7 +794,6 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const fileLoader = document.getElementById('fileLoader');
-    const colorPicker = document.getElementById('colorPicker');
     const brightnessSlider = document.getElementById('brightness');
     const contrastSlider = document.getElementById('contrast');
     const sharpnessSlider = document.getElementById('sharpness');
@@ -764,11 +812,15 @@
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
     const mobileDrawBtn = document.getElementById('mobileDrawBtn');
     const mobileCropBtn = document.getElementById('mobileCropBtn');
+    const mobileUndoBtn = document.getElementById('mobileUndoBtn');
     const mobileDownloadBtn = document.getElementById('mobileDownloadBtn');
-    const mobileResetBtn = document.getElementById('mobileResetBtn');
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
     
     // Variables de estado
     let rectangles = [];
+    let history = [];
+    let historyIndex = -1;
     let currentRect = null;
     let startX, startY, isDrawing = false;
     let isCropping = false;
@@ -780,6 +832,7 @@
     let zoom = 1;
     let originalCanvasWidth = 800;
     let originalCanvasHeight = 400;
+    let baseImage = null;
     
     // Inicialización
     function init() {
@@ -787,8 +840,6 @@
       updateSliderValues();
       setupEventListeners();
       initCanvas();
-      
-      // Actualizar indicador de dispositivo cuando cambia el tamaño de la ventana
       window.addEventListener('resize', detectDevice);
     }
     
@@ -843,13 +894,14 @@
       
       mobileCropBtn.addEventListener('click', activarRecorte);
       mobileDownloadBtn.addEventListener('click', descargarImagen);
-      mobileResetBtn.addEventListener('click', () => {
-        resetRects();
-        resetFilters();
-      });
+      mobileUndoBtn.addEventListener('click', undoLastAction);
       
       // Evento para cargar archivos
       fileLoader.addEventListener('change', handleFileUpload);
+      
+      // Eventos para historial
+      undoBtn.addEventListener('click', undoLastAction);
+      redoBtn.addEventListener('click', redoAction);
     }
     
     function updateMobileButtons() {
@@ -860,6 +912,54 @@
     function updateZoom() {
       zoomLevel.textContent = Math.round(zoom * 100) + '%';
       redrawCanvas();
+    }
+    
+    // Guardar estado actual en el historial
+    function saveToHistory() {
+      // Guardar solo los últimos 10 estados
+      if (history.length > 10) {
+        history.shift();
+      }
+      
+      history.push({
+        rectangles: JSON.parse(JSON.stringify(rectangles)),
+        imageState: currentImage.src,
+        canvasWidth: originalCanvasWidth,
+        canvasHeight: originalCanvasHeight
+      });
+      
+      historyIndex = history.length - 1;
+    }
+    
+    // Deshacer última acción
+    function undoLastAction() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        restoreFromHistory();
+      }
+    }
+    
+    // Rehacer acción
+    function redoAction() {
+      if (historyIndex < history.length - 1) {
+        historyIndex++;
+        restoreFromHistory();
+      }
+    }
+    
+    // Restaurar desde historial
+    function restoreFromHistory() {
+      const state = history[historyIndex];
+      rectangles = JSON.parse(JSON.stringify(state.rectangles));
+      currentImage.src = state.imageState;
+      originalCanvasWidth = state.canvasWidth;
+      originalCanvasHeight = state.canvasHeight;
+      
+      currentImage.onload = function() {
+        canvas.width = originalCanvasWidth;
+        canvas.height = originalCanvasHeight;
+        redrawCanvas();
+      };
     }
     
     async function handleFileUpload(e) {
@@ -884,6 +984,8 @@
             canvas.width = originalCanvasWidth;
             canvas.height = originalCanvasHeight;
             currentImage.src = originalImage.src;
+            baseImage = originalImage.src;
+            saveToHistory();
             applyImageFilters();
             canvasMessage.style.display = 'none';
           };
@@ -911,6 +1013,8 @@
         const dataUrl = canvas.toDataURL('image/png');
         originalImage.onload = function() {
           currentImage.src = originalImage.src;
+          baseImage = originalImage.src;
+          saveToHistory();
           applyImageFilters();
           canvasMessage.style.display = 'none';
         };
@@ -1006,7 +1110,9 @@
           modeIndicator.textContent = "Modo: Dibujar áreas";
           updateMobileButtons();
         } else {
-          rectangles.push({ ...currentRect, color: colorPicker.value });
+          // Usar blanco para áreas de ocultamiento
+          rectangles.push({ ...currentRect, color: '#ffffff' });
+          saveToHistory();
         }
         currentRect = null;
         redrawCanvas();
@@ -1038,7 +1144,7 @@
         0, 0, originalCanvasWidth, originalCanvasHeight,
         0, 0, canvas.width, canvas.height);
       
-      // Dibujar los rectángulos escalados
+      // Dibujar los rectángulos escalados (en blanco)
       for (const r of rectangles) {
         ctx.fillStyle = r.color;
         ctx.fillRect(
@@ -1052,15 +1158,27 @@
       // Dibujar el rectángulo actual si está en modo dibujo
       if (showCurrent && currentRect) {
         ctx.save();
-        ctx.setLineDash([6]);
+        
+        // Línea punteada más grande para dispositivos móviles
+        const lineWidth = window.innerWidth <= 768 ? 4 : 2;
+        const dashSize = window.innerWidth <= 768 ? 8 : 6;
+        
+        ctx.setLineDash([dashSize]);
         ctx.strokeStyle = isCropping ? '#f00' : '#000';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = lineWidth;
         ctx.strokeRect(
           currentRect.x * zoom, 
           currentRect.y * zoom, 
           currentRect.width * zoom, 
           currentRect.height * zoom
         );
+        
+        // Agregar clase para dispositivos móviles
+        if (window.innerWidth <= 768) {
+          ctx.strokeStyle = '#ff0000';
+          ctx.lineWidth = 4;
+        }
+        
         ctx.restore();
       }
     }
@@ -1078,7 +1196,7 @@
       const tempCtx = tempCanvas.getContext('2d');
       tempCtx.drawImage(currentImage, 0, 0);
       
-      // Dibujar los rectángulos en el canvas temporal
+      // Dibujar los rectángulos en el canvas temporal (en blanco)
       for (const r of rectangles) {
         tempCtx.fillStyle = r.color;
         tempCtx.fillRect(r.x, r.y, r.width, r.height);
@@ -1092,6 +1210,7 @@
     
     function resetRects() {
       rectangles = [];
+      saveToHistory();
       redrawCanvas();
     }
     
@@ -1107,6 +1226,8 @@
     }
     
     function aplicarRecorte(rect) {
+      saveToHistory();
+      
       const cropCanvas = document.createElement('canvas');
       cropCanvas.width = Math.abs(rect.width);
       cropCanvas.height = Math.abs(rect.height);
