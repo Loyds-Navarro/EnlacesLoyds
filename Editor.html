@@ -298,6 +298,15 @@
       color: white;
     }
     
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      opacity: 0.9;
+    }
+    
     .preview-area {
       flex: 1;
       background: var(--panel-bg);
@@ -662,8 +671,7 @@
           <h3 class="panel-title"><i class="fas fa-magic"></i> Herramientas de Ocultamiento</h3>
           <div class="color-picker">
             <span class="color-label">Color de ocultamiento:</span>
-            <input type="color" id="colorPicker" value="#ffffff" disabled>
-            <span>Blanco</span>
+            <input type="color" id="colorPicker" value="#ffffff">
           </div>
           <div class="history-controls">
             <button class="history-btn" id="undoBtn">
@@ -710,6 +718,9 @@
             <button class="btn btn-warning" id="cropBtn">
               <i class="fas fa-crop"></i> Recortar
             </button>
+            <button class="btn btn-success" id="removeBgBtn">
+              <i class="fas fa-cut"></i> Quitar Fondo
+            </button>
             <button class="btn btn-danger" id="resetFiltersBtn">
               <i class="fas fa-redo"></i> Resetear
             </button>
@@ -743,10 +754,11 @@
           <h4><i class="fas fa-info-circle"></i> Instrucciones de uso:</h4>
           <ul>
             <li>Seleccione una imagen o PDF para comenzar a editar</li>
-            <li>Dibuje áreas rectangulares para ocultar información (color blanco)</li>
+            <li>Dibuje áreas rectangulares para ocultar información (seleccione color)</li>
             <li>Utilice los botones Deshacer/Rehacer para corregir errores</li>
             <li>Ajuste brillo, contraste y nitidez para mejorar la imagen</li>
             <li>Utilice el recorte para enfocar áreas importantes</li>
+            <li>Use "Quitar Fondo" para eliminar completamente el fondo (transparente)</li>
             <li>Descargue el resultado cuando termine de editar</li>
           </ul>
         </div>
@@ -761,6 +773,9 @@
     </div>
     <div class="mobile-tool-btn" id="mobileCropBtn" title="Recortar">
       <i class="fas fa-crop-alt"></i>
+    </div>
+    <div class="mobile-tool-btn" id="mobileRemoveBgBtn" title="Quitar Fondo">
+      <i class="fas fa-cut"></i>
     </div>
     <div class="mobile-tool-btn" id="mobileUndoBtn" title="Deshacer">
       <i class="fas fa-undo"></i>
@@ -792,7 +807,7 @@
     
     // Elementos DOM
     const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const fileLoader = document.getElementById('fileLoader');
     const brightnessSlider = document.getElementById('brightness');
     const contrastSlider = document.getElementById('contrast');
@@ -809,13 +824,16 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetRectsBtn = document.getElementById('resetRectsBtn');
     const cropBtn = document.getElementById('cropBtn');
+    const removeBgBtn = document.getElementById('removeBgBtn');
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
     const mobileDrawBtn = document.getElementById('mobileDrawBtn');
     const mobileCropBtn = document.getElementById('mobileCropBtn');
+    const mobileRemoveBgBtn = document.getElementById('mobileRemoveBgBtn');
     const mobileUndoBtn = document.getElementById('mobileUndoBtn');
     const mobileDownloadBtn = document.getElementById('mobileDownloadBtn');
     const undoBtn = document.getElementById('undoBtn');
     const redoBtn = document.getElementById('redoBtn');
+    const colorPicker = document.getElementById('colorPicker');
     
     // Variables de estado
     let rectangles = [];
@@ -833,6 +851,9 @@
     let originalCanvasWidth = 800;
     let originalCanvasHeight = 400;
     let baseImage = null;
+    
+    // API Key para remove.bg (deberías reemplazarla con tu propia key)
+    const REMOVE_BG_API_KEY = "ZdJqa1j9RuDLLGouy6KayKUQ";
     
     // Inicialización
     function init() {
@@ -883,6 +904,7 @@
       downloadBtn.addEventListener('click', descargarImagen);
       resetRectsBtn.addEventListener('click', resetRects);
       cropBtn.addEventListener('click', activarRecorte);
+      removeBgBtn.addEventListener('click', removeBackground);
       resetFiltersBtn.addEventListener('click', resetFilters);
       
       // Eventos para los botones móviles
@@ -893,6 +915,7 @@
       });
       
       mobileCropBtn.addEventListener('click', activarRecorte);
+      mobileRemoveBgBtn.addEventListener('click', removeBackground);
       mobileDownloadBtn.addEventListener('click', descargarImagen);
       mobileUndoBtn.addEventListener('click', undoLastAction);
       
@@ -1095,7 +1118,7 @@
       const currentY = coords.y;
       const width = currentX - startX;
       const height = currentY - startY;
-      currentRect = { x: startX, y: startY, width, height };
+      currentRect = { x: startX, y: startY, width, height, color: colorPicker.value };
       redrawCanvas(true);
     }
     
@@ -1110,8 +1133,7 @@
           modeIndicator.textContent = "Modo: Dibujar áreas";
           updateMobileButtons();
         } else {
-          // Usar blanco para áreas de ocultamiento
-          rectangles.push({ ...currentRect, color: '#ffffff' });
+          rectangles.push({ ...currentRect, color: colorPicker.value });
           saveToHistory();
         }
         currentRect = null;
@@ -1144,7 +1166,7 @@
         0, 0, originalCanvasWidth, originalCanvasHeight,
         0, 0, canvas.width, canvas.height);
       
-      // Dibujar los rectángulos escalados (en blanco)
+      // Dibujar los rectángulos escalados con el color seleccionado
       for (const r of rectangles) {
         ctx.fillStyle = r.color;
         ctx.fillRect(
@@ -1173,12 +1195,6 @@
           currentRect.height * zoom
         );
         
-        // Agregar clase para dispositivos móviles
-        if (window.innerWidth <= 768) {
-          ctx.strokeStyle = '#ff0000';
-          ctx.lineWidth = 4;
-        }
-        
         ctx.restore();
       }
     }
@@ -1189,14 +1205,20 @@
         return;
       }
       
+      // Cancelar cualquier rectángulo en proceso
+      currentRect = null;
+      redrawCanvas();
+      
       // Crear un canvas temporal con el tamaño original
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = originalCanvasWidth;
       tempCanvas.height = originalCanvasHeight;
       const tempCtx = tempCanvas.getContext('2d');
+      
+      // Dibujar la imagen base (sin efectos de zoom)
       tempCtx.drawImage(currentImage, 0, 0);
       
-      // Dibujar los rectángulos en el canvas temporal (en blanco)
+      // Dibujar los rectángulos de ocultamiento con el color seleccionado
       for (const r of rectangles) {
         tempCtx.fillStyle = r.color;
         tempCtx.fillRect(r.x, r.y, r.width, r.height);
@@ -1228,18 +1250,43 @@
     function aplicarRecorte(rect) {
       saveToHistory();
       
+      // Crear un canvas temporal para el recorte sin la línea punteada
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = originalCanvasWidth * zoom;
+      tempCanvas.height = originalCanvasHeight * zoom;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // Dibujar la imagen base con zoom
+      tempCtx.drawImage(currentImage, 
+        0, 0, originalCanvasWidth, originalCanvasHeight,
+        0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Dibujar los rectángulos de ocultamiento con zoom
+      for (const r of rectangles) {
+        tempCtx.fillStyle = r.color;
+        tempCtx.fillRect(
+          r.x * zoom, 
+          r.y * zoom, 
+          r.width * zoom, 
+          r.height * zoom
+        );
+      }
+      
+      // Crear el canvas para el recorte
       const cropCanvas = document.createElement('canvas');
       cropCanvas.width = Math.abs(rect.width);
       cropCanvas.height = Math.abs(rect.height);
       const cropCtx = cropCanvas.getContext('2d');
       
+      // Recortar desde el canvas temporal (sin línea punteada)
       cropCtx.drawImage(
-        canvas,
-        rect.x * zoom, rect.y * zoom, rect.width * zoom, rect.height * zoom,
+        tempCanvas,
+        rect.x * zoom, rect.y * zoom, 
+        rect.width * zoom, rect.height * zoom,
         0, 0, cropCanvas.width, cropCanvas.height
       );
       
-      // Actualizar la imagen original
+      // Actualizar la imagen original con el recorte
       originalImage.onload = function() {
         originalCanvasWidth = cropCanvas.width;
         originalCanvasHeight = cropCanvas.height;
@@ -1253,6 +1300,116 @@
       originalImage.src = cropCanvas.toDataURL();
       
       rectangles = [];
+    }
+    
+    async function removeBackground() {
+      if (!currentImage.complete) {
+        alert("Primero cargue una imagen");
+        return;
+      }
+      
+      try {
+        // Mostrar mensaje de carga
+        const originalText = removeBgBtn.innerHTML;
+        removeBgBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        removeBgBtn.disabled = true;
+        
+        // Crear un canvas temporal para enviar a la API
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = originalCanvasWidth;
+        tempCanvas.height = originalCanvasHeight;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Dibujar la imagen original con los rectángulos de ocultamiento
+        tempCtx.drawImage(currentImage, 0, 0);
+        for (const r of rectangles) {
+          tempCtx.fillStyle = r.color;
+          tempCtx.fillRect(r.x, r.y, r.width, r.height);
+        }
+        
+        // Convertir a Blob
+        const blob = await new Promise(resolve => {
+          tempCanvas.toBlob(resolve, 'image/png');
+        });
+        
+        // Crear FormData para la API
+        const formData = new FormData();
+        formData.append("image_file", blob, "image.png");
+        formData.append("size", "auto");
+        formData.append("bg_color", "transparent"); // Forzar fondo transparente
+        
+        // Llamar a la API de remove.bg
+        const res = await fetch("https://api.remove.bg/v1.0/removebg", {
+          method: "POST",
+          headers: { "X-Api-Key": REMOVE_BG_API_KEY },
+          body: formData,
+        });
+        
+        if (!res.ok) {
+          throw new Error("Error al quitar fondo");
+        }
+        
+        // Procesar la respuesta
+        const resultBlob = await res.blob();
+        const url = URL.createObjectURL(resultBlob);
+        
+        // Actualizar la imagen en el editor
+        originalImage.onload = function() {
+          originalCanvasWidth = originalImage.width;
+          originalCanvasHeight = originalImage.height;
+          currentImage.src = originalImage.src;
+          baseImage = originalImage.src;
+          
+          // Resetear zoom y redibujar
+          zoom = 1;
+          updateZoom();
+          saveToHistory();
+          applyImageFilters();
+          
+          // Verificar transparencia
+          checkTransparency();
+        };
+        originalImage.src = url;
+        
+        // Limpiar rectángulos después de quitar el fondo
+        rectangles = [];
+        
+      } catch (error) {
+        console.error("Error al quitar fondo:", error);
+        alert("Error al quitar fondo. Asegúrese de que la API key es válida y tiene créditos disponibles.");
+      } finally {
+        // Restaurar el botón
+        removeBgBtn.innerHTML = originalText;
+        removeBgBtn.disabled = false;
+      }
+    }
+    
+    function checkTransparency() {
+      // Crear un canvas temporal para verificar transparencia
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = originalCanvasWidth;
+      tempCanvas.height = originalCanvasHeight;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // Dibujar la imagen
+      tempCtx.drawImage(currentImage, 0, 0);
+      
+      // Obtener datos de píxeles
+      const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+      const data = imageData.data;
+      
+      // Verificar si hay píxeles transparentes
+      let hasTransparency = false;
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] < 255) {
+          hasTransparency = true;
+          break;
+        }
+      }
+      
+      if (!hasTransparency) {
+        console.warn("La imagen resultante no tiene transparencia");
+      }
     }
     
     function resetFilters() {
