@@ -1428,26 +1428,34 @@
     async function obtenerValorUDI() {
         const udiText = document.getElementById("udiText");
         const spinner = document.getElementById("spinner");
-        const fallbackValue = "8.5205"; // Provided fallback value
-        const fallbackDate = new Date(2025, 0, 1); 
+        const fallbackValue = "8.5205"; 
+        const fallbackDate = new Date(); // Use current date for fallback if needed
         
         try {
             udiText.textContent = "Consultando...";
             spinner.style.display = 'inline-block';
 
-            const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+            const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2"; // Your token
+            // Fetch the UDI value for the current date.
+            // Adjusting the date format for Banxico API. It typically uses YYYY-MM-DD.
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+
             const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/${formattedDate}/${formattedDate}?token=${token}`;
             
             const response = await fetch(url);
             const data = await response.json();
             
-            if (data.bmx && data.bmx.series && data.bmx.series[0].datos && data.bmx.series[0].datos[0]) {
+            if (data.bmx && data.bmx.series && data.bmx.series[0].datos && data.bmx.series[0].datos.length > 0) {
                 const datoRaw = data.bmx.series[0].datos[0].dato;
                 const fechaRaw = data.bmx.series[0].datos[0].fecha;
                 const valorStr = datoRaw.replace(",", ".");
                 const valorUDI = parseFloat(valorStr);
-                const [dia, mes, anio] = fechaRaw.split('/');
-                const fechaObj = new Date(anio, mes - 1, dia); 
+                const [d, m, a] = fechaRaw.split('/');
+                const fechaObj = new Date(a, m - 1, d); 
                 const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
                 const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
                 
@@ -1455,35 +1463,57 @@
                 
                 // Update all UDI input fields
                 document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
-                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4); // For new section
+                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
                 document.getElementById("valorUdi").value = valorUDI.toFixed(4);
                 document.getElementById("udiProy").value = valorUDI.toFixed(4);
 
             } else {
-                console.warn("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
-                const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
-                udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
-                
-                // Update all UDI input fields with fallback
-                document.getElementById("udiActualRecuperacion").value = fallbackValue;
-                document.getElementById("udiActualSumaAsegurada").value = fallbackValue; // For new section
-                document.getElementById("valorUdi").value = fallbackValue;
-                document.getElementById("udiProy").value = fallbackValue;
+               console.warn("No se pudo obtener el valor de la UDI de Banxico para hoy. Intentando con días anteriores...");
+                // Fallback: Try fetching the latest available UDI if today's is not found
+                const urlLatest = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
+                const responseLatest = await fetch(urlLatest);
+                const dataLatest = await responseLatest.json();
+
+                if (dataLatest.bmx && dataLatest.bmx.series && dataLatest.bmx.series[0].datos && dataLatest.bmx.series[0].datos.length > 0) {
+                    const datoRaw = dataLatest.bmx.series[0].datos[0].dato;
+                    const fechaRaw = dataLatest.bmx.series[0].datos[0].fecha;
+                    const valorStr = datoRaw.replace(",", ".");
+                    const valorUDI = parseFloat(valorStr);
+                    const [d, m, a] = fechaRaw.split('/');
+                    const fechaObj = new Date(a, m - 1, d); 
+                    const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
+                    const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+                    
+                    document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
+                    document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
+                    document.getElementById("valorUdi").value = valorUDI.toFixed(4);
+                    document.getElementById("udiProy").value = valorUDI.toFixed(4);
+                } else {
+                    console.error("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
+                    const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
+                    
+                    document.getElementById("udiActualRecuperacion").value = fallbackValue;
+                    document.getElementById("udiActualSumaAsegurada").value = fallbackValue;
+                    document.getElementById("valorUdi").value = fallbackValue;
+                    document.getElementById("udiProy").value = fallbackValue;
+                }
             }
         } catch (error) {
             console.error("Error al obtener la UDI:", error);
             const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
             udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
             
-            // Update all UDI input fields with fallback on error
             document.getElementById("udiActualRecuperacion").value = fallbackValue;
-            document.getElementById("udiActualSumaAsegurada").value = fallbackValue; // For new section
+            document.getElementById("udiActualSumaAsegurada").value = fallbackValue;
             document.getElementById("valorUdi").value = fallbackValue;
             document.getElementById("udiProy").value = fallbackValue;
         } finally {
             spinner.style.display = 'none';
         }
     }
+
 
     // --- Sección 3: Recuperación en Pesos ---
     function calcularAuto() {
