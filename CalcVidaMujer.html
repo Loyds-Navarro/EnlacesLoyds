@@ -457,7 +457,7 @@
 <header>
     <div class="header-content">
         <div class="logo">
-            <img src="https://images.vexels.com/media/users/3/142348/isolated/preview/9c8d9b01a7fb4d0d9a2c9d3f0c9e51c0-logotipo-de-moneda-de-dinero.png" alt="Logo Calculadora UDIs">
+            <img src="logoa.png" alt="Logo Calculadora UDIs">
         </div>
         <h1>Calculadora Integral de UDIs</h1>
         <p class="subtitle">Herramienta profesional para conversión, proyección y recuperación</p>
@@ -556,7 +556,7 @@
         </div>
         
         <div class="input-group">
-            <label for="cantidadUdisRecuperacion"><i class="fas fa-cubes"></i> Cantidad UDIs:</label>
+            <label for="cantidadUdisRecuperacion"><i class="fas fa-cubes"></i> Cantidad UDIs de recuperación:</label>
             <input type="number" id="cantidadUdisRecuperacion" step="0.01" placeholder="Ej: 2500" />
         </div>
         
@@ -963,44 +963,47 @@
         const years = [5, 7, 9, 11, 13, 15, 17];
         
         // Crear tabla de protección
-        tablaProteccionHtml = `
-            <div style="margin-top: 15px;">
-                <div class="result-title"><i class="fas fa-shield-alt"></i> Detalle de UDIs de Protección (5% de $${montoProteccion.toLocaleString('es-MX')} = $${baseProteccion.toLocaleString('es-MX', {minimumFractionDigits:2})})</div>
-                <div style="overflow-x: auto;">
-                    <table class="tabla-proyeccion">
-                        <thead>
-                            <tr>
-                                <th>Año</th>
-                                <th>Valor UDI Proyectado</th>
-                                <th>Monto Base</th>
-                                <th>Valor Protección</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        `;
-        
-        for (const year of years) {
-            const udiProy = udiActual * Math.pow(1 + inflacion / 100, year - 1);
-            const monto = baseProteccion * udiProy;
-            sumatoriaProteccion += monto;
-            
-            tablaProteccionHtml += `
-                <tr>
-                    <td>${year}</td>
-                    <td>${udiProy.toFixed(4)}</td>
-                    <td>$${baseProteccion.toLocaleString('es-MX', {minimumFractionDigits:2})}</td>
-                    <td>$${monto.toLocaleString('es-MX', {minimumFractionDigits:2})}</td>
-                </tr>
-            `;
-        }
-        
-        tablaProteccionHtml += `
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-        
+tablaProteccionHtml = `
+    <div style="margin-top: 15px;">
+        <div class="result-title">
+            <i class="fas fa-shield-alt"></i> 
+            Detalle de UDIs de Protección (5% de ${Math.round(montoProteccion).toLocaleString('es-MX')} = ${Math.round(baseProteccion).toLocaleString('es-MX')})
+        </div>
+        <div style="overflow-x: auto;">
+            <table class="tabla-proyeccion">
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>Valor UDI Proyectado</th>
+                        <th>Monto Base</th>
+                        <th>Valor Protección</th>
+                    </tr>
+                </thead>
+                <tbody>
+`;
+
+for (const year of years) {
+    const udiProy = udiActual * Math.pow(1 + inflacion / 100, year - 1);
+    const monto = baseProteccion * udiProy;
+    sumatoriaProteccion += monto;
+
+    tablaProteccionHtml += `
+        <tr>
+            <td>${year}</td>
+            <td>$${udiProy.toLocaleString('es-MX', {minimumFractionDigits: 4})}</td>
+            <td>${baseProteccion.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
+            <td>$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
+        </tr>
+    `;
+}
+
+tablaProteccionHtml += `
+                </tbody>
+            </table>
+        </div>
+    </div>
+`;
+
         proteccionHtml = `
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
