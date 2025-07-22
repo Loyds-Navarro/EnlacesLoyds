@@ -1436,7 +1436,7 @@
             spinner.style.display = 'inline-block';
 
             const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
-            const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
+            const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/${formattedDate}/${formattedDate}?token=${token}`;
             
             const response = await fetch(url);
             const data = await response.json();
