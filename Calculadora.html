@@ -1251,32 +1251,32 @@
         <div class="frecuencia-grid">
             <div class="frecuencia-card">
                 <div class="title">Anual</div>
-                <div class="value">${anual_udis.toFixed(4)} UDIs</div>
+                <div class="value">${anual_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Semestral</div>
-                <div class="value">${semestral_udis.toFixed(4)} UDIs</div>
+                <div class="value">${semestral_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
 			<div class="frecuencia-card">
                 <div class="title">Trimestral</div>
-                <div class="value">${trimestral_udis.toFixed(4)} UDIs</div>
+                <div class="value">${trimestral_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Mensual</div>
-                <div class="value">${mensual_udis.toFixed(4)} UDIs</div>
+                <div class="value">${mensual_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Semanal</div>
-                <div class="value">${semanal_udis.toFixed(4)} UDIs</div>
+                <div class="value">${semanal_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${semanal_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Diario</div>
-                <div class="value">${diario_udis.toFixed(4)} UDIs</div>
+                <div class="value">${diario_udis..toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${diario_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
         </div>
@@ -1344,7 +1344,7 @@
             html += `
                 <tr>
                     <td>${i}</td>
-                    <td>${valor.toFixed(4)}</td>
+                    <td>${valor..toFixed(6)}</td>
                     <td>$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}</td>
                 </tr>
             `;
@@ -1459,13 +1459,13 @@
                 const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
                 const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
                 
-                udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+                udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI..toFixed(6)}`;
                 
                 // Update all UDI input fields
-                document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
-                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
-                document.getElementById("valorUdi").value = valorUDI.toFixed(4);
-                document.getElementById("udiProy").value = valorUDI.toFixed(4);
+                document.getElementById("udiActualRecuperacion").value = valorUDI..toFixed(6);
+                document.getElementById("udiActualSumaAsegurada").value = valorUDI..toFixed(6);
+                document.getElementById("valorUdi").value = valorUDI..toFixed(6);
+                document.getElementById("udiProy").value = valorUDI..toFixed(6);
 
             } else {
                console.warn("No se pudo obtener el valor de la UDI de Banxico para hoy. Intentando con días anteriores...");
@@ -1483,12 +1483,12 @@
                     const fechaObj = new Date(a, m - 1, d); 
                     const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
                     const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
-                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI..toFixed(6)}`;
                     
-                    document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
-                    document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
-                    document.getElementById("valorUdi").value = valorUDI.toFixed(4);
-                    document.getElementById("udiProy").value = valorUDI.toFixed(4);
+                    document.getElementById("udiActualRecuperacion").value = valorUDI..toFixed(6);
+                    document.getElementById("udiActualSumaAsegurada").value = valorUDI..toFixed(6);
+                    document.getElementById("valorUdi").value = valorUDI..toFixed(6);
+                    document.getElementById("udiProy").value = valorUDI..toFixed(6);
                 } else {
                     console.error("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
                     const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
@@ -1541,7 +1541,7 @@
             <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
                     <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+                    <div><span class="value-badge">$${udiProyectada..toFixed(6)}</span></div>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
@@ -1593,7 +1593,7 @@
             <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
                     <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+                    <div><span class="value-badge">$${udiProyectada..toFixed(6)}</span></div>
                 </div>
             </div>
 			<div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
