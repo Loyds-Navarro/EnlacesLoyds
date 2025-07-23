@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculadora Integral de UDIs</title>
+    <title>Calculadora Integral de UDIs Vida Mujer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Script para Chart.js y su plugin de datalabels -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,14 +11,14 @@
     <style>
         /* Estilos generales */
         :root {
-            --primary-dark: #00183c;
-            --primary: #0d47a1;
-            --primary-light: #1976d2;
-            --accent: #0077cc;
-            --light-bg: #f0f4f8;
+            --primary-dark: #8a1c4a;
+            --primary: #d81b60;
+            --primary-light: #ec407a;
+            --accent: #ad1457;
+            --light-bg: #fdf3f7;
             --card-bg: #ffffff;
             --text-light: #ffffff;
-            --text-dark: #333333;
+            --text-dark: #4a4a4a;
             --border-radius: 8px;
             --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             --transition: all 0.2s ease;
@@ -96,7 +96,7 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
             color: var(--text-light);
             padding: 6px 10px;
             border-radius: 16px;
@@ -147,6 +147,7 @@
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            border: 1px solid #f5e6eb;
         }
 
         section::before {
@@ -200,10 +201,10 @@
         input, select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #c5d8f0;
+            border: 1px solid #f0c9d6;
             border-radius: 6px;
             font-size: 0.9rem;
-            background: #f9fcff;
+            background: #fff9fb;
         }
 
         button {
@@ -221,17 +222,23 @@
             justify-content: center;
             gap: 8px;
             transition: var(--transition);
+            box-shadow: var(--shadow);
         }
 
         button:hover {
             opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(1px);
         }
 
         /* Resultados individuales de la calculadora */
         .resultado {
             margin-top: 15px;
             padding: 12px;
-            background: #e3f2fd;
+            background: #fce9f0;
             border-radius: 6px;
             border-left: 3px solid var(--primary-light);
             display: none;
@@ -276,12 +283,13 @@
         }
 
         .frecuencia-card {
-            background: #f0f7ff;
+            background: #fdf0f4;
             padding: 10px;
             border-radius: 6px;
             text-align: center;
-            border: 1px solid #d1e4fa;
+            border: 1px solid #f8d7e1;
             font-size: 0.85rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .frecuencia-card .title {
@@ -298,7 +306,7 @@
 
         .frecuencia-card .value-pesos {
             font-size: 0.75rem;
-            color: #555;
+            color: #666;
         }
 
         /* Tabla de Proyección */
@@ -318,27 +326,28 @@
         }
 
         .tabla-proyeccion tr:nth-child(even) {
-            background-color: #f0f7ff;
+            background-color: #fdf0f4;
         }
 
         .tabla-proyeccion td {
             padding: 6px;
-            border-bottom: 1px solid #d1e4fa;
+            border-bottom: 1px solid #f8d7e1;
         }
 
         .total-row {
             font-weight: 700;
-            background-color: #d4e6ff !important;
+            background-color: #fce9f0 !important;
         }
 
         .compact-result {
-            background: #d4e6ff;
+            background: #fce9f0;
             padding: 10px;
             border-radius: 6px;
             margin-top: 8px;
             text-align: center;
             font-weight: 600;
             font-size: 0.9rem;
+            border: 1px solid #f8d7e1;
         }
         
         /* Comparación */
@@ -350,10 +359,10 @@
         }
         
         .comparison-card {
-            background: #f0f7ff;
+            background: #fdf0f4;
             padding: 12px;
             border-radius: 6px;
-            border: 1px solid #d1e4fa;
+            border: 1px solid #f8d7e1;
             text-align: center;
         }
         
@@ -370,7 +379,7 @@
         }
         
         .difference-card {
-            background: #e3f2fd;
+            background: #fce9f0;
             padding: 15px;
             border-radius: 6px;
             margin-top: 15px;
@@ -423,11 +432,12 @@
         .chart-container {
             position: relative;
             height: 300px;
-            margin: 20px 0; /* Ajustado para mejor espaciado */
+            margin: 20px 0;
             padding: 10px;
-            background: #f9fcff;
+            background: #fff9fb;
             border-radius: 8px;
             box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+            border: 1px solid #f8d7e1;
         }
         
         .chart-title {
@@ -463,13 +473,13 @@
         /* Estos estilos se inyectarán en la nueva ventana para su apariencia */
         /* ========================================================= */
         .report-body-html {
-            font-family: 'Segoe UI', 'Poppins', sans-serif; /* Asegurar la fuente deseada */
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
             margin: 0;
             color: var(--text-dark);
-            background-color: var(--light-bg); /* Fondo claro similar al principal */
+            background-color: var(--light-bg);
         }
         .report-container-html {
-            max-width: 850px; /* Un poco más ancho para el reporte */
+            max-width: 850px;
             margin: 20px auto;
             background-color: white;
             padding: 30px;
@@ -479,26 +489,25 @@
 
         /* Encabezado del Reporte (con fondo #00183c) */
         .report-header-section-html { 
-            background: var(--primary-dark); /* Color #00183c */
-            color: var(--text-light); /* Texto blanco para contraste */
+            background: var(--primary-dark);
+            color: var(--text-light);
             text-align: center;
             padding: 25px 0;
-            /* Ajuste de márgenes para que el header se extienda por todo el ancho del contenedor */
             margin: -30px -30px 25px -30px; 
             border-top-left-radius: var(--border-radius);
             border-top-right-radius: var(--border-radius);
-            box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2); /* Sombra interna para profundidad */
+            box-shadow: inset 0 -3px 8px rgba(0,0,0,0.2);
         }
         .report-logo-html { 
-            width: 110px; /* Tamaño del logo en el reporte */
+            width: 110px;
             height: 110px;
             border-radius: 100%; 
-            border: 3px solid rgba(255, 255, 255, 0.4); /* Borde más visible */
+            border: 3px solid rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px; /* Centrar y espacio */
-            overflow: hidden; /* Asegurar que la imagen no se salga del círculo */
+            margin: 0 auto 12px;
+            overflow: hidden;
         }
         .report-logo-html img {
             max-width: 100%;
@@ -507,7 +516,7 @@
             object-fit: contain;
         }
         .report-main-title-html { 
-            font-size: 2.2rem; /* Título principal más grande */
+            font-size: 2.2rem;
             margin-bottom: 8px;
             font-weight: 700;
         }
@@ -525,27 +534,27 @@
 
         hr.report-section-divider-html { 
             border: none;
-            border-top: 1px dashed #ccc; /* Línea divisoria punteada */
+            border-top: 1px dashed #f0c9d6;
             margin: 30px 0;
         }
 
         /* Contenedores de las secciones de resultados en el reporte */
         .report-section-card-html { 
-            background: var(--card-bg); /* Fondo blanco */
+            background: var(--card-bg);
             padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow); 
-            border-left: 4px solid var(--primary); /* Borde lateral */
-            margin-bottom: 30px; /* Espacio entre secciones */
+            border-left: 4px solid var(--primary);
+            margin-bottom: 30px;
         }
         .report-section-card-html:last-child {
-            margin-bottom: 0; /* No hay margen después de la última sección */
+            margin-bottom: 0;
         }
 
-        .report-section-card-html h3 { /* Título de cada sección en el reporte */
+        .report-section-card-html h3 {
             color: var(--primary);
             margin: 0 0 15px 0;
-            font-size: 1.6rem; /* Título de sección más grande */
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -558,20 +567,17 @@
         }
         
         /* Aseguramos que los estilos de los paneles de resultados se apliquen */
-        /* Estas clases ya tienen los estilos que te gustan y no necesitan ser redefinidas si el CSS principal es global */
-
-        /* Sobrescribir solo lo necesario para el reporte */
-        .report-results-inner { /* Contenedor para los resultados en sí dentro de cada tarjeta de sección */
-            padding-top: 10px; /* Pequeño padding para separar del título de sección */
+        .report-results-inner {
+            padding-top: 10px;
         }
-        .report-results-inner .resultado { /* Asegurar que se muestre en el reporte */
+        .report-results-inner .resultado {
             display: block !important; 
-            background: none; /* Eliminar fondos duplicados */
-            border: none; /* Eliminar bordes duplicados */
-            padding: 0; /* Eliminar padding duplicado */
+            background: none;
+            border: none;
+            padding: 0;
         }
         .report-results-inner .result-title {
-            display: none; /* Ocultar el título "Resultados:" duplicado */
+            display: none;
         }
 
         /* Pie de página del reporte */
@@ -627,7 +633,7 @@
             height: 350px;
             margin: 25px 0;
             padding: 10px;
-            background: #f9fcff;
+            background: #fff9fb;
             border-radius: 8px;
             box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
         }
@@ -665,7 +671,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
-            border-bottom: 1px dotted #ccc;
+            border-bottom: 1px dotted #f0c9d6;
             font-size: 0.9rem;
         }
 
@@ -684,25 +690,17 @@
         }
         /* Mejoras de diseño */
         .input-group label {
-            font-size: 1rem; /* Aumentar tamaño de fuente de etiquetas */
-            color: var(--primary-dark); /* Color más oscuro para mejor contraste */
+            font-size: 1rem;
+            color: var(--primary-dark);
         }
         .input-group input, .input-group select {
-            border: 1px solid var(--primary-light); /* Borde más pronunciado */
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Sombra interna sutil */
+            border: 1px solid var(--primary-light);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.2); /* Resplandor al enfocar */
-        }
-        button {
-            box-shadow: var(--shadow); /* Sombra para botones */
-            transition: all 0.3s ease;
-        }
-        button:active {
-            transform: translateY(1px); /* Efecto de click */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(173, 20, 87, 0.2);
         }
     </style>
 </head>
@@ -711,9 +709,9 @@
 <header>
     <div class="header-content">
         <div class="logo">
-            <img src="https://placehold.co/150x150/00183c/ffffff?text=UDI" alt="Logo Calculadora UDIs">
+            <img src="logo.png" alt="Logo Calculadora UDIs">
         </div>
-        <h1>Calculadora Integral de UDIs</h1>
+        <h1>Calculadora Integral de UDIs Vida Mujer</h1>
         <p class="subtitle">Herramienta profesional para conversión, proyección y recuperación</p>
     </div>
 </header>
@@ -882,7 +880,7 @@
         </button>
         
         <button onclick="generarReporteYDescargar()" style="
-            background-color: #0d47a1;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -892,6 +890,7 @@
             margin: 20px auto;
             display: block;
             cursor: pointer;
+            box-shadow: var(--shadow);
         ">
             <i class="fas fa-file-export"></i> Ver Reporte y Descargar
         </button>
@@ -1047,7 +1046,7 @@
 
                 hr.report-section-divider-html { 
                     border: none;
-                    border-top: 1px dashed #ccc; 
+                    border-top: 1px dashed #f0c9d6; 
                     margin: 30px 0;
                 }
 
@@ -1145,7 +1144,7 @@
                     height: 350px;
                     margin: 25px 0;
                     padding: 10px;
-                    background: #f9fcff;
+                    background: #fff9fb;
                     border-radius: 8px;
                     box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
                 }
@@ -1215,7 +1214,7 @@
                 <div class="report-container-html" id="reportContentToDownload">
                     <header class="report-header-section-html">
                         <div class="report-logo-html">
-                            <img src="https://placehold.co/150x150/00183c/ffffff?text=UDI" alt="Logo Calculadora UDIs">
+                            <img src="logo.png" alt="Logo Calculadora UDIs">
                         </div>
                         <h1 class="report-main-title-html">${tituloReporte}</h1>
                         <p class="report-sub-title-html">Loyd´s & Navarro Preservando tu futuro finaciero</p>
@@ -1327,39 +1326,39 @@
         const mensual_pesos = monto / 12;
         const semanal_pesos = monto / 52;
         const diario_pesos = monto / 365;
-        const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#0d47a1;">${nombre}</span></div>` : '';
+        const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#d81b60;">${nombre}</span></div>` : '';
 
         conversionResult.innerHTML = `
         ${tituloNombre}
         <div class="frecuencia-grid">
             <div class="frecuencia-card">
                 <div class="title">Anual</div>
-                <div class="value">${anual_udis.toFixed(4)} UDIs</div>
+                <div class="value">${anual_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Semestral</div>
-                <div class="value">${semestral_udis.toFixed(4)} UDIs</div>
+                <div class="value">${semestral_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
 			<div class="frecuencia-card">
                 <div class="title">Trimestral</div>
-                <div class="value">${trimestral_udis.toFixed(4)} UDIs</div>
+                <div class="value">${trimestral_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Mensual</div>
-                <div class="value">${mensual_udis.toFixed(4)} UDIs</div>
+                <div class="value">${mensual_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Semanal</div>
-                <div class="value">${semanal_udis.toFixed(4)} UDIs</div>
+                <div class="value">${semanal_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${semanal_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
             <div class="frecuencia-card">
                 <div class="title">Diario</div>
-                <div class="value">${diario_udis.toFixed(4)} UDIs</div>
+                <div class="value">${diario_udis.toFixed(6)} UDIs</div>
                 <div class="value-pesos">$${diario_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
             </div>
         </div>
@@ -1427,7 +1426,7 @@
             html += `
                 <tr>
                     <td>${i}</td>
-                    <td>${valor.toFixed(4)}</td>
+                    <td>${valor.toFixed(6)}</td>
                     <td>$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}</td>
                 </tr>
             `;
@@ -1471,8 +1470,8 @@
                 datasets: [{
                     label: 'Valor Proyectado (MXN)',
                     data: proyeccionData,
-                    backgroundColor: 'rgba(13, 71, 161, 0.2)',
-                    borderColor: 'rgba(13, 71, 161, 1)',
+                    backgroundColor: 'rgba(216, 27, 96, 0.2)',
+                    borderColor: 'rgba(216, 27, 96, 1)',
                     borderWidth: 2,
                     tension: 0.1,
                     fill: true
@@ -1542,13 +1541,13 @@
                 const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
                 const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
                 
-                udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+                udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(6)}`;
                 
                 // Update all UDI input fields
-                document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
-                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
-                document.getElementById("valorUdi").value = valorUDI.toFixed(4);
-                document.getElementById("udiProy").value = valorUDI.toFixed(4);
+                document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(6);
+                document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(6);
+                document.getElementById("valorUdi").value = valorUDI.toFixed(6);
+                document.getElementById("udiProy").value = valorUDI.toFixed(6);
 
             } else {
                console.warn("No se pudo obtener el valor de la UDI de Banxico para hoy. Intentando con días anteriores...");
@@ -1566,12 +1565,12 @@
                     const fechaObj = new Date(a, m - 1, d); 
                     const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
                     const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
-                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(4)}`;
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(6)}`;
                     
-                    document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(4);
-                    document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(4);
-                    document.getElementById("valorUdi").value = valorUDI.toFixed(4);
-                    document.getElementById("udiProy").value = valorUDI.toFixed(4);
+                    document.getElementById("udiActualRecuperacion").value = valorUDI.toFixed(6);
+                    document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(6);
+                    document.getElementById("valorUdi").value = valorUDI.toFixed(6);
+                    document.getElementById("udiProy").value = valorUDI.toFixed(6);
                 } else {
                     console.error("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
                     const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
@@ -1632,8 +1631,8 @@
             
             let tablaProteccion = `
                 <div style="margin-top: 20px;">
-                    <div style="font-weight: 600; margin-bottom: 10px; color: #0d47a1;">
-                        <i class="fas fa-shield-alt"></i> Protección (5% de ${sumaProteccion.toLocaleString('es-MX')} UDIs):
+                    <div style="font-weight: 600; margin-bottom: 10px; color: #d81b60;">
+                        <i class="fas fa-shield-alt"></i> Beneficio del 5% adelantado de ${sumaProteccion.toLocaleString('es-MX')} UDIs:
                     </div>
                     <table class="tabla-proyeccion">
                         <thead>
@@ -1658,7 +1657,7 @@
                 tablaProteccion += `
                     <tr>
                         <td>${anio}</td>
-                        <td>${udiProyectadaProteccion.toFixed(4)}</td>
+                        <td>${udiProyectadaProteccion.toFixed(6)}</td>
                         <td>${udisProteccion.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
                         <td>$${totalPesos.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
                     </tr>
@@ -1683,26 +1682,32 @@
         }
         
         recuperacionResult.innerHTML = `
+					<div class="compact-result" style="margin-top: 10px;">
+    <i class="fas fa-shield-alt"></i> Total Recuperación: 
+    <span>$${(valorTotal + proteccionTotalPesos).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+</div>
+		
             <div style="margin-bottom: 8px; font-size: 0.9rem;">
                 Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
             </div>
             
-            <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+            <div style="background: #fdf0f4; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+                    <div><i class="fas fa-arrow-up" style="color: #d81b60;"></i> UDI proyectada:</div>
+                    <div><span class="value-badge">$${udiProyectada.toFixed(6)}</span></div>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                    <div><i class="fas fa-coins" style="color: #0d47a1;"></i> UDIs invertidas:</div>
+                    <div><i class="fas fa-coins" style="color: #d81b60;"></i> UDIs invertidas:</div>
                     <div><span class="value-badge">${cantidadUdis.toLocaleString('es-MX')}</span></div>
                 </div>
             </div>
             
             <div class="compact-result">
-                <i class="fas fa-piggy-bank"></i> Total Recuperación: 
+                <i class="fas fa-piggy-bank"></i> Recuperación de UDI´s restantes: 
                 <span>$${valorTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
+
             
             ${proteccionHtml}
         `;
@@ -1716,11 +1721,12 @@
         const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
         if (!isNaN(cantidadUdisFallecimiento)) {
             const udisEnfermedadTerminal = cantidadUdisFallecimiento * 0.25; // 25%
-            document.getElementById("cantidadUdisEnfermedadTerminal").value = udisEnfermedadTerminal.toFixed(4);
+            document.getElementById("cantidadUdisEnfermedadTerminal").value = udisEnfermedadTerminal.toFixed(6);
         } else {
             document.getElementById("cantidadUdisEnfermedadTerminal").value = "";
         }
     }
+	
 
 
     // --- Sección 4: Suma Asegurada Detallada ---
@@ -1753,15 +1759,15 @@
                 Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
             </div>
             
-            <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+            <div style="background: #fdf0f4; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(4)}</span></div>
+                    <div><i class="fas fa-arrow-up" style="color: #d81b60;"></i> UDI proyectada:</div>
+                    <div><span class="value-badge">$${udiProyectada.toFixed(6)}</span></div>
                 </div>
             </div>
-			<div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+			<div style="background: #fdf0f4; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-sticky-note" style="color: #0d47a1;"></i>Los valores proyectados en el cálculo se basan en una estimación del valor de la UDI de su plan de ahorro. Estos pueden modificarse de acuerdo con el valor real de la UDI en el año en que ocurra el evento.</div>
+                    <div><i class="fas fa-sticky-note" style="color: #d81b60;"></i>Los valores proyectados en el cálculo se basan en una estimación del valor de la UDI de su plan de ahorro. Estos pueden modificarse de acuerdo con el valor real de la UDI en el año en que ocurra el evento.</div>
                 </div>
             </div>
 
@@ -1944,7 +1950,7 @@
                 <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}% de la Recuperación</div>
             </div>
             
-            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem;">
+            <div style="margin-top: 15px; padding: 10px; background: #fce9f0; border-radius: 6px; font-size: 0.9rem;">
                 <i class="fas fa-info-circle"></i> 
                 ${esPositivo ? 
                     '<i class="fas fa-thumbs-up" style="color: green; margin-right: 5px;"></i>¡Excelente! La Recuperación es mayor o igual que la proyección de ahorro, lo que indica un buen rendimiento.' : 
@@ -1972,12 +1978,12 @@
                     label: 'Monto (MXN)',
                     data: [proyeccionTotal, recuperacionTotal],
                     backgroundColor: [
-                        'rgba(13, 71, 161, 0.7)',
-                        'rgba(25, 118, 210, 0.7)'
+                        'rgba(216, 27, 96, 0.7)',
+                        'rgba(236, 64, 122, 0.7)'
                     ],
                     borderColor: [
-                        'rgba(13, 71, 161, 1)',
-                        'rgba(25, 118, 210, 1)'
+                        'rgba(216, 27, 96, 1)',
+                        'rgba(236, 64, 122, 1)'
                     ],
                     borderWidth: 2
                 }]
