@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranking Aseguradoras de Vida en México</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      color: #333;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Login Screen */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a3a5f 0%, #2c5c8a 100%);
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      color: #1a3a5f;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .login-box button {
+      background: #1a3a5f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    .login-box button:hover {
+      background: #2c5c8a;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+    
+    /* Header Styles */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #1a3a5f 0%, #2c5c8a 100%);
+      padding: 20px 40px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo {
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, #4a90e2 0%, #1a3a5f 100%);
+      border-radius: 60%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo img {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .logo-text span {
+      color: #4fc3f7;
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      margin: 30px 0;
+      color: #2c3e50;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .page-title::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #4a90e2, #2ecc71);
+      border-radius: 2px;
+    }
+    
+    /* Cards */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-title i {
+      color: #4a90e2;
+    }
+    
+    .card-content {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a3a5f;
+    }
+    
+    .card-content span {
+      font-size: 16px;
+      font-weight: normal;
+      color: #7f8c8d;
+    }
+    
+    /* Table Section */
+    .section {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .filter-btn {
+      padding: 10px 20px;
+      background: #f0f4f8;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover {
+      background: #4a90e2;
+      color: white;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.95em;
+    }
+    
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    th {
+      background: linear-gradient(180deg, #4a90e2 0%, #2c5c8a 100%);
+      color: white;
+      text-align: left;
+      padding: 16px 12px;
+      font-weight: 600;
+    }
+    
+    th:first-child {
+      border-top-left-radius: 10px;
+    }
+    
+    th:last-child {
+      border-top-right-radius: 10px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #eef2f7;
+      vertical-align: top;
+    }
+    
+    .rating-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+    
+    .rating-high {
+      color: #27ae60;
+    }
+    
+    .rating-medium {
+      color: #f39c12;
+    }
+    
+    .rating-low {
+      color: #e74c3c;
+    }
+    
+    .solvencia-cell {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    
+    .solvencia-alta {
+      background: rgba(39, 174, 96, 0.15);
+      color: #27ae60;
+    }
+    
+    .solvencia-media {
+      background: rgba(243, 156, 18, 0.15);
+      color: #f39c12;
+    }
+    
+    .complaints-cell {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+    
+    .complaints-high {
+      color: #e74c3c;
+    }
+    
+    .complaints-medium {
+      color: #f39c12;
+    }
+    
+    .complaints-low {
+      color: #27ae60;
+    }
+    
+    .complaint-types {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 5px;
+    }
+    
+    .complaint-tag {
+      background: #eef2f7;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8em;
+    }
+    
+    .complaint-tag.high {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+    
+    .complaint-tag.medium {
+      background: rgba(243, 156, 18, 0.15);
+      color: #f39c12;
+    }
+    
+    .benefits-list {
+      padding-left: 20px;
+    }
+    
+    .benefits-list li {
+      margin-bottom: 8px;
+      font-size: 0.9em;
+    }
+    
+    .detalle-btn {
+      padding: 8px 15px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.3s ease;
+    }
+    
+    .detalle-btn:hover {
+      background: #1a3a5f;
+    }
+    
+    .detalle-quejas {
+      background: #f8fafc;
+    }
+    
+    .detalle-quejas td {
+      padding: 20px;
+    }
+    
+    .detail-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .detail-section {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .detail-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eef2f7;
+    }
+    
+    .detail-chart {
+      height: 200px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eef2f7;
+      margin-bottom: 20px;
+    }
+    
+    .chart-bar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .bar {
+      width: 100%;
+      background: linear-gradient(to top, #4a90e2, #2c5c8a);
+      border-radius: 4px 4px 0 0;
+      min-height: 1px;
+    }
+    
+    .bar-label {
+      margin-top: 8px;
+      font-size: 0.8em;
+      text-align: center;
+      color: #7f8c8d;
+    }
+    
+    .cancellation-reasons {
+      list-style: none;
+    }
+    
+    .cancellation-reasons li {
+      padding: 12px 0;
+      border-bottom: 1px solid #eef2f7;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .reason-progress {
+      height: 6px;
+      background: #eef2f7;
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    
+    .reason-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #e74c3c, #f39c12);
+      border-radius: 3px;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
+    
+    /* Currency Styles */
+    .currency-info {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .currency-card {
+      text-align: center;
+      min-width: 200px;
+    }
+    
+    .currency-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a3a5f;
+      margin: 10px 0;
+    }
+    
+    .currency-label {
+      font-size: 16px;
+      color: #7f8c8d;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,.1);
+      border-radius: 50%;
+      border-top-color: #1a3a5f;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Fuente de consulta */
+    .data-source {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+      color: #555;
+    }
+
+    .data-source strong {
+      color: #2c3e50;
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+      
+      .controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <h2>Acceso al Sistema</h2>
+      <input type="password" id="passwordInput" placeholder="Ingrese la contraseña">
+      <button onclick="checkPassword()">Acceder</button>
+      <div id="errorMessage" class="error-message">Contraseña incorrecta. Intente nuevamente.</div>
+    </div>
+  </div>
+
+  <!-- Main Content (hidden by default) -->
+  <div id="mainContent" class="container hidden">
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo">
+          <img src="logo.png" alt="Logo">
+        </div>
+        <div class="logo-text">Rank<span>Aseguradoras</span></div>
+      </div>
+      <div class="header-info">
+        <h2>Informe de Mercado de Seguros</h2>
+        <p>Datos actualizados de Julio, 2025</p>
+      </div>
+    </div>
+    
+    <h1 class="page-title">Ranking Top 20 Aseguradoras de Vida en México</h1>
+    
+    <!-- Sección de conversión de monedas -->
+    <div class="currency-info">
+      <div class="currency-card">
+        <div class="currency-label">Valor de la UDI</div>
+        <div id="udiText" class="currency-value">
+          <span id="spinner" class="spinner" style="display: none;"></span>
+          Cargando...
+        </div>
+      </div>
+      <div class="currency-card">
+        <div class="currency-label">Tipo de cambio USD/MXN</div>
+        <div id="dolarText" class="currency-value">
+          <span id="spinnerDolar" class="spinner" style="display: none;"></span>
+          Cargando...
+        </div>
+      </div>
+    </div>
+
+    <!-- Fuente de consulta -->
+    <div class="data-source">
+      <strong>Fuente de consulta:</strong> Datos obtenidos de la Comisión Nacional de Seguros y Fianzas (CNSF) y Banxico. 
+      Valores de UDI y tipo de cambio actualizados al día de hoy.
+    </div>
+    
+    <div class="cards-container">
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-building"></i>
+          <span>Aseguradoras Analizadas</span>
+        </div>
+        <div class="card-content">20</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Quejas Totales (2024)</span>
+        </div>
+        <div class="card-content">1,850 <span>quejas registradas</span></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">
+          <i class="fas fa-file-contract"></i>
+          <span>Cancelaciones Anuales</span>
+        </div>
+        <div class="card-content">23,500 <span>pólizas canceladas</span></div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-table"></i>
+          Comparativa de Aseguradoras
+        </h2>
+        <div class="controls">
+          <button class="filter-btn" onclick="convertirMontos('MXN')">
+            <i class="fas fa-dollar-sign"></i> Mostrar en MXN
+          </button>
+          <button class="filter-btn" onclick="convertirMontos('UDI')">
+            <i class="fas fa-chart-line"></i> Mostrar en UDIs
+          </button>
+          <button class="filter-btn" onclick="convertirMontos('USD')">
+            <i class="fas fa-globe"></i> Mostrar en USD
+          </button>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Aseguradora</th>
+            <th>Calificación</th>
+            <th>Solvencia</th>
+            <th>Prima Promedio</th>
+            <th>Quejas (2024)</th>
+            <th>Tipos de Quejas</th>
+            <th>Beneficios Destacados</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaAseguradoras">
+          <tr><td colspan="8">Cargando datos...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="footer">
+      <p>Reporte generado por el Departamento de Análisis Financiero - Datos proporcionados por la CNSF</p>
+      <p>© 2025 RankAseguradoras - Todos los derechos reservados</p>
+    </div>
+  </div>
+
+  <script>
+    // Función para verificar la contraseña
+    function checkPassword() {
+      const password = document.getElementById("passwordInput").value;
+      const errorMessage = document.getElementById("errorMessage");
+      const loginScreen = document.getElementById("loginScreen");
+      const mainContent = document.getElementById("mainContent");
+      
+      if (password === "Gabby") {
+        loginScreen.style.display = "none";
+        mainContent.classList.remove("hidden");
+        // Cargar los datos después del login
+        cargarRankingAseguradoras();
+        obtenerValorUDI();
+        obtenerTipoCambioDolar();
+      } else {
+        errorMessage.style.display = "block";
+        document.getElementById("passwordInput").value = "";
+      }
+    }
+
+    // Permitir login con Enter
+    document.getElementById("passwordInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    });
+
+    // Variables globales para almacenar los valores de conversión
+    let valorUDI = 8.5205; // Valor por defecto
+    let valorUSD = 18.50; // Tipo de cambio aproximado USD/MXN
+    let currentCurrency = 'MXN'; // Moneda actual mostrada
+    
+    // --- Obtener UDI desde Banxico ---
+    async function obtenerValorUDI() {
+        const udiText = document.getElementById("udiText");
+        const spinner = document.getElementById("spinner");
+        const fallbackValue = "8.5205"; 
+        const fallbackDate = new Date(); 
+        
+        try {
+            udiText.textContent = "Consultando...";
+            spinner.style.display = 'inline-block';
+            const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/${formattedDate}/${formattedDate}?token=${token}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.bmx && data.bmx.series[0].datos.length > 0) {
+                const datoRaw = data.bmx.series[0].datos[0].dato;
+                const fechaRaw = data.bmx.series[0].datos[0].fecha;
+                valorUDI = parseFloat(datoRaw.replace(",", "."));
+                const [d, m, a] = fechaRaw.split('/');
+                const fechaMostrar = new Date(a, m - 1, d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+                udiText.innerHTML = `$${valorUDI.toFixed(6)} <small>(${fechaMostrar})</small>`;
+                
+                // Actualizar los montos mostrados si ya estaban en UDIs
+                if (currentCurrency === 'UDI') {
+                    convertirMontos('UDI');
+                }
+            } else {
+                const urlLatest = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/oportuno?token=${token}`;
+                const responseLatest = await fetch(urlLatest);
+                const dataLatest = await responseLatest.json();
+                if (dataLatest.bmx && dataLatest.bmx.series[0].datos.length > 0) {
+                    const datoRaw = dataLatest.bmx.series[0].datos[0].dato;
+                    const fechaRaw = dataLatest.bmx.series[0].datos[0].fecha;
+                    valorUDI = parseFloat(datoRaw.replace(",", "."));
+                    const [d, m, a] = fechaRaw.split('/');
+                    const fechaMostrar = new Date(a, m - 1, d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+                    udiText.innerHTML = `$${valorUDI.toFixed(6)} <small>(${fechaMostrar})</small>`;
+                    
+                    // Actualizar los montos mostrados si ya estaban en UDIs
+                    if (currentCurrency === 'UDI') {
+                        convertirMontos('UDI');
+                    }
+                } else {
+                    const fechaMostrar = fallbackDate.toLocaleDateString('es-MX');
+                    udiText.innerHTML = `$${fallbackValue} <small>(${fechaMostrar})</small>`;
+                    valorUDI = parseFloat(fallbackValue);
+                }
+            }
+        } catch (error) {
+            console.error("Error al obtener la UDI:", error);
+            const fechaMostrar = fallbackDate.toLocaleDateString('es-MX');
+            udiText.innerHTML = `$${fallbackValue} <small>(${fechaMostrar})</small>`;
+            valorUDI = parseFloat(fallbackValue);
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
+    // --- Obtener tipo de cambio dólar ---
+    async function obtenerTipoCambioDolar() {
+        const dolarText = document.getElementById("dolarText");
+        const spinnerDolar = document.getElementById("spinnerDolar");
+        const fallbackValue = "18.0000";
+        const fallbackDate = new Date();
+        
+        try {
+            dolarText.textContent = "Consultando...";
+            spinnerDolar.style.display = 'inline-block';
+            const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/${formattedDate}/${formattedDate}?token=${token}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.bmx && data.bmx.series[0].datos.length > 0) {
+                const datoRaw = data.bmx.series[0].datos[0].dato;
+                const fechaRaw = data.bmx.series[0].datos[0].fecha;
+                valorUSD = parseFloat(datoRaw.replace(",", "."));
+                const [d, m, a] = fechaRaw.split('/');
+                const fechaMostrar = new Date(a, m - 1, d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+                dolarText.innerHTML = `$${valorUSD.toFixed(4)} <small>(${fechaMostrar})</small>`;
+                
+                // Actualizar los montos mostrados si ya estaban en USD
+                if (currentCurrency === 'USD') {
+                    convertirMontos('USD');
+                }
+            } else {
+                const urlLatest = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/oportuno?token=${token}`;
+                const responseLatest = await fetch(urlLatest);
+                const dataLatest = await responseLatest.json();
+                if (dataLatest.bmx && dataLatest.bmx.series[0].datos.length > 0) {
+                    const datoRaw = dataLatest.bmx.series[0].datos[0].dato;
+                    const fechaRaw = dataLatest.bmx.series[0].datos[0].fecha;
+                    valorUSD = parseFloat(datoRaw.replace(",", "."));
+                    const [d, m, a] = fechaRaw.split('/');
+                    const fechaMostrar = new Date(a, m - 1, d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+                    dolarText.innerHTML = `$${valorUSD.toFixed(4)} <small>(${fechaMostrar})</small>`;
+                    
+                    // Actualizar los montos mostrados si ya estaban en USD
+                    if (currentCurrency === 'USD') {
+                        convertirMontos('USD');
+                    }
+                } else {
+                    const fechaMostrar = fallbackDate.toLocaleDateString('es-MX');
+                    dolarText.innerHTML = `$${fallbackValue} <small>(${fechaMostrar})</small>`;
+                    valorUSD = parseFloat(fallbackValue);
+                }
+            }
+        } catch (error) {
+            console.error("Error al obtener el tipo de cambio:", error);
+            const fechaMostrar = fallbackDate.toLocaleDateString('es-MX');
+            dolarText.innerHTML = `$${fallbackValue} <small>(${fechaMostrar})</small>`;
+            valorUSD = parseFloat(fallbackValue);
+        } finally {
+            spinnerDolar.style.display = 'none';
+        }
+    }
+    
+    // Función para convertir montos entre MXN, UDIs y USD
+    function convertirMontos(moneda) {
+        currentCurrency = moneda;
+        const elementos = document.querySelectorAll('.monto-convertible');
+        
+        elementos.forEach(elemento => {
+            const mxn = parseFloat(elemento.getAttribute('data-mxn'));
+            let valor, simbolo;
+            
+            switch(moneda) {
+                case 'UDI':
+                    valor = mxn / valorUDI;
+                    simbolo = 'UDIs';
+                    break;
+                case 'USD':
+                    valor = mxn / valorUSD;
+                    simbolo = 'USD';
+                    break;
+                default: // MXN
+                    valor = mxn;
+                    simbolo = 'MXN';
+                    break;
+            }
+            
+            // Formatear el número según la moneda
+            if (moneda === 'UDI') {
+                elemento.textContent = `${valor.toFixed(2)} ${simbolo}`;
+            } else {
+                elemento.textContent = `${simbolo} $${valor.toFixed(2)}`;
+            }
+            
+            // Actualizar el tooltip con el valor original en MXN
+            elemento.setAttribute('title', `Valor original: MXN $${mxn.toFixed(2)}`);
+        });
+    }
+
+    function toggleDetalle(id) {
+      const row = document.getElementById(id);
+      row.style.display = (row.style.display === "table-row") ? "none" : "table-row";
+    }
+
+    function cargarRankingAseguradoras() {
+      const tabla = document.getElementById("tablaAseguradoras");
+      const datos = [
+        {
+          nombre: "GNP Seguros",
+          calificacion: 9.4,
+          solvencia: "Alta",
+          primaPromedio: 2500,
+          quejas: 120,
+          tipoQuejas: ["Demoras en pagos", "Cancelaciones injustificadas", "Falta de información clara"],
+          quejasDetalle: {
+            "Demoras en pagos": 30,
+            "Cancelaciones injustificadas": 25,
+            "Falta de información clara": 20,
+            "Negativa de pago o rechazo": 15,
+            "Atención al cliente deficiente": 10,
+            "Errores en documentos": 10,
+            "Otros": 10
+          },
+          motivosCancelacion: {
+            "Precios elevados": 35,
+            "Insatisfacción con cobertura": 28,
+            "Mala atención al cliente": 22,
+            "Encontró mejor opción": 15
+          },
+          beneficios: [
+            "Planes flexibles con múltiples opciones de cobertura",
+            "Cobertura internacional en todos los planes",
+            "Programa de ahorro con inversión garantizada"
+          ]
+        },
+        {
+          nombre: "MetLife México",
+          calificacion: 9.1,
+          solvencia: "Alta",
+          primaPromedio: 2800,
+          quejas: 95,
+          tipoQuejas: ["Cancelaciones", "Falta de información", "Atención al cliente"],
+          quejasDetalle: {
+            "Cancelaciones injustificadas": 40,
+            "Falta de información clara": 30,
+            "Atención al cliente deficiente": 15,
+            "Errores en documentos": 10
+          },
+          motivosCancelacion: {
+            "Cambio en situación financiera": 42,
+            "Insatisfacción con servicio": 25,
+            "Precios elevados al renovar": 18,
+            "Cobertura inadecuada": 15
+          },
+          beneficios: [
+            "Seguros combinados con ahorro e inversión",
+            "Protección por invalidez y enfermedades graves",
+            "Descuentos por pago anual"
+          ]
+        },
+        {
+          nombre: "Seguros Monterrey NY Life",
+          calificacion: 9.2,
+          solvencia: "Alta",
+          primaPromedio: 2300,
+          quejas: 70,
+          tipoQuejas: ["Demoras en pagos", "Trámites lentos"],
+          quejasDetalle: {
+            "Demoras en pagos": 30,
+            "Trámites lentos": 40
+          },
+          motivosCancelacion: {
+            "Falta de transparencia en costos": 38,
+            "Problemas con reclamaciones": 22,
+            "Pérdida de confianza": 20,
+            "Ofertas de competidores": 20
+          },
+          beneficios: [
+            "Ahorro para retiro con rendimientos garantizados",
+            "Cobertura total por fallecimiento",
+            "Exención de pago por invalidez"
+          ]
+        },
+        {
+          nombre: "AXA México",
+          calificacion: 8.9,
+          solvencia: "Media",
+          primaPromedio: 2100,
+          quejas: 210,
+          tipoQuejas: ["Negativa de pago", "Atención al cliente", "Cancelaciones"],
+          quejasDetalle: {
+            "Negativa de pago o rechazo": 80,
+            "Atención al cliente deficiente": 70,
+            "Cancelaciones injustificadas": 60
+          },
+          motivosCancelacion: {
+            "Reclamos no resueltos": 45,
+            "Aumentos de prima injustificados": 30,
+            "Problemas con agentes": 15,
+            "Falta de flexibilidad": 10
+          },
+          beneficios: [
+            "Seguro vida temporal y vitalicio",
+            "Protección con asistencia médica global",
+            "Opciones de pago flexibles"
+          ]
+        },
+        {
+          nombre: "Zurich Santander",
+          calificacion: 8.7,
+          solvencia: "Media",
+          primaPromedio: 1950,
+          quejas: 140,
+          tipoQuejas: ["Demoras", "Información insuficiente"],
+          quejasDetalle: {
+            "Demoras en pagos": 50,
+            "Falta de información clara": 40,
+            "Atención al cliente deficiente": 25,
+            "Errores en documentos": 25
+          },
+          motivosCancelacion: {
+            "Complejidad de trámites": 40,
+            "Insatisfacción con cobertura": 25,
+            "Costos ocultos": 20,
+            "Mala comunicación": 15
+          },
+          beneficios: [
+            "Productos combinados con inversión",
+            "Asistencia médica premium",
+            "Descuentos para clientes bancarios"
+          ]
+        },
+        {
+          nombre: "Allianz México",
+          calificacion: 8.8,
+          solvencia: "Alta",
+          primaPromedio: 2650,
+          quejas: 85,
+          tipoQuejas: ["Cobertura", "Atención", "Pagos"],
+          quejasDetalle: {
+            "Cobertura insuficiente": 30,
+            "Atención al cliente deficiente": 25,
+            "Demoras en pagos": 30
+          },
+          motivosCancelacion: {
+            "Falta de personalización": 35,
+            "Precios elevados": 30,
+            "Experiencia negativa en reclamos": 20,
+            "Cambio de necesidades": 15
+          },
+          beneficios: [
+            "Cobertura internacional extendida",
+            "Ahorro a largo plazo con protección",
+            "Seguros inteligentes con ajuste automático"
+          ]
+        },
+        {
+          nombre: "Mapfre México",
+          calificacion: 8.5,
+          solvencia: "Media",
+          primaPromedio: 1850,
+          quejas: 110,
+          tipoQuejas: ["Cancelaciones", "Trámites", "Atención"],
+          quejasDetalle: {
+            "Cancelaciones injustificadas": 45,
+            "Trámites lentos": 35,
+            "Atención al cliente deficiente": 30
+          },
+          motivosCancelacion: {
+            "Insatisfacción con servicio postventa": 40,
+            "Dificultad para realizar cambios": 25,
+            "Falta de claridad en exclusiones": 20,
+            "Problemas con renovación": 15
+          },
+          beneficios: [
+            "Amplia cobertura para diversas necesidades",
+            "Planes personalizados según perfil",
+            "Programa de beneficios para familiares"
+          ]
+        },
+        {
+          nombre: "Seguros Inbursa",
+          calificacion: 8.6,
+          solvencia: "Alta",
+          primaPromedio: 1750,
+          quejas: 90,
+          tipoQuejas: ["Demoras", "Información", "Pagos"],
+          quejasDetalle: {
+            "Demoras en pagos": 35,
+            "Falta de información clara": 30,
+            "Errores en documentos": 25
+          },
+          motivosCancelacion: {
+            "Limitaciones en cobertura": 38,
+            "Incrementos de prima": 25,
+            "Falta de innovación en productos": 20,
+            "Experiencia digital deficiente": 17
+          },
+          beneficios: [
+            "Planes competitivos con buen respaldo financiero",
+            "Opciones de cobertura básica y ampliada",
+            "Descuentos por múltiples pólizas"
+          ]
+        },
+        {
+          nombre: "Banamex Seguros",
+          calificacion: 8.4,
+          solvencia: "Alta",
+          primaPromedio: 2200,
+          quejas: 95,
+          tipoQuejas: ["Atención", "Cancelaciones", "Demoras"],
+          quejasDetalle: {
+            "Atención al cliente deficiente": 40,
+            "Cancelaciones injustificadas": 35,
+            "Demoras en pagos": 20
+          },
+          motivosCancelacion: {
+            "Cambio de entidad financiera": 45,
+            "Insatisfacción con beneficios": 20,
+            "Problemas con pagos automáticos": 18,
+            "Falta de asesoramiento": 17
+          },
+          beneficios: [
+            "Productos flexibles según necesidades",
+            "Atención personalizada en sucursales",
+            "Integración con servicios bancarios"
+          ]
+        },
+        {
+          nombre: "Chubb Seguros",
+          calificacion: 8.7,
+          solvencia: "Alta",
+          primaPromedio: 3200,
+          quejas: 75,
+          tipoQuejas: ["Negativa de pago", "Cobertura", "Trámites"],
+          quejasDetalle: {
+            "Negativa de pago o rechazo": 30,
+            "Cobertura insuficiente": 25,
+            "Trámites lentos": 20
+          },
+          motivosCancelacion: {
+            "Precios premium no justificados": 40,
+            "Exclusiones extensas": 25,
+            "Falta de flexibilidad en coberturas": 20,
+            "Problemas con agentes": 15
+          },
+          beneficios: [
+            "Seguro internacional de alta gama",
+            "Planes premium con coberturas exclusivas",
+            "Servicio de asistencia global 24/7"
+          ]
+        },
+        {
+          nombre: "HDI Seguros",
+          calificacion: 8.3,
+          solvencia: "Media",
+          primaPromedio: 1650,
+          quejas: 130,
+          tipoQuejas: ["Atención al cliente", "Demoras", "Documentación"],
+          quejasDetalle: {
+            "Atención al cliente deficiente": 50,
+            "Demoras en pagos": 40,
+            "Problemas con documentación": 40
+          },
+          motivosCancelacion: {
+            "Insatisfacción general": 40,
+            "Problemas con reclamaciones": 30,
+            "Cambio a competencia": 20,
+            "Falta de información": 10
+          },
+          beneficios: [
+            "Precios competitivos",
+            "Coberturas básicas accesibles",
+            "Proceso de contratación sencillo"
+          ]
+        },
+        {
+          nombre: "Quálitas Vida",
+          calificacion: 8.2,
+          solvencia: "Media",
+          primaPromedio: 1550,
+          quejas: 145,
+          tipoQuejas: ["Cancelaciones", "Reclamos", "Atención"],
+          quejasDetalle: {
+            "Cancelaciones injustificadas": 60,
+            "Problemas con reclamos": 50,
+            "Atención al cliente deficiente": 35
+          },
+          motivosCancelacion: {
+            "Mala experiencia en siniestros": 45,
+            "Precios al renovar": 30,
+            "Falta de cobertura": 15,
+            "Otros": 10
+          },
+          beneficios: [
+            "Primas bajas para coberturas básicas",
+            "Facilidad de contratación",
+            "Promociones frecuentes"
+          ]
+        },
+        {
+          nombre: "Plan Seguro",
+          calificacion: 8.1,
+          solvencia: "Media",
+          primaPromedio: 1800,
+          quejas: 160,
+          tipoQuejas: ["Negativa de pago", "Demoras", "Atención"],
+          quejasDetalle: {
+            "Negativa de pago o rechazo": 70,
+            "Demoras en pagos": 50,
+            "Atención al cliente deficiente": 40
+          },
+          motivosCancelacion: {
+            "Reclamos no resueltos": 50,
+            "Insatisfacción con cobertura": 25,
+            "Problemas con agentes": 15,
+            "Otros": 10
+          },
+          beneficios: [
+            "Planes especializados para profesionistas",
+            "Cobertura de gastos médicos incluida",
+            "Descuentos por pago anual"
+          ]
+        },
+        {
+          nombre: "Ana Seguros",
+          calificacion: 8.0,
+          solvencia: "Media",
+          primaPromedio: 1450,
+          quejas: 170,
+          tipoQuejas: ["Información", "Cancelaciones", "Pagos"],
+          quejasDetalle: {
+            "Falta de información clara": 70,
+            "Cancelaciones injustificadas": 60,
+            "Problemas con pagos": 40
+          },
+          motivosCancelacion: {
+            "Falta de transparencia": 45,
+            "Insatisfacción con servicio": 30,
+            "Precios": 15,
+            "Otros": 10
+          },
+          beneficios: [
+            "Primas económicas",
+            "Planes sencillos de entender",
+            "Contratación en línea"
+          ]
+        },
+        {
+          nombre: "Sura México",
+          calificacion: 8.4,
+          solvencia: "Alta",
+          primaPromedio: 2350,
+          quejas: 100,
+          tipoQuejas: ["Trámites", "Atención", "Documentación"],
+          quejasDetalle: {
+            "Trámites lentos": 45,
+            "Atención al cliente deficiente": 35,
+            "Problemas con documentación": 20
+          },
+          motivosCancelacion: {
+            "Complejidad de procesos": 40,
+            "Insatisfacción con servicio": 25,
+            "Precios": 20,
+            "Otros": 15
+          },
+          beneficios: [
+            "Cobertura en América Latina",
+            "Planes con componente de ahorro",
+            "Asistencia en viajes"
+          ]
+        },
+        {
+          nombre: "AIG Seguros México",
+          calificacion: 8.5,
+          solvencia: "Alta",
+          primaPromedio: 2750,
+          quejas: 85,
+          tipoQuejas: ["Cobertura", "Reclamos", "Atención"],
+          quejasDetalle: {
+            "Cobertura insuficiente": 35,
+            "Problemas con reclamos": 30,
+            "Atención al cliente deficiente": 20
+          },
+          motivosCancelacion: {
+            "Expectativas no cumplidas": 40,
+            "Precios": 30,
+            "Servicio": 20,
+            "Otros": 10
+          },
+          beneficios: [
+            "Coberturas internacionales",
+            "Planes para expatriados",
+            "Servicio en inglés"
+          ]
+        },
+        {
+          nombre: "Generali México",
+          calificacion: 8.3,
+          solvencia: "Alta",
+          primaPromedio: 2250,
+          quejas: 110,
+          tipoQuejas: ["Demoras", "Atención", "Cancelaciones"],
+          quejasDetalle: {
+            "Demoras en pagos": 45,
+            "Atención al cliente deficiente": 35,
+            "Cancelaciones injustificadas": 30
+          },
+          motivosCancelacion: {
+            "Insatisfacción con servicio": 40,
+            "Precios": 25,
+            "Cobertura": 20,
+            "Otros": 15
+          },
+          beneficios: [
+            "Planes con beneficios adicionales",
+            "Descuentos por lealtad",
+            "Programas de bienestar"
+          ]
+        },
+        {
+          nombre: "Seguros Atlas",
+          calificacion: 7.9,
+          solvencia: "Media",
+          primaPromedio: 1350,
+          quejas: 190,
+          tipoQuejas: ["Negativa de pago", "Atención", "Documentación"],
+          quejasDetalle: {
+            "Negativa de pago o rechazo": 80,
+            "Atención al cliente deficiente": 60,
+            "Problemas con documentación": 50
+          },
+          motivosCancelacion: {
+            "Reclamos no resueltos": 50,
+            "Mala atención": 30,
+            "Precios": 15,
+            "Otros": 5
+          },
+          beneficios: [
+            "Primas bajas",
+            "Coberturas básicas accesibles",
+            "Promociones frecuentes"
+          ]
+        },
+        {
+          nombre: "ABA Seguros",
+          calificacion: 7.8,
+          solvencia: "Media",
+          primaPromedio: 1250,
+          quejas: 200,
+          tipoQuejas: ["Cancelaciones", "Demoras", "Atención"],
+          quejasDetalle: {
+            "Cancelaciones injustificadas": 90,
+            "Demoras en pagos": 70,
+            "Atención al cliente deficiente": 40
+          },
+          motivosCancelacion: {
+            "Insatisfacción general": 60,
+            "Problemas con reclamos": 25,
+            "Precios": 10,
+            "Otros": 5
+          },
+          beneficios: [
+            "Primas muy económicas",
+            "Contratación rápida",
+            "Planes sencillos"
+          ]
+        },
+        {
+          nombre: "Seguros Argos",
+          calificacion: 7.7,
+          solvencia: "Media",
+          primaPromedio: 1150,
+          quejas: 220,
+          tipoQuejas: ["Negativa de pago", "Cancelaciones", "Atención"],
+          quejasDetalle: {
+            "Negativa de pago o rechazo": 100,
+            "Cancelaciones injustificadas": 80,
+            "Atención al cliente deficiente": 40
+          },
+          motivosCancelacion: {
+            "Reclamos no resueltos": 60,
+            "Mala atención": 25,
+            "Precios": 10,
+            "Otros": 5
+          },
+          beneficios: [
+            "Primas más bajas del mercado",
+            "Sin requisitos médicos estrictos",
+            "Contratación inmediata"
+          ]
+        }
+      ];
+
+      tabla.innerHTML = datos.map((a, index) => {
+        // Determinar clase de calificación
+        let ratingClass = 'rating-medium';
+        if (a.calificacion >= 9.0) ratingClass = 'rating-high';
+        else if (a.calificacion <= 8.3) ratingClass = 'rating-low';
+        
+        // Determinar clase de solvencia
+        const solvenciaClass = a.solvencia === "Alta" ? 'solvencia-alta' : 'solvencia-media';
+        
+        // Determinar clase de quejas
+        let complaintsClass = 'complaints-medium';
+        if (a.quejas >= 100) complaintsClass = 'complaints-high';
+        else if (a.quejas <= 70) complaintsClass = 'complaints-low';
+        
+        // Generar tags de quejas
+        const complaintTags = a.tipoQuejas.map(tipo => {
+          let tagClass = '';
+          if (tipo.includes("Cancelaciones") || tipo.includes("Negativa")) tagClass = 'high';
+          else if (tipo.includes("Demoras") || tipo.includes("Atención")) tagClass = 'medium';
+          return `<span class="complaint-tag ${tagClass}">${tipo}</span>`;
+        }).join('');
+        
+        // Generar lista de beneficios
+        const beneficiosList = a.beneficios.map(b => `<li>${b}</li>`).join('');
+        
+        // Generar gráfico de quejas
+        const quejasBars = Object.entries(a.quejasDetalle).map(([tipo, cantidad]) => {
+          const maxVal = Math.max(...Object.values(a.quejasDetalle));
+          const height = (cantidad / maxVal) * 100;
+          return `
+            <div class="chart-bar">
+              <div class="bar" style="height: ${height}%"></div>
+              <div class="bar-label">${cantidad}</div>
+              <div class="bar-label">${tipo}</div>
+            </div>
+          `;
+        }).join('');
+        
+        // Generar lista de motivos de cancelación
+        const cancelacionList = Object.entries(a.motivosCancelacion).map(([motivo, porcentaje]) => {
+          return `
+            <li>
+              <div>${motivo}</div>
+              <div>${porcentaje}%</div>
+              <div class="reason-progress">
+                <div class="reason-progress-bar" style="width: ${porcentaje}%"></div>
+              </div>
+            </li>
+          `;
+        }).join('');
+        
+        return `
+          <tr>
+            <td><strong>${a.nombre}</strong></td>
+            <td class="rating-cell ${ratingClass}">
+              <i class="fas fa-star"></i>${a.calificacion}
+            </td>
+            <td>
+              <span class="solvencia-cell ${solvenciaClass}">${a.solvencia}</span>
+            </td>
+            <td>
+              <span class="monto-convertible" data-mxn="${a.primaPromedio}" title="Valor original: MXN $${a.primaPromedio.toFixed(2)}">MXN $${a.primaPromedio.toFixed(2)}</span>
+            </td>
+            <td class="complaints-cell ${complaintsClass}">
+              <i class="fas fa-exclamation-circle"></i>${a.quejas}
+            </td>
+            <td>
+              <div>${a.tipoQuejas.slice(0, 3).join(", ")}</div>
+              <div class="complaint-types">${complaintTags}</div>
+            </td>
+            <td>
+              <ul class="benefits-list">${beneficiosList}</ul>
+            </td>
+            <td>
+              <button class="detalle-btn" onclick="toggleDetalle('detalle-${index}')">
+                <i class="fas fa-chart-bar"></i> Detalle
+              </button>
+            </td>
+          </tr>
+          <tr id="detalle-${index}" class="detalle-quejas" style="display:none;">
+            <td colspan="8">
+              <div class="detail-container">
+                <div class="detail-section">
+                  <h3 class="detail-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Detalle de Quejas
+                  </h3>
+                  <div class="detail-chart">
+                    ${quejasBars}
+                  </div>
+                </div>
+                
+                <div class="detail-section">
+                  <h3 class="detail-title">
+                    <i class="fas fa-file-contract"></i>
+                    Motivos de Cancelación (Porcentaje)
+                  </h3>
+                  <ul class="cancellation-reasons">
+                    ${cancelacionList}
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
