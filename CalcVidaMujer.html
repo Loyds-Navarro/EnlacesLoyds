@@ -551,7 +551,7 @@
             margin-bottom: 0;
         }
 
-        .report-section-card-html h3 {
+        .report-section-card-html h3 { 
             color: var(--primary);
             margin: 0 0 15px 0;
             font-size: 1.6rem;
@@ -827,7 +827,7 @@
         </div>
     </section>
 
-    <section>
+      <section>
         <h2><i class="fas fa-shield-alt"></i> Suma Asegurada Protección y Beneficios</h2>
         
         <div class="input-group">
@@ -847,7 +847,7 @@
         
         <div class="input-group">
             <label for="cantidadUdisFallecimiento"><i class="fas fa-cross"></i> Cantidad UDIs por fallecimiento:</label>
-            <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" oninput="actualizarUdisEnfermedadTerminal()" />
+            <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" />
         </div>
         
         <div class="input-group">
@@ -857,10 +857,10 @@
         
         <div class="input-group">
             <label for="cantidadUdisEnfermedadTerminal"><i class="fas fa-hospital-alt"></i> Cantidad UDIs por enfermedad terminal:</label>
-            <input type="number" id="cantidadUdisEnfermedadTerminal" step="00.0000001" readonly style="background-color: #e9ecef;" />
+            <input type="number" id="cantidadUdisEnfermedadTerminal" step="0.01" placeholder="Ej: 5000" />
         </div>
 
-        <button onclick="calcularSumaAseguradaDetallada()" style="margin-top: 10px;">
+        <button onclick="calcularSumaAseguradaDetallada()">
             <i class="fas fa-calculator"></i> Calcular Suma Asegurada
         </button>
 
@@ -869,7 +869,7 @@
             <div id="sumaAseguradaDetalladaResult"></div>
         </div>
     </section>
-    
+	
     <section>
         <h2><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h2>
         
@@ -976,7 +976,7 @@
         const fechaTexto = fechaActual.toLocaleString('es-MX', options);
 
         const nombreReporteArchivo = nombre ? `Reporte_UDI_${nombre.replace(/\s+/g, '_')}` : 'Reporte_Integral_UDI';
-        const tituloReporte = nombre ? `Propuesta de cálculo para ${nombre}` : 'Reporte Integral de Cálculos UDI';
+        const tituloReporte = nombre ? `Propuesta de cálculo de Vida Mujer para ${nombre}` : 'Reporte Integral de Cálculos UDI';
 
         // Estilos para la ventana emergente - Se inyectan para asegurar que se apliquen
         const popupStyles = `
@@ -1716,198 +1716,256 @@
         recuperacionTotal = valorTotal + proteccionTotalPesos; // Sumamos el total de recuperación con la protección
     }
 
-    // Function to automatically update "Cantidad UDIs por enfermedad terminal"
-    function actualizarUdisEnfermedadTerminal() {
-        const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
-        if (!isNaN(cantidadUdisFallecimiento)) {
-            const udisEnfermedadTerminal = cantidadUdisFallecimiento * 0.25; // 25%
-            document.getElementById("cantidadUdisEnfermedadTerminal").value = udisEnfermedadTerminal.toFixed(6);
-        } else {
-            document.getElementById("cantidadUdisEnfermedadTerminal").value = "";
-        }
-    }
-	
-
-
     // --- Sección 4: Suma Asegurada Detallada ---
     function calcularSumaAseguradaDetallada() {
-        const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
-        const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value);
-        const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
-        const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
-        const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
-        const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
-        const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
-        const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
+            const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
+            const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value) / 100;
+            const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
+            const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
+            const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
+            const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
+            const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
+            const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
 
-        if (isNaN(udiActual) || isNaN(inflacion) || isNaN(anios) || 
-            isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal) || anios < 1) {
-            sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos y años mayor que cero.</div>';
+            // Validaciones
+            if (isNaN(udiActual) || udiActual <= 0) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un valor válido para la UDI actual.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            if (isNaN(inflacion) || inflacion <= 0) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un porcentaje de inflación válido.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            if (isNaN(anios) || anios < 1) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un número válido de años (mayor que 0).</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            // Validar cantidades de UDIs
+            if (isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal)) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa cantidades válidas de UDIs.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            // Calcular UDI futura basada en inflación y años
+            const udiFutura = udiActual * Math.pow(1 + inflacion, anios);
+
+            // Realizar cálculos con UDI actual
+            const montoFallecimientoActual = udiActual * cantidadUdisFallecimiento;
+            const montoFallecimientoTerceroActual = montoFallecimientoActual * 2;
+            const montoInvalidezActual = udiActual * cantidadUdisInvalidez;
+            const montoEnfermedadTerminalActual = udiActual * cantidadUdisEnfermedadTerminal;
+
+            // Realizar cálculos con UDI futura proyectada
+            const montoFallecimientoFuturo = udiFutura * cantidadUdisFallecimiento;
+            const montoFallecimientoTerceroFuturo = montoFallecimientoFuturo * 2;
+            const montoInvalidezFuturo = udiFutura * cantidadUdisInvalidez;
+            const montoEnfermedadTerminalFuturo = udiFutura * cantidadUdisEnfermedadTerminal;
+
+            // Mostrar resultados
+            let htmlContent = `
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI actual:</strong></div>
+                        <div><span class="value-badge">$${udiActual.toFixed(6)}</span></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Inflación anual:</strong></div>
+                        <div><span class="value-badge">${(inflacion * 100).toFixed(2)}%</span></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI proyectado en ${anios} año${anios > 1 ? 's' : ''}:</strong></div>
+                        <div><span class="value-badge">$${udiFutura.toFixed(6)}</span></div>
+                    </div>
+                </div>
+
+                <div style="background: #f0f7ff; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Cálculos con UDI Actual</div>
+                    
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
+                        <span>$${montoFallecimientoActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
+                        <span>$${montoFallecimientoTerceroActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
+                        <span>$${montoInvalidezActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
+                        <span>$${montoEnfermedadTerminalActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Proyección en ${anios} año${anios > 1 ? 's' : ''} (con inflación del ${(inflacion * 100).toFixed(2)}%)</div>
+                    
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
+                        <span>$${montoFallecimientoFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
+                        <span>$${montoFallecimientoTerceroFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
+                        <span>$${montoInvalidezFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
+                        <span>$${montoEnfermedadTerminalFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+            `;
+
+            // *PROTECCIÓN POR CÁNCER FEMENINO*
+            htmlContent += `
+                <div class="sub-section-title">
+                    <i class="fas fa-ribbon"></i> PROTECCIÓN POR CÁNCER FEMENINO
+                </div>
+                <div class="sub-section-content">
+                    <div class="sub-section-item">
+                        <span class="label">CÁNCER FEMENINO PCF 100%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE LA MAMA * 100%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE LA MAMA LOCALIZADO (b.) ** 47%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.47 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE OVARIO 38%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.38 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE ÚTERO * 21%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.21 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE ÚTERO LOCALIZADO (b.) ** 12%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.12 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR MALIGNO DE TROMPAS DE FALOPIO 12%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.12 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">TUMOR BENIGNO DE VAGINA O VULVA 9%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.09 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+					<div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle" style="color: #0d47a1;"></i> * Tumor maligno del órgano correspondiente (mama o útero) con metástasis regionales o a distancia.
+
+                </div>
+									<div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle" style="color: #0d47a1;"></i> ** Tumor maligno del órgano correspondiente (mama o útero) con invasión a tejidos vecinos del propio órgano.
+
+                </div>
+                </div>
+            `;
+
+            // *ENFERMEDADES DE LA MUJER*
+            htmlContent += `
+                <div class="sub-section-title">
+                    <i class="fas fa-female"></i> ENFERMEDADES DE LA MUJER
+                </div>
+                <div class="sub-section-content">
+                    <div class="sub-section-item">
+                        <span class="label">ENFERMEDAD INFLAMATORIA PÉLVICA 60%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">PROLAPSO GENITAL FEMENINO 60%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">FIBRO ADENOMAS 45%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.45 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+            `;
+
+            // *COMPLICACIONES DEL EMBARAZO*
+            htmlContent += `
+                <div class="sub-section-title">
+                    <i class="fas fa-baby"></i> COMPLICACIONES DEL EMBARAZO
+                </div>
+                <div class="sub-section-content">
+                    <div class="sub-section-item">
+                        <span class="label">PARTO PREMATURO 100%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">PARTOS MÚLTIPLES *** 60%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">ECLAMPSIA O SÍNDROME DE HELLP 60%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">EMBARAZO ECTÓPICO O EXTRAUTERINO 40%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.40 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">EMBARAZO MOLAR HIDATIFORME 30%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.30 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+										<div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle" style="color: #0d47a1;"></i> *** Siempre y cuando no sea por paternidad asistida.
+
+                </div>
+                </div>
+            `;
+
+            // *COMPLICACIONES DEL RECIÉN NACIDO*
+            htmlContent += `
+                <div class="sub-section-title">
+                    <i class="fas fa-child"></i> COMPLICACIONES DEL RECIÉN NACIDO
+                </div>
+                <div class="sub-section-content">
+                    <div class="sub-section-item">
+                        <span class="label">ESPINA BÍFIDA 75%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">LABIO LEPORINO 75%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">SÍNDROME DE DOWN 75%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="sub-section-item">
+                        <span class="label">CARDIOPATÍA CIANÓGENA 50%</span>
+                        <span class="value">$${(cantidadUdisFallecimiento * 0.50 * udiActual).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+            `;
+
+            // Mensaje final
+            htmlContent += `
+                <div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle" style="color: #0d47a1;"></i> Los valores proyectados son estimaciones basadas en la inflación proporcionada. El valor real dependerá del comportamiento real de la UDI.
+                </div>
+            `;
+
+            sumaAseguradaDetalladaResult.innerHTML = htmlContent;
             resultadoDiv.classList.add('active');
-            return;
         }
-
-        const udiProyectada = udiActual * Math.pow(1 + inflacion / 100, anios - 1);
-        
-        montoFallecimiento = udiProyectada * cantidadUdisFallecimiento;
-        montoFallecimientoTercero = montoFallecimiento * 2; // Multiplica por 2 el monto por fallecimiento
-        montoInvalidez = udiProyectada * cantidadUdisInvalidez;
-        montoEnfermedadTerminal = udiProyectada * cantidadUdisEnfermedadTerminal;
-
-        let htmlContent = `
-            <div style="margin-bottom: 8px; font-size: 0.9rem;">
-                Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
-            </div>
-            
-            <div style="background: #fdf0f4; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-arrow-up" style="color: #d81b60;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(6)}</span></div>
-                </div>
-            </div>
-			<div style="background: #fdf0f4; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-sticky-note" style="color: #d81b60;"></i>Los valores proyectados en el cálculo se basan en una estimación del valor de la UDI de su plan de ahorro. Estos pueden modificarse de acuerdo con el valor real de la UDI en el año en que ocurra el evento.</div>
-                </div>
-            </div>
-
-            <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
-                <span>$${montoFallecimiento.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-            </div>
-            <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
-                <span>$${montoFallecimientoTercero.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-            </div>
-            <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
-                <span>$${montoInvalidez.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-            </div>
-            <div class="compact-result" style="margin-top: 10px;">
-                <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
-                <span>$${montoEnfermedadTerminal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-            </div>
-        `;
-
-        // *PROTECCIÓN POR CANCER FEMENINO*
-        htmlContent += `
-            <div class="sub-section-title">
-                <i class="fas fa-ribbon"></i> PROTECCIÓN POR CÁNCER FEMENINO
-            </div>
-            <div class="sub-section-content">
-                <div class="sub-section-item">
-                    <span class="label">CÁNCER FEMENINO PCF 100%</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE LA MAMA</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE LA MAMA LOCALIZADO (b.)</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.47 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE OVARIO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.38 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE ÚTERO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.21 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE ÚTERO LOCALIZADO (b.)</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.12 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR MALIGNO DE TROMPAS DE FALOPIO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.12 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">TUMOR BENIGNO DE VAGINA O VULVA</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.09 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-            </div>
-        `;
-
-        // *ENFERMEDADES DE LA MUJER*
-        htmlContent += `
-            <div class="sub-section-title">
-                <i class="fas fa-female"></i> ENFERMEDADES DE LA MUJER
-            </div>
-            <div class="sub-section-content">
-                <div class="sub-section-item">
-                    <span class="label">ENFERMEDAD INFLAMATORIA PÉLVICA</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">PROLAPSO GENITAL FEMENINO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">FIBRO ADENOMAS</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.45 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-            </div>
-        `;
-
-        // *COMPLICACIONES DEL EMBARAZO*
-        htmlContent += `
-            <div class="sub-section-title">
-                <i class="fas fa-baby"></i> COMPLICACIONES DEL EMBARAZO
-            </div>
-            <div class="sub-section-content">
-                <div class="sub-section-item">
-                    <span class="label">PARTO PREMATURO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 1.00 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">PARTOS MÚLTIPLES</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">ECLAMPSIA O SÍNDROME DE HELLP</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.60 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">EMBARAZO ECTÓPICO O EXTRAUTERINO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.40 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">EMBARAZO MOLAR HIDATIFORME</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.30 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-            </div>
-        `;
-
-        // *COMPLICACIONES DEL RECIÉN NACIDO*
-        htmlContent += `
-            <div class="sub-section-title">
-                <i class="fas fa-child"></i> COMPLICACIONES DEL RECIÉN NACIDO
-            </div>
-            <div class="sub-section-content">
-                <div class="sub-section-item">
-                    <span class="label">ESPINA BÍFIDA</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">LABIO LEPORINO</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">SÍNDROME DE DOWN</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.75 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-                <div class="sub-section-item">
-                    <span class="label">CARDIOPATÍA CIANÓGENA</span>
-                    <span class="value">$${(cantidadUdisFallecimiento * 0.50 * udiProyectada).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
-                </div>
-            </div>
-        `;
-
-        sumaAseguradaDetalladaResult.innerHTML = htmlContent;
-        resultadoDiv.classList.add('active');
-    }
 
     // --- Sección 5: Comparación Proyección vs Recuperación ---
     function calcularDiferencia() {
@@ -2066,7 +2124,7 @@
         document.getElementById("sumaProteccion").value = "35000"; // Nueva entrada para suma de protección
         document.getElementById("cantidadUdisFallecimiento").value = "10000"; // For new section
         document.getElementById("cantidadUdisInvalidez").value = "8000"; // For new section
-        actualizarUdisEnfermedadTerminal(); // Ensure initial calculation for this field
+        document.getElementById("cantidadUdisEnfermedadTerminal").value = "5000"; // For new section
     }
 
     // Execute on DOM load
