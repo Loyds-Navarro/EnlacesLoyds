@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Valores UDI - Banxico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e5799, #207cca, #2989d8, #1e5799);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            color: #1e5799;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="date"]:focus {
+            border-color: #2989d8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(41, 137, 216, 0.2);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #2989d8, #1e5799);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #1e5799, #2989d8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #218838, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, #dc3545, #c82333);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(to right, #c82333, #dc3545);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner i {
+            font-size: 40px;
+            color: #2989d8;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: linear-gradient(to bottom, #1e5799, #2989d8);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9f7fe;
+        }
+        
+        .results-card {
+            display: none;
+        }
+        
+        .info {
+            background: #e9f7fe;
+            border-left: 4px solid #2989d8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #1e5799;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> Generador de Valores UDI</h1>
+            <p class="subtitle">Consulta históricos de la Unidad de Inversión de Banxico</p>
+        </header>
+        
+        <main>
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-calendar-alt"></i> Seleccionar Rango de Fechas</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-date"><i class="fas fa-calendar-day"></i> Fecha de Inicio</label>
+                        <input type="date" id="start-date" value="2024-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-date"><i class="fas fa-calendar-check"></i> Fecha de Fin</label>
+                        <input type="date" id="end-date" value="2030-01-01">
+                    </div>
+                </div>
+                
+                <div class="info">
+                    <div class="info-title">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>Información Importante</h3>
+                    </div>
+                    <p>La UDI (Unidad de Inversión) es una unidad de cuenta cuyo valor se actualiza diariamente con base en la inflación. Los datos se obtienen directamente de Banxico. Para obtener los valores, ingrese un rango de fechas válido y haga clic en "Consultar Valores".</p>
+                </div>
+                
+                <div class="actions">
+                    <button id="consultar-btn" class="btn-primary">
+                        <i class="fas fa-search"></i> Consultar Valores
+                    </button>
+                    <button id="exportar-btn" class="btn-secondary" disabled>
+                        <i class="fas fa-file-excel"></i> Exportar a Excel
+                    </button>
+                    <button id="limpiar-btn" class="btn-danger">
+                        <i class="fas fa-trash-alt"></i> Limpiar Tabla
+                    </button>
+                </div>
+            </div>
+            
+            <div class="spinner" id="spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Cargando datos de Banxico...</p>
+            </div>
+            
+            <div class="card results-card" id="results-card">
+                <h2 class="card-title"><i class="fas fa-table"></i> Resultados de la Consulta</h2>
+                
+                <div id="result-info" class="info">
+                    <div class="info-title">
+                        <i class="fas fa-database"></i>
+                        <h3>Datos Obtenidos</h3>
+                    </div>
+                    <p>Se han encontrado <span id="total-registros">0</span> registros de valores UDI en el rango seleccionado.</p>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table id="udi-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Valor UDI</th>
+                                <th>Año</th>
+                                <th>Mes</th>
+                                <th>Día</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Los datos se insertarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2023 Generador de Valores UDI - Datos proporcionados por Banxico</p>
+            <p>Esta aplicación es para fines informativos y educativos</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Token de acceso a la API de Banxico
+        const TOKEN = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+        const SERIE_UDI = "SP68257";
+        
+        // Elementos del DOM
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const consultarBtn = document.getElementById('consultar-btn');
+        const exportarBtn = document.getElementById('exportar-btn');
+        const limpiarBtn = document.getElementById('limpiar-btn');
+        const spinner = document.getElementById('spinner');
+        const resultsCard = document.getElementById('results-card');
+        const tableBody = document.getElementById('table-body');
+        const totalRegistros = document.getElementById('total-registros');
+        
+        // Configurar fechas por defecto
+        const hoy = new Date();
+        endDateInput.value = hoy.toISOString().split('T')[0];
+        
+        // Event Listeners
+        consultarBtn.addEventListener('click', obtenerDatosUDI);
+        exportarBtn.addEventListener('click', exportarExcel);
+        limpiarBtn.addEventListener('click', limpiarTabla);
+        
+        // Función para obtener datos de la UDI
+        async function obtenerDatosUDI() {
+            const fechaInicio = startDateInput.value;
+            const fechaFin = endDateInput.value;
+            
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor seleccione ambas fechas.');
+                return;
+            }
+            
+            if (new Date(fechaInicio) > new Date(fechaFin)) {
+                alert('La fecha de inicio no puede ser mayor a la fecha de fin.');
+                return;
+            }
+            
+            // Mostrar spinner
+            spinner.style.display = 'block';
+            resultsCard.style.display = 'none';
+            
+            try {
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${SERIE_UDI}/datos/${fechaInicio}/${fechaFin}?token=${TOKEN}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Error en la consulta: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                procesarDatos(data);
+                
+            } catch (error) {
+                console.error('Error al obtener datos de Banxico:', error);
+                alert(`Error al obtener datos: ${error.message}`);
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+        
+        // Procesar los datos de la API
+        function procesarDatos(data) {
+            if (!data.bmx.series || !data.bmx.series[0].datos) {
+                alert('No se encontraron datos para el rango seleccionado.');
+                return;
+            }
+            
+            const datosUDI = data.bmx.series[0].datos;
+            tableBody.innerHTML = '';
+            
+            datosUDI.forEach((dato, index) => {
+                const fila = document.createElement('tr');
+                
+                // Formatear fecha
+                const [dia, mes, anio] = dato.fecha.split('/');
+                const fechaFormateada = `${dia}/${mes}/${anio}`;
+                
+                // Formatear valor UDI
+                const valor = parseFloat(dato.dato.replace(',', '.'));
+                const valorFormateado = valor.toFixed(6);
+                
+                fila.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${fechaFormateada}</td>
+                    <td>${valorFormateado}</td>
+                    <td>${anio}</td>
+                    <td>${mes}</td>
+                    <td>${dia}</td>
+                `;
+                
+                tableBody.appendChild(fila);
+            });
+            
+            // Actualizar información
+            totalRegistros.textContent = datosUDI.length;
+            resultsCard.style.display = 'block';
+            exportarBtn.disabled = false;
+        }
+        
+        // Exportar a Excel
+        function exportarExcel() {
+            const tabla = document.getElementById('udi-table');
+            const libro = XLSX.utils.table_to_book(tabla, {sheet: "Valores UDI"});
+            
+            // Generar nombre de archivo con las fechas
+            const fechaInicio = startDateInput.value.replace(/-/g, '');
+            const fechaFin = endDateInput.value.replace(/-/g, '');
+            const nombreArchivo = `UDI_${fechaInicio}_${fechaFin}.xlsx`;
+            
+            XLSX.writeFile(libro, nombreArchivo);
+        }
+        
+        // Limpiar tabla
+        function limpiarTabla() {
+            tableBody.innerHTML = '';
+            resultsCard.style.display = 'none';
+            exportarBtn.disabled = true;
+            totalRegistros.textContent = '0';
+        }
+        
+        // Cargar valores de ejemplo al inicio
+        window.addEventListener('load', () => {
+            // Simular datos de ejemplo para la demostración
+            const datosEjemplo = [
+                {fecha: "01/01/2023", dato: "6.123456"},
+                {fecha: "02/01/2023", dato: "6.124567"},
+                {fecha: "03/01/2023", dato: "6.125678"},
+                {fecha: "04/01/2023", dato: "6.126789"},
+                {fecha: "05/01/2023", dato: "6.127890"},
+            ];
+            
+            // Mostrar datos de ejemplo
+            tableBody.innerHTML = '';
+            
+            datosEjemplo.forEach((dato, index) => {
+                const fila = document.createElement('tr');
+                
+                const [dia, mes, anio] = dato.fecha.split('/');
+                const fechaFormateada = `${dia}/${mes}/${anio}`;
+                const valorFormateado = dato.dato;
+                
+                fila.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${fechaFormateada}</td>
+                    <td>${valorFormateado}</td>
+                    <td>${anio}</td>
+                    <td>${mes}</td>
+                    <td>${dia}</td>
+                `;
+                
+                tableBody.appendChild(fila);
+            });
+            
+            totalRegistros.textContent = datosEjemplo.length;
+            resultsCard.style.display = 'block';
+            exportarBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>
