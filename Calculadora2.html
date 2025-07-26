@@ -662,8 +662,8 @@
     </div>
     
     <div class="input-group">
-        <label for="nombreProducto"><i class="fas fa-cube"></i> Nombre del Producto:</label>
-        <input type="text" id="nombreProducto" placeholder="Nombre del producto o plan" />
+        <label for="edad"><i class="fas fa-user"></i> Edad:</label>
+        <input type="number" id="edad" placeholder="Tu edad en años" min="18" max="99" />
     </div>
     
     <div class="input-group">
@@ -676,7 +676,7 @@
         <input type="number" id="montoAnual" step="any" placeholder="Ej: 12000" />
     </div>
 
-    <button onclick="calcularUdis()">
+    <button onclick="calcularUdis()" style="margin-top: 10px;">
         <i class="fas fa-calculator"></i> Calcular
     </button>
 
@@ -685,7 +685,6 @@
         <div id="conversionResult"></div>
     </div>
 </section>
-
    <section>
         <h2><i class="fas fa-chart-line"></i> Proyección de Ahorro</h2>
         
@@ -1232,36 +1231,32 @@
     // --- Sección 1: Conversión de Pesos a UDIs ---
     function calcularUdis() {
     const nombre = document.getElementById('nombre').value.trim();
-    const nombreProducto = document.getElementById('nombreProducto').value.trim();
+    const edad = parseInt(document.getElementById('edad').value);
     const monto = parseFloat(document.getElementById('montoAnual').value);
     const udi = parseFloat(document.getElementById('valorUdi').value);
     const resultadoDiv = document.getElementById('resultadoUdis');
     const conversionResult = document.getElementById('conversionResult');
     
-    if (isNaN(monto) || isNaN(udi) || udi === 0) {
-        conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos.</div>';
+    if (isNaN(monto) || isNaN(udi) || udi === 0 || isNaN(edad) || edad < 18 || edad > 99) {
+        conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos y edad entre 18 y 99 años.</div>';
         resultadoDiv.classList.add('active');
         return;
     }
     
+    // Aplicar porcentajes según frecuencia
     const anual_udis = monto / udi;
-    const semestral_udis = monto / 2 / udi;
-    const trimestral_udis = monto / 4 / udi;
-    const mensual_udis = monto / 12 / udi;
-    const semanal_udis = monto / 52 / udi;
-    const diario_udis = monto / 365 / udi;
+    const semestral_udis = (monto / 2 / udi) * 1.025; // +2.5% semestral
+    const trimestral_udis = (monto / 4 / udi) * 1.04;  // +4% trimestral
+    const mensual_udis = (monto / 12 / udi) * 1.05;    // +5% mensual
     
-    const semestral_pesos = monto / 2;
-    const trimestral_pesos = monto / 4;
-    const mensual_pesos = monto / 12;
-    const semanal_pesos = monto / 52;
-    const diario_pesos = monto / 365;
-    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#0d47a1;">${nombre}</span></div>` : '';
-    const tituloProducto = nombreProducto ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Producto: <span style="color:#0d47a1;">${nombreProducto}</span></div>` : '';
+    const semestral_pesos = (monto / 2) * 1.025;
+    const trimestral_pesos = (monto / 4) * 1.04;
+    const mensual_pesos = (monto / 12) * 1.05;
+    
+    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#d81b60;">${nombre}</span> (${edad} años)</div>` : '';
 
     conversionResult.innerHTML = `
     ${tituloNombre}
-    ${tituloProducto}
     <div class="frecuencia-grid">
         <div class="frecuencia-card">
             <div class="title">Anual</div>
@@ -1269,31 +1264,31 @@
             <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
         <div class="frecuencia-card">
-            <div class="title">Semestral</div>
+            <div class="title">Semestral (+2.5%)</div>
             <div class="value">${semestral_udis.toFixed(6)} UDIs</div>
             <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
         <div class="frecuencia-card">
-            <div class="title">Trimestral</div>
+            <div class="title">Trimestral (+4%)</div>
             <div class="value">${trimestral_udis.toFixed(6)} UDIs</div>
             <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
         <div class="frecuencia-card">
-            <div class="title">Mensual</div>
+            <div class="title">Mensual (+5%)</div>
             <div class="value">${mensual_udis.toFixed(6)} UDIs</div>
             <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
-        <div class="frecuencia-card">
-            <div class="title">Semanal</div>
-            <div class="value">${semanal_udis.toFixed(6)} UDIs</div>
-            <div class="value-pesos">$${semanal_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-        </div>
-        <div class="frecuencia-card">
-            <div class="title">Diario</div>
-            <div class="value">${diario_udis.toFixed(6)} UDIs</div>
-            <div class="value-pesos">$${diario_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-        </div>
     </div>
+    <div style="margin-top: 15px; padding: 10px; background: #d2e5fa; border-radius: 6px; font-size: 0.85rem;">
+        <i class="fas fa-info-circle"></i> Cuando las aportaciones se realizan en periodos fraccionados del año (en lugar de una sola aportación anual), se aplican porcentajes adicionales al monto anual como sigue:
+<p>
+<p>_____________________________________________________________________________</p>
+<p>* Aportaciones Semestrales: se incrementa el 2.5% sobre el monto anual.</p>
+<p>* Aportaciones Trimestrales: se incrementa el 4% sobre el monto anual.</p>
+<p>* Aportaciones Mensuales: se incrementa el 5% sobre el monto anual.</p>
+<p>_____________________________________________________________________________</p>
+<p> Nota: Estos porcentajes representan un ajuste por la frecuencia de pago y no un cargo adicional, sino una forma de mantener el equilibrio financiero del plan cuando las aportaciones no se hacen de forma anualizada.
+   </p> </div>
     `;
     resultadoDiv.classList.add('active');
 }
