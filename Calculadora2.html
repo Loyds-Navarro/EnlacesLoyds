@@ -653,17 +653,22 @@
 </div>
 
 <main>
-    <section>
+  <section>
     <h2><i class="fas fa-exchange-alt"></i> Conversor Pesos a UDIs</h2>
     
     <div class="input-group">
-        <label for="nombre">Escribe tu nombre:</label>
+        <label for="nombre"><i class="fas fa-user"></i> Escribe tu nombre:</label>
         <input type="text" id="nombre" placeholder="Tu nombre aquí" />
     </div>
     
     <div class="input-group">
-        <label for="edad"><i class="fas fa-user"></i> Edad:</label>
+        <label for="edad"><i class="fas fa-birthday-cake"></i> Edad:</label>
         <input type="number" id="edad" placeholder="Tu edad en años" min="18" max="99" />
+    </div>
+    
+    <div class="input-group">
+        <label for="nombreProducto"><i class="fas fa-cube"></i> Nombre del Producto:</label>
+        <input type="text" id="nombreProducto" placeholder="Ej: Plan Protección Familiar" />
     </div>
     
     <div class="input-group">
@@ -676,7 +681,7 @@
         <input type="number" id="montoAnual" step="any" placeholder="Ej: 12000" />
     </div>
 
-    <button onclick="calcularUdis()" style="margin-top: 10px;">
+    <button onclick="calcularUdis()">
         <i class="fas fa-calculator"></i> Calcular
     </button>
 
@@ -1229,34 +1234,50 @@
     }
     
     // --- Sección 1: Conversión de Pesos a UDIs ---
-    function calcularUdis() {
+function calcularUdis() {
     const nombre = document.getElementById('nombre').value.trim();
     const edad = parseInt(document.getElementById('edad').value);
+    const nombreProducto = document.getElementById('nombreProducto').value.trim();
     const monto = parseFloat(document.getElementById('montoAnual').value);
     const udi = parseFloat(document.getElementById('valorUdi').value);
     const resultadoDiv = document.getElementById('resultadoUdis');
     const conversionResult = document.getElementById('conversionResult');
     
-    if (isNaN(monto) || isNaN(udi) || udi === 0 || isNaN(edad) || edad < 18 || edad > 99) {
-        conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos y edad entre 18 y 99 años.</div>';
+    if (isNaN(monto) || isNaN(udi) || udi === 0 || isNaN(edad) || edad < 18 || edad > 99 || nombreProducto === '') {
+        conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Completa todos los campos: edad (18-99), nombre del producto y valores numéricos válidos.</div>';
         resultadoDiv.classList.add('active');
         return;
     }
     
-    // Aplicar porcentajes según frecuencia
+    // Aplicar porcentajes adicionales según frecuencia de pago (base al monto anual)
+    const montoSemestral = (monto / 2) * 1.0254323; // +2.5% semestral
+    const montoTrimestral = (monto / 4) * 1.040261;  // +4% trimestral
+    const montoMensual = (monto / 12) * 1.051977;    // +5% mensual
+    
     const anual_udis = monto / udi;
-    const semestral_udis = (monto / 2 / udi) * 1.025; // +2.5% semestral
-    const trimestral_udis = (monto / 4 / udi) * 1.04;  // +4% trimestral
-    const mensual_udis = (monto / 12 / udi) * 1.05;    // +5% mensual
+    const semestral_udis = montoSemestral / udi;
+    const trimestral_udis = montoTrimestral / udi;
+    const mensual_udis = montoMensual / udi;
+    const semanal_udis = monto / 52 / udi;
+    const diario_udis = monto / 365 / udi;
     
-    const semestral_pesos = (monto / 2) * 1.025;
-    const trimestral_pesos = (monto / 4) * 1.04;
-    const mensual_pesos = (monto / 12) * 1.05;
-    
-    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#d81b60;">${nombre}</span> (${edad} años)</div>` : '';
+    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cliente: <span style="color:#0d47a1;">${nombre}</span> (${edad} años)</div>` : '';
+    const tituloProducto = `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Producto contratado: <span style="color:#0d47a1;">${nombreProducto}</span></div>`;
 
     conversionResult.innerHTML = `
     ${tituloNombre}
+    ${tituloProducto}
+    <div style="margin-bottom: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <div><i class="fas fa-info-circle"></i> Valor UDI utilizado:</div>
+            <div><strong>$${udi.toFixed(6)}</strong></div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <div><i class="fas fa-info-circle"></i> Monto base anual:</div>
+            <div><strong>$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</strong></div>
+        </div>
+    </div>
+    
     <div class="frecuencia-grid">
         <div class="frecuencia-card">
             <div class="title">Anual</div>
@@ -1266,19 +1287,32 @@
         <div class="frecuencia-card">
             <div class="title">Semestral (+2.5%)</div>
             <div class="value">${semestral_udis.toFixed(6)} UDIs</div>
-            <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+            <div class="value-pesos">$${montoSemestral.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
         <div class="frecuencia-card">
             <div class="title">Trimestral (+4%)</div>
             <div class="value">${trimestral_udis.toFixed(6)} UDIs</div>
-            <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+            <div class="value-pesos">$${montoTrimestral.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
         <div class="frecuencia-card">
             <div class="title">Mensual (+5%)</div>
             <div class="value">${mensual_udis.toFixed(6)} UDIs</div>
-            <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+            <div class="value-pesos">$${montoMensual.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Semanal</div>
+            <div class="value">${semanal_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${(monto/52).toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Diario</div>
+            <div class="value">${diario_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${(monto/365).toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
         </div>
     </div>
+	
+	
+	
     <div style="margin-top: 15px; padding: 10px; background: #d2e5fa; border-radius: 6px; font-size: 0.85rem;">
         <i class="fas fa-info-circle"></i> Cuando las aportaciones se realizan en periodos fraccionados del año (en lugar de una sola aportación anual), se aplican porcentajes adicionales al monto anual como sigue:
 <p>
