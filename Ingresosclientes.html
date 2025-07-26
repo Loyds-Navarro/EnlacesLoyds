@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluador Financiero Completo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0a192f;
+      --navy-light: #172a45;
+      --navy-dark: #020c1b;
+      --teal: #64ffda;
+      --teal-dark: #52d1b2;
+      --light: #f8f9fa;
+      --light-blue: #e6f7ff;
+      --success: #00c853;
+      --warning: #ffab00;
+      --danger: #ff5252;
+      --shadow: 0 4px 12px rgba(2, 12, 27, 0.2);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #f0f7ff 0%, #e1eeff 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(10, 25, 47, 0.1);
+    }
+    
+    header {
+      background: linear-gradient(to right, var(--navy), var(--navy-light));
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .logo-container {
+      background: white;
+      border-radius: 10px;
+      padding: 8px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-container img {
+      height: 60px;
+      display: block;
+    }
+    
+    .header-text {
+      flex: 1;
+    }
+    
+    .header-text h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      color: white;
+    }
+    
+    .header-text p {
+      opacity: 0.85;
+      font-size: 1rem;
+      color: var(--teal);
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      padding: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .section {
+      background: var(--light);
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(10, 25, 47, 0.08);
+    }
+    
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--navy);
+    }
+    
+    h2 {
+      color: var(--navy);
+      border-bottom: 2px solid var(--teal);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    h2 i {
+      color: var(--teal);
+    }
+    
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--navy-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: var(--transition);
+      background: #fff;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+      border-color: var(--teal);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+    }
+    
+    .btn-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: var(--navy);
+      color: white;
+      flex: 1;
+    }
+    
+    .btn-primary:hover {
+      background: var(--navy-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(10, 25, 47, 0.25);
+    }
+    
+    .btn-secondary {
+      background: var(--teal);
+      color: var(--navy);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--teal-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(10, 25, 47, 0.25);
+    }
+    
+    .result-container {
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 10px;
+      background: var(--light-blue);
+      border: 1px solid #b3e5fc;
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .result-container h3 {
+      color: var(--navy);
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .result-content {
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .result-item {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .result-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .result-value {
+      font-weight: 600;
+    }
+    
+    .positive {
+      color: var(--success);
+    }
+    
+    .negative {
+      color: var(--danger);
+    }
+    
+    .neutral {
+      color: var(--warning);
+    }
+    
+    .savings-section {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--navy);
+      background: linear-gradient(to right, rgba(10, 25, 47, 0.03), rgba(100, 255, 218, 0.08));
+    }
+    
+    .insurance-assessment {
+      margin-top: 20px;
+      padding: 20px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      border-left: 4px solid var(--navy);
+    }
+    
+    .print-only {
+      display: none;
+    }
+    
+    .insurance-question {
+      margin-bottom: 15px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: var(--transition);
+      border: 1px solid rgba(10, 25, 47, 0.05);
+    }
+    
+    .insurance-question:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-color: var(--teal);
+    }
+    
+    .insurance-question label {
+      font-weight: normal;
+    }
+    
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .section-title span {
+      font-size: 0.9rem;
+      color: var(--navy);
+      font-weight: 500;
+      background: rgba(100, 255, 218, 0.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    
+    .required::after {
+      content: " *";
+      color: var(--danger);
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      margin-left: 5px;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 250px;
+      background-color: var(--navy);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -125px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9rem;
+      font-weight: normal;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+      background: #f8f9fa;
+    }
+    
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .container, .container * {
+        visibility: visible;
+      }
+      .container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+      }
+      .btn-container, button {
+        display: none;
+      }
+      .print-only {
+        display: block;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: var(--navy);
+      }
+      .result-container {
+        display: block !important;
+      }
+    }
+    
+    .floating-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--teal);
+      color: var(--navy);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    
+    .summary-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .summary-item {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-top: 3px solid var(--navy);
+      text-align: center;
+    }
+    
+    .summary-item h4 {
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    
+    .summary-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    
+    .savings-positive {
+      border-top-color: var(--success);
+    }
+    
+    .savings-negative {
+      border-top-color: var(--danger);
+    }
+    
+    .savings-neutral {
+      border-top-color: var(--warning);
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .highlight-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 10px 0;
+      color: var(--teal);
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--teal);
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .success-message {
+      display: none;
+      padding: 15px;
+      background: var(--success);
+      color: white;
+      border-radius: 6px;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="floating-badge">Evaluación Completa</div>
+    
+    <header>
+      <div class="logo-container">
+        <img src="https://images.vexels.com/media/users/3/223136/isolated/preview/5d3481b2e0d362bdfb828e3c4c6ca6c0-dise-ntilde-o-de-logotipo-de-escudo-de-seguros.png" alt="Logo Seguros" height="60">
+      </div>
+      <div class="header-text">
+        <h1>Evaluador Financiero Completo</h1>
+        <p>Análisis de ahorro con aguinaldo y evaluación para seguro de vida</p>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="section">
+        <div class="section-title">
+          <h2><i class="fas fa-user"></i> Datos Personales</h2>
+          <span>Información requerida</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="nombre" class="required"><i class="fas fa-signature"></i> Nombre completo:</label>
+          <input type="text" id="nombre" placeholder="Ej: Juan Pérez García">
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="required"><i class="fas fa-envelope"></i> Correo electrónico:</label>
+          <input type="email" id="email" placeholder="Ej: juan.perez@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="telefono"><i class="fas fa-phone"></i> Teléfono:</label>
+          <input type="text" id="telefono" placeholder="Ej: 5551234567">
+        </div>
+        
+        <div class="section-title" style="margin-top: 30px;">
+          <h2><i class="fas fa-money-bill-wave"></i> Ingresos Mensuales</h2>
+          <span>Valores en USD</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="salario" class="required"><i class="fas fa-hand-holding-usd"></i> Salario neto:</label>
+          <input type="number" id="salario" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="comisiones"><i class="fas fa-file-invoice-dollar"></i> Honorarios o comisiones:</label>
+          <input type="number" id="comisiones" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="negocio"><i class="fas fa-store"></i> Ingreso por negocio propio:</label>
+          <input type="number" id="negocio" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="arrendamiento"><i class="fas fa-home"></i> Arrendamientos (renta de propiedades):</label>
+          <input type="number" id="arrendamiento" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="pension"><i class="fas fa-university"></i> Pensión:</label>
+          <input type="number" id="pension" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="otrosIngresos"><i class="fas fa-piggy-bank"></i> Otros ingresos:</label>
+          <input type="number" id="otrosIngresos" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="aguinaldo"><i class="fas fa-gift"></i> Aguinaldo (anual):</label>
+          <input type="number" id="aguinaldo" min="0" placeholder="0.00">
+          <small style="display: block; margin-top: 5px; color: #666;">Ingreso anual adicional</small>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">
+          <h2><i class="fas fa-credit-card"></i> Egresos Mensuales</h2>
+          <span>Valores en USD</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="despensa" class="required"><i class="fas fa-shopping-cart"></i> Despensa (alimentos y limpieza):</label>
+          <input type="number" id="despensa" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="servicios"><i class="fas fa-lightbulb"></i> Servicios básicos (luz, agua, gas):</label>
+          <input type="number" id="servicios" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="telecom"><i class="fas fa-wifi"></i> Telefonía, cable, internet:</label>
+          <input type="number" id="telecom" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="transporte"><i class="fas fa-car"></i> Transporte o gasolina:</label>
+          <input type="number" id="transporte" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="vivienda"><i class="fas fa-house-user"></i> Renta o crédito hipotecario:</label>
+          <input type="number" id="vivienda" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="creditos"><i class="fas fa-credit-card"></i> Créditos o tarjetas:</label>
+          <input type="number" id="creditos" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="entretenimiento"><i class="fas fa-film"></i> Entretenimiento, membresías, comidas fuera:</label>
+          <input type="number" id="entretenimiento" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="form-group">
+          <label for="otrosEgresos"><i class="fas fa-tshirt"></i> Otros gastos:</label>
+          <input type="number" id="otrosEgresos" min="0" placeholder="0.00">
+        </div>
+        
+        <div class="section-title" style="margin-top: 30px;">
+          <h2><i class="fas fa-heartbeat"></i> Evaluación para Seguro de Vida</h2>
+          <span>Información requerida</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="edad" class="required"><i class="fas fa-birthday-cake"></i> Edad:</label>
+          <input type="number" id="edad" min="18" max="80" placeholder="Ej: 35">
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-smoking"></i> ¿Fuma regularmente?</label>
+          <select id="fuma">
+            <option value="no">No</option>
+            <option value="si">Sí</option>
+            <option value="ocasional">Ocasionalmente</option>
+          </select>
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-wine-glass-alt"></i> ¿Consume alcohol regularmente?</label>
+          <select id="alcohol">
+            <option value="no">No</option>
+            <option value="moderado">Moderadamente</option>
+            <option value="frecuente">Frecuentemente</option>
+          </select>
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-running"></i> ¿Realiza actividad física?</label>
+          <select id="actividadFisica">
+            <option value="regular">Regularmente (3+ veces/semana)</option>
+            <option value="ocasional">Ocasionalmente</option>
+            <option value="poco">Poco o nada</option>
+          </select>
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-stethoscope"></i> ¿Tiene condiciones médicas preexistentes?</label>
+          <select id="condicionesMedicas">
+            <option value="no">No</option>
+            <option value="leves">Leves (hipertensión, etc.)</option>
+            <option value="graves">Graves (diabetes, cáncer, etc.)</option>
+          </select>
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-history"></i> Antecedentes familiares de enfermedades graves:</label>
+          <select id="antecedentesFamiliares">
+            <option value="no">No</option>
+            <option value="algunos">Algunos casos</option>
+            <option value="varios">Varios casos</option>
+          </select>
+        </div>
+        
+        <div class="insurance-question">
+          <label><i class="fas fa-user-md"></i> ¿Visita al médico regularmente?</label>
+          <select id="visitasMedico">
+            <option value="si">Sí, al menos una vez al año</option>
+            <option value="poco">Ocasionalmente</option>
+            <option value="no">Casi nunca</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div style="padding: 0 30px 30px;">
+      <div class="btn-container">
+        <button class="btn-primary" onclick="calcularYEnviar()">
+          <i class="fas fa-calculator"></i> Calcular Finanzas y Evaluar
+        </button>
+      </div>
+      
+      <div class="result-container" id="resultado">
+        <div class="print-only">
+          <h3>Reporte Financiero y de Seguros</h3>
+          <p>Generado el: <span id="fechaReporte"></span></p>
+          <p>Cliente: <span id="print-nombre"></span></p>
+        </div>
+        
+        <h3><i class="fas fa-chart-line"></i> Resultados Financieros</h3>
+        
+        <div class="summary-card">
+          <div class="summary-item">
+            <h4>Ingresos Mensuales</h4>
+            <div class="summary-value" id="res-ingresos-mes">$0.00</div>
+          </div>
+          
+          <div class="summary-item">
+            <h4>Egresos Mensuales</h4>
+            <div class="summary-value" id="res-egresos-mes">$0.00</div>
+          </div>
+          
+          <div class="summary-item" id="ahorro-mensual-card">
+            <h4>Ahorro Mensual</h4>
+            <div class="summary-value" id="res-ahorro-mes">$0.00</div>
+          </div>
+          
+          <div class="summary-item" id="ahorro-anual-card">
+            <h4>Ahorro Anual</h4>
+            <div class="summary-value" id="res-ahorro-anual">$0.00</div>
+          </div>
+        </div>
+        
+        <div class="result-content" style="margin-top: 20px;">
+          <div class="result-item">
+            <span>Nombre del cliente:</span>
+            <span class="result-value" id="res-nombre">-</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Ingresos totales mensuales:</span>
+            <span class="result-value" id="ingresos-mes">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Egresos totales mensuales:</span>
+            <span class="result-value" id="egresos-mes">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Balance mensual:</span>
+            <span class="result-value" id="balance-mes">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Aguinaldo (anual):</span>
+            <span class="result-value" id="aguinaldo-val">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Ingresos anuales:</span>
+            <span class="result-value" id="ingresos-anual">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Egresos anuales:</span>
+            <span class="result-value" id="egresos-anual">$0.00</span>
+          </div>
+          
+          <div class="result-item">
+            <span>Porcentaje de ahorro mensual:</span>
+            <span class="result-value" id="porcentaje-ahorro">0.00%</span>
+          </div>
+        </div>
+        
+        <div class="savings-section">
+          <h3><i class="fas fa-piggy-bank"></i> Capacidad de Ahorro</h3>
+          <div class="highlight-box">
+            <p>Ahorro mensual disponible</p>
+            <div class="highlight-value" id="ahorro-mensual">$0.00</div>
+            <p>Ahorro anual estimado (incluyendo aguinaldo)</p>
+            <div class="highlight-value" id="ahorro-anual">$0.00</div>
+          </div>
+          
+          <div id="recomendacion-ahorro" style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid var(--teal);">
+            <p><i class="fas fa-lightbulb"></i> <strong>Recomendación:</strong> Complete el formulario y haga clic en calcular para ver recomendaciones personalizadas.</p>
+          </div>
+        </div>
+        
+        <div class="insurance-assessment">
+          <h3><i class="fas fa-shield-alt"></i> Evaluación para Seguro de Vida</h3>
+          <div id="seguroResultado">
+            <p>Complete la información de salud y haga clic en calcular para ver la evaluación de seguro de vida.</p>
+          </div>
+        </div>
+        
+        <div class="loading" id="loadingIndicator">
+          <div class="loading-spinner"></div>
+          <p>Enviando resultados, por favor espere...</p>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+          <i class="fas fa-check-circle"></i> Los resultados han sido enviados correctamente a tu correo
+        </div>
+        
+        <div class="btn-container">
+          <button class="btn-secondary" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir Resultados
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>© 2023 Seguros VidaPro | Todos los derechos reservados</p>
+      <p>Este formulario es solo para fines ilustrativos. Consulte a un asesor financiero para recomendaciones personalizadas.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Reemplaza esta URL con la que obtengas de Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8ZpbhQx5_Bqzpz09pHPpB1CPiEwo5mgg0vS1ffs56GuONh7QkE1GVNvaC9jwmPqlEUQ/exec';
+    
+    function calcularYEnviar() {
+      // Validar campos requeridos
+      if (!document.getElementById('nombre').value || 
+          !document.getElementById('email').value || 
+          !document.getElementById('salario').value || 
+          !document.getElementById('despensa').value || 
+          !document.getElementById('edad').value) {
+        alert('Por favor complete todos los campos requeridos (*)');
+        return;
+      }
+      
+      // Obtener datos personales
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+      const telefono = document.getElementById('telefono').value || 'No proporcionado';
+      
+      // Obtener valores de ingresos
+      const salario = parseFloat(document.getElementById('salario').value) || 0;
+      const comisiones = parseFloat(document.getElementById('comisiones').value) || 0;
+      const negocio = parseFloat(document.getElementById('negocio').value) || 0;
+      const arrendamiento = parseFloat(document.getElementById('arrendamiento').value) || 0;
+      const pension = parseFloat(document.getElementById('pension').value) || 0;
+      const otrosIngresos = parseFloat(document.getElementById('otrosIngresos').value) || 0;
+      const aguinaldo = parseFloat(document.getElementById('aguinaldo').value) || 0;
+      
+      // Calcular ingresos totales mensuales
+      const ingresosMensuales = salario + comisiones + negocio + arrendamiento + pension + otrosIngresos;
+      
+      // Obtener valores de egresos
+      const despensa = parseFloat(document.getElementById('despensa').value) || 0;
+      const servicios = parseFloat(document.getElementById('servicios').value) || 0;
+      const telecom = parseFloat(document.getElementById('telecom').value) || 0;
+      const transporte = parseFloat(document.getElementById('transporte').value) || 0;
+      const vivienda = parseFloat(document.getElementById('vivienda').value) || 0;
+      const creditos = parseFloat(document.getElementById('creditos').value) || 0;
+      const entretenimiento = parseFloat(document.getElementById('entretenimiento').value) || 0;
+      const otrosEgresos = parseFloat(document.getElementById('otrosEgresos').value) || 0;
+      
+      // Calcular egresos totales mensuales
+      const egresosMensuales = despensa + servicios + telecom + transporte + vivienda + creditos + entretenimiento + otrosEgresos;
+      
+      // Calcular balance mensual (ahorro mensual)
+      const balanceMensual = ingresosMensuales - egresosMensuales;
+      
+      // Calcular valores anuales
+      const ingresosAnuales = (ingresosMensuales * 12) + aguinaldo;
+      const egresosAnuales = egresosMensuales * 12;
+      const balanceAnual = ingresosAnuales - egresosAnuales;
+      
+      // Calcular porcentaje de ahorro
+      const porcentajeAhorro = ingresosMensuales > 0 ? (balanceMensual / ingresosMensuales * 100) : 0;
+      
+      // Actualizar resumen
+      document.getElementById('res-nombre').textContent = nombre;
+      document.getElementById('print-nombre').textContent = nombre;
+      document.getElementById('res-ingresos-mes').textContent = '$' + ingresosMensuales.toFixed(2);
+      document.getElementById('res-egresos-mes').textContent = '$' + egresosMensuales.toFixed(2);
+      document.getElementById('res-ahorro-mes').textContent = '$' + balanceMensual.toFixed(2);
+      document.getElementById('res-ahorro-anual').textContent = '$' + balanceAnual.toFixed(2);
+      
+      // Actualizar valores detallados
+      document.getElementById('ingresos-mes').textContent = '$' + ingresosMensuales.toFixed(2);
+      document.getElementById('egresos-mes').textContent = '$' + egresosMensuales.toFixed(2);
+      document.getElementById('balance-mes').textContent = '$' + balanceMensual.toFixed(2);
+      document.getElementById('aguinaldo-val').textContent = '$' + aguinaldo.toFixed(2);
+      document.getElementById('ingresos-anual').textContent = '$' + ingresosAnuales.toFixed(2);
+      document.getElementById('egresos-anual').textContent = '$' + egresosAnuales.toFixed(2);
+      document.getElementById('porcentaje-ahorro').textContent = porcentajeAhorro.toFixed(2) + '%';
+      
+      // Actualizar ahorros destacados
+      document.getElementById('ahorro-mensual').textContent = '$' + balanceMensual.toFixed(2);
+      document.getElementById('ahorro-anual').textContent = '$' + balanceAnual.toFixed(2);
+      
+      // Estilizar tarjetas según el ahorro
+      const ahorroMensualCard = document.getElementById('ahorro-mensual-card');
+      const ahorroAnualCard = document.getElementById('ahorro-anual-card');
+      
+      ahorroMensualCard.className = 'summary-item ' + 
+        (balanceMensual > 0 ? 'savings-positive' : balanceMensual < 0 ? 'savings-negative' : 'savings-neutral');
+      
+      ahorroAnualCard.className = 'summary-item ' + 
+        (balanceAnual > 0 ? 'savings-positive' : balanceAnual < 0 ? 'savings-negative' : 'savings-neutral');
+      
+      // Generar recomendación financiera
+      let recomendacionHTML = '';
+      if (balanceMensual > 0) {
+        recomendacionHTML = `
+          <p><i class="fas fa-check-circle"></i> <strong>¡Excelente situación financiera!</strong></p>
+          <p>Su capacidad de ahorro mensual es de <strong>$${balanceMensual.toFixed(2)}</strong>, 
+          lo que le permitiría ahorrar <strong>$${balanceAnual.toFixed(2)}</strong> anualmente.</p>
+          <p style="margin-top: 10px;">Recomendaciones:</p>
+          <ul>
+            <li>Asigne al menos el 20% de su ahorro mensual a un fondo de emergencia</li>
+            <li>Considere invertir una parte de su ahorro anual en instrumentos de largo plazo</li>
+            <li>El aguinaldo puede ser utilizado para metas financieras específicas</li>
+          </ul>
+        `;
+      } else if (balanceMensual < 0) {
+        recomendacionHTML = `
+          <p><i class="fas fa-exclamation-triangle"></i> <strong>Atención: Gastos superan ingresos</strong></p>
+          <p>Actualmente tiene un déficit mensual de <strong>$${Math.abs(balanceMensual).toFixed(2)}</strong>, 
+          lo que resultaría en un déficit anual de <strong>$${Math.abs(balanceAnual).toFixed(2)}</strong>.</p>
+          <p style="margin-top: 10px;">Recomendaciones urgentes:</p>
+          <ul>
+            <li>Revise detalladamente sus gastos para identificar áreas de reducción</li>
+            <li>Considere fuentes de ingreso adicionales</li>
+            <li>Priorice el pago de deudas con altos intereses</li>
+            <li>El aguinaldo debería utilizarse para reducir deudas o cubrir déficit</li>
+          </ul>
+        `;
+      } else {
+        recomendacionHTML = `
+          <p><i class="fas fa-info-circle"></i> <strong>Balance equilibrado</strong></p>
+          <p>Sus ingresos y gastos están equilibrados, sin capacidad de ahorro mensual.</p>
+          <p>Su ahorro anual sería de <strong>$${balanceAnual.toFixed(2)}</strong> gracias al aguinaldo.</p>
+          <p style="margin-top: 10px;">Recomendaciones:</p>
+          <ul>
+            <li>Identifique oportunidades para reducir gastos y generar un pequeño ahorro mensual</li>
+            <li>El aguinaldo debe ser su principal fuente de ahorro anual</li>
+            <li>Considere asignar al menos el 50% de su aguinaldo a ahorro o inversión</li>
+          </ul>
+        `;
+      }
+      
+      document.getElementById('recomendacion-ahorro').innerHTML = recomendacionHTML;
+      
+      // Evaluación para seguro de vida
+      let riesgo = 0;
+      let recomendacionesSeguro = [];
+      let seguroHTML = "";
+      
+      // Obtener datos para seguro de vida
+      const edad = parseInt(document.getElementById('edad').value) || 0;
+      const fuma = document.getElementById('fuma').value;
+      const alcohol = document.getElementById('alcohol').value;
+      const actividadFisica = document.getElementById('actividadFisica').value;
+      const condicionesMedicas = document.getElementById('condicionesMedicas').value;
+      const antecedentesFamiliares = document.getElementById('antecedentesFamiliares').value;
+      const visitasMedico = document.getElementById('visitasMedico').value;
+      
+      // Calcular nivel de riesgo
+      if (edad < 30) riesgo -= 2;
+      else if (edad > 50) riesgo += 3;
+      else if (edad > 40) riesgo += 1;
+      
+      if (fuma === 'si') riesgo += 3;
+      else if (fuma === 'ocasional') riesgo += 1;
+      
+      if (alcohol === 'frecuente') riesgo += 2;
+      else if (alcohol === 'moderado') riesgo += 1;
+      
+      if (actividadFisica === 'poco') riesgo += 2;
+      else if (actividadFisica === 'ocasional') riesgo += 1;
+      else if (actividadFisica === 'regular') riesgo -= 1;
+      
+      if (condicionesMedicas === 'graves') riesgo += 4;
+      else if (condicionesMedicas === 'leves') riesgo += 2;
+      
+      if (antecedentesFamiliares === 'varios') riesgo += 3;
+      else if (antecedentesFamiliares === 'algunos') riesgo += 1;
+      
+      if (visitasMedico === 'no') riesgo += 2;
+      else if (visitasMedico === 'poco') riesgo += 1;
+      
+      // Determinar nivel de riesgo
+      if (riesgo <= 2) {
+        seguroHTML = `
+          <p><strong>Nivel de riesgo:</strong> <span class="positive">Bajo</span></p>
+          <p>Su perfil es favorable para un seguro de vida. Probablemente calificará para las mejores tarifas.</p>
+          <p><strong>Recomendación:</strong> Considera un seguro de vida a término con cobertura de 10-20 años.</p>
+          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.05).toFixed(2)} - $${(balanceMensual * 0.1).toFixed(2)}</p>
+        `;
+      } else if (riesgo <= 5) {
+        seguroHTML = `
+          <p><strong>Nivel de riesgo:</strong> <span class="neutral">Moderado</span></p>
+          <p>Su perfil es aceptable para un seguro de vida, pero podría tener tarifas ligeramente superiores.</p>
+          <p><strong>Recomendación:</strong> Considera un seguro de vida permanente con beneficios acumulados.</p>
+          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.08).toFixed(2)} - $${(balanceMensual * 0.15).toFixed(2)}</p>
+        `;
+        recomendacionesSeguro.push("Considera reducir el consumo de tabaco o alcohol si aplica");
+        recomendacionesSeguro.push("Mantén un estilo de vida activo y visita al médico regularmente");
+      } else {
+        seguroHTML = `
+          <p><strong>Nivel de riesgo:</strong> <span class="negative">Alto</span></p>
+          <p>Podría enfrentar dificultades para obtener un seguro de vida o pagar primas más altas.</p>
+          <p><strong>Recomendación:</strong> Considera un seguro de vida garantizado que no requiere examen médico.</p>
+          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.15).toFixed(2)} - $${(balanceMensual * 0.25).toFixed(2)}</p>
+        `;
+        recomendacionesSeguro.push("Consulta con un médico para manejar condiciones de salud existentes");
+        recomendacionesSeguro.push("Considera cambios en tu estilo de vida para reducir factores de riesgo");
+        recomendacionesSeguro.push("Realiza exámenes médicos regulares para monitorear tu salud");
+      }
+      
+      // Agregar recomendaciones
+      if (recomendacionesSeguro.length > 0) {
+        seguroHTML += `<p><strong>Recomendaciones para mejorar:</strong></p><ul style="margin-top: 10px;">`;
+        recomendacionesSeguro.forEach(rec => {
+          seguroHTML += `<li>${rec}</li>`;
+        });
+        seguroHTML += `</ul>`;
+      }
+      
+      document.getElementById('seguroResultado').innerHTML = seguroHTML;
+      
+      // Fecha para reporte
+      const hoy = new Date();
+      document.getElementById('fechaReporte').textContent = hoy.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      // Mostrar contenedor de resultados
+      document.getElementById('resultado').style.display = 'block';
+      
+      // Preparar datos para enviar por correo
+      const data = {
+        nombre: nombre,
+        email: email,
+        telefono: telefono,
+        resultados: {
+          ahorroMensual: '$' + balanceMensual.toFixed(2),
+          ahorroAnual: '$' + balanceAnual.toFixed(2),
+          ingresosMensuales: '$' + ingresosMensuales.toFixed(2),
+          egresosMensuales: '$' + egresosMensuales.toFixed(2),
+          balanceMensual: '$' + balanceMensual.toFixed(2),
+          aguinaldo: '$' + aguinaldo.toFixed(2),
+          ingresosAnuales: '$' + ingresosAnuales.toFixed(2),
+          egresosAnuales: '$' + egresosAnuales.toFixed(2),
+          porcentajeAhorro: porcentajeAhorro.toFixed(2) + '%'
+        },
+        seguro: {
+          evaluacion: document.getElementById('seguroResultado').innerText,
+          nivelRiesgo: document.querySelector('#seguroResultado strong')?.textContent || 'No determinado'
+        },
+        recomendaciones: recomendacionHTML
+      };
+      
+      // Mostrar carga y ocultar mensaje previo
+      document.getElementById('loadingIndicator').style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+      
+      // Enviar los datos al Google Apps Script
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        mode: 'no-cors'
+      })
+      .then(() => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+      })
+      .catch(error => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
