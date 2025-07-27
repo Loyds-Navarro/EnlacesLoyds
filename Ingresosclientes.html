@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evaluador Financiero Completo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
   <style>
     :root {
       --navy: #0a192f;
@@ -824,7 +826,83 @@
 
   <script>
     // Reemplaza esta URL con la que obtengas de Google Apps Script
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8ZpbhQx5_Bqzpz09pHPpB1CPiEwo5mgg0vS1ffs56GuONh7QkE1GVNvaC9jwmPqlEUQ/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmwV3n6scvoXa1P2Rtb0njcEK7A0VyNvvBWygZh1f-IBh31KeE3B-Lovk7vFcFeEc92w/exec';
+    
+    // Función para formatear números con comas
+    function formatNumber(num) {
+      return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
+    // Función para crear gráfica de pastel anual reducida con etiquetas
+    function createAnnualPieChart(ingresosAnuales, egresosAnuales) {
+      // Crear contenedor para la gráfica si no existe
+      if (!document.getElementById('annualPieChartContainer')) {
+        const chartSection = document.querySelector('.result-content');
+        
+        const chartHTML = `
+          <div id="annualPieChartContainer" style="margin-top: 30px; text-align: center;">
+            <h4><i class="fas fa-chart-pie"></i> Distribución Anual de Ingresos y Egresos</h4>
+            <div style="width: 50%; margin: 0 auto;">
+              <canvas id="annualPieChart" height="200" width="200"></canvas>
+            </div>
+          </div>
+        `;
+        chartSection.insertAdjacentHTML('afterbegin', chartHTML);
+      }
+
+      // Configurar datos para la gráfica
+      const ctx = document.getElementById('annualPieChart').getContext('2d');
+      const total = ingresosAnuales + egresosAnuales;
+      const ingresosPorcentaje = ((ingresosAnuales / total) * 100).toFixed(1);
+      const egresosPorcentaje = ((egresosAnuales / total) * 100).toFixed(1);
+      
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Ingresos', 'Egresos'],
+          datasets: [{
+            data: [ingresosAnuales, egresosAnuales],
+            backgroundColor: ['#4e79a7', '#e15759'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false // Ocultamos la leyenda para hacer más espacio
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  return `${label}: $${formatNumber(value)} (${((value / total) * 100).toFixed(1)}%)`;
+                }
+              }
+            },
+            datalabels: {
+              formatter: (value, ctx) => {
+                const label = ctx.chart.data.labels[ctx.dataIndex];
+                const percentage = ((value / total) * 100).toFixed(1) + '%';
+                const amount = '$' + formatNumber(value);
+                return `${label}\n${amount}\n${percentage}`;
+              },
+              color: '#fff',
+              font: {
+                size: 10,
+                weight: 'bold'
+              },
+              anchor: 'center',
+              align: 'center',
+              textAlign: 'center'
+            }
+          }
+        },
+        plugins: [ChartDataLabels] // Requiere el plugin chartjs-plugin-datalabels
+      });
+    }
     
     function calcularYEnviar() {
       // Validar campos requeridos
@@ -878,26 +956,26 @@
       // Calcular porcentaje de ahorro
       const porcentajeAhorro = ingresosMensuales > 0 ? (balanceMensual / ingresosMensuales * 100) : 0;
       
-      // Actualizar resumen
+      // Actualizar resumen con formato de comas
       document.getElementById('res-nombre').textContent = nombre;
       document.getElementById('print-nombre').textContent = nombre;
-      document.getElementById('res-ingresos-mes').textContent = '$' + ingresosMensuales.toFixed(2);
-      document.getElementById('res-egresos-mes').textContent = '$' + egresosMensuales.toFixed(2);
-      document.getElementById('res-ahorro-mes').textContent = '$' + balanceMensual.toFixed(2);
-      document.getElementById('res-ahorro-anual').textContent = '$' + balanceAnual.toFixed(2);
+      document.getElementById('res-ingresos-mes').textContent = '$' + formatNumber(ingresosMensuales);
+      document.getElementById('res-egresos-mes').textContent = '$' + formatNumber(egresosMensuales);
+      document.getElementById('res-ahorro-mes').textContent = '$' + formatNumber(balanceMensual);
+      document.getElementById('res-ahorro-anual').textContent = '$' + formatNumber(balanceAnual);
       
       // Actualizar valores detallados
-      document.getElementById('ingresos-mes').textContent = '$' + ingresosMensuales.toFixed(2);
-      document.getElementById('egresos-mes').textContent = '$' + egresosMensuales.toFixed(2);
-      document.getElementById('balance-mes').textContent = '$' + balanceMensual.toFixed(2);
-      document.getElementById('aguinaldo-val').textContent = '$' + aguinaldo.toFixed(2);
-      document.getElementById('ingresos-anual').textContent = '$' + ingresosAnuales.toFixed(2);
-      document.getElementById('egresos-anual').textContent = '$' + egresosAnuales.toFixed(2);
+      document.getElementById('ingresos-mes').textContent = '$' + formatNumber(ingresosMensuales);
+      document.getElementById('egresos-mes').textContent = '$' + formatNumber(egresosMensuales);
+      document.getElementById('balance-mes').textContent = '$' + formatNumber(balanceMensual);
+      document.getElementById('aguinaldo-val').textContent = '$' + formatNumber(aguinaldo);
+      document.getElementById('ingresos-anual').textContent = '$' + formatNumber(ingresosAnuales);
+      document.getElementById('egresos-anual').textContent = '$' + formatNumber(egresosAnuales);
       document.getElementById('porcentaje-ahorro').textContent = porcentajeAhorro.toFixed(2) + '%';
       
       // Actualizar ahorros destacados
-      document.getElementById('ahorro-mensual').textContent = '$' + balanceMensual.toFixed(2);
-      document.getElementById('ahorro-anual').textContent = '$' + balanceAnual.toFixed(2);
+      document.getElementById('ahorro-mensual').textContent = '$' + formatNumber(balanceMensual);
+      document.getElementById('ahorro-anual').textContent = '$' + formatNumber(balanceAnual);
       
       // Estilizar tarjetas según el ahorro
       const ahorroMensualCard = document.getElementById('ahorro-mensual-card');
@@ -914,8 +992,8 @@
       if (balanceMensual > 0) {
         recomendacionHTML = `
           <p><i class="fas fa-check-circle"></i> <strong>¡Excelente situación financiera!</strong></p>
-          <p>Su capacidad de ahorro mensual es de <strong>$${balanceMensual.toFixed(2)}</strong>, 
-          lo que le permitiría ahorrar <strong>$${balanceAnual.toFixed(2)}</strong> anualmente.</p>
+          <p>Su capacidad de ahorro mensual es de <strong>$${formatNumber(balanceMensual)}</strong>, 
+          lo que le permitiría ahorrar <strong>$${formatNumber(balanceAnual)}</strong> anualmente.</p>
           <p style="margin-top: 10px;">Recomendaciones:</p>
           <ul>
             <li>Asigne al menos el 20% de su ahorro mensual a un fondo de emergencia</li>
@@ -926,8 +1004,8 @@
       } else if (balanceMensual < 0) {
         recomendacionHTML = `
           <p><i class="fas fa-exclamation-triangle"></i> <strong>Atención: Gastos superan ingresos</strong></p>
-          <p>Actualmente tiene un déficit mensual de <strong>$${Math.abs(balanceMensual).toFixed(2)}</strong>, 
-          lo que resultaría en un déficit anual de <strong>$${Math.abs(balanceAnual).toFixed(2)}</strong>.</p>
+          <p>Actualmente tiene un déficit mensual de <strong>$${formatNumber(Math.abs(balanceMensual))}</strong>, 
+          lo que resultaría en un déficit anual de <strong>$${formatNumber(Math.abs(balanceAnual))}</strong>.</p>
           <p style="margin-top: 10px;">Recomendaciones urgentes:</p>
           <ul>
             <li>Revise detalladamente sus gastos para identificar áreas de reducción</li>
@@ -940,7 +1018,7 @@
         recomendacionHTML = `
           <p><i class="fas fa-info-circle"></i> <strong>Balance equilibrado</strong></p>
           <p>Sus ingresos y gastos están equilibrados, sin capacidad de ahorro mensual.</p>
-          <p>Su ahorro anual sería de <strong>$${balanceAnual.toFixed(2)}</strong> gracias al aguinaldo.</p>
+          <p>Su ahorro anual sería de <strong>$${formatNumber(balanceAnual)}</strong> gracias al aguinaldo.</p>
           <p style="margin-top: 10px;">Recomendaciones:</p>
           <ul>
             <li>Identifique oportunidades para reducir gastos y generar un pequeño ahorro mensual</li>
@@ -996,14 +1074,14 @@
           <p><strong>Nivel de riesgo:</strong> <span class="positive">Bajo</span></p>
           <p>Su perfil es favorable para un seguro de vida. Probablemente calificará para las mejores tarifas.</p>
           <p><strong>Recomendación:</strong> Considera un seguro de vida a término con cobertura de 10-20 años.</p>
-          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.05).toFixed(2)} - $${(balanceMensual * 0.1).toFixed(2)}</p>
+          <p><strong>Prima estimada mensual:</strong> $${formatNumber(balanceMensual * 0.05)} - $${formatNumber(balanceMensual * 0.1)}</p>
         `;
       } else if (riesgo <= 5) {
         seguroHTML = `
           <p><strong>Nivel de riesgo:</strong> <span class="neutral">Moderado</span></p>
           <p>Su perfil es aceptable para un seguro de vida, pero podría tener tarifas ligeramente superiores.</p>
           <p><strong>Recomendación:</strong> Considera un seguro de vida permanente con beneficios acumulados.</p>
-          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.08).toFixed(2)} - $${(balanceMensual * 0.15).toFixed(2)}</p>
+          <p><strong>Prima estimada mensual:</strong> $${formatNumber(balanceMensual * 0.08)} - $${formatNumber(balanceMensual * 0.15)}</p>
         `;
         recomendacionesSeguro.push("Considera reducir el consumo de tabaco o alcohol si aplica");
         recomendacionesSeguro.push("Mantén un estilo de vida activo y visita al médico regularmente");
@@ -1012,7 +1090,7 @@
           <p><strong>Nivel de riesgo:</strong> <span class="negative">Alto</span></p>
           <p>Podría enfrentar dificultades para obtener un seguro de vida o pagar primas más altas.</p>
           <p><strong>Recomendación:</strong> Considera un seguro de vida garantizado que no requiere examen médico.</p>
-          <p><strong>Prima estimada mensual:</strong> $${(balanceMensual * 0.15).toFixed(2)} - $${(balanceMensual * 0.25).toFixed(2)}</p>
+          <p><strong>Prima estimada mensual:</strong> $${formatNumber(balanceMensual * 0.15)} - $${formatNumber(balanceMensual * 0.25)}</p>
         `;
         recomendacionesSeguro.push("Consulta con un médico para manejar condiciones de salud existentes");
         recomendacionesSeguro.push("Considera cambios en tu estilo de vida para reducir factores de riesgo");
@@ -1038,6 +1116,9 @@
         day: 'numeric'
       });
       
+      // Crear gráfica de pastel anual
+      createAnnualPieChart(ingresosAnuales, egresosAnuales);
+      
       // Mostrar contenedor de resultados
       document.getElementById('resultado').style.display = 'block';
       
@@ -1047,14 +1128,14 @@
         email: email,
         telefono: telefono,
         resultados: {
-          ahorroMensual: '$' + balanceMensual.toFixed(2),
-          ahorroAnual: '$' + balanceAnual.toFixed(2),
-          ingresosMensuales: '$' + ingresosMensuales.toFixed(2),
-          egresosMensuales: '$' + egresosMensuales.toFixed(2),
-          balanceMensual: '$' + balanceMensual.toFixed(2),
-          aguinaldo: '$' + aguinaldo.toFixed(2),
-          ingresosAnuales: '$' + ingresosAnuales.toFixed(2),
-          egresosAnuales: '$' + egresosAnuales.toFixed(2),
+          ahorroMensual: '$' + formatNumber(balanceMensual),
+          ahorroAnual: '$' + formatNumber(balanceAnual),
+          ingresosMensuales: '$' + formatNumber(ingresosMensuales),
+          egresosMensuales: '$' + formatNumber(egresosMensuales),
+          balanceMensual: '$' + formatNumber(balanceMensual),
+          aguinaldo: '$' + formatNumber(aguinaldo),
+          ingresosAnuales: '$' + formatNumber(ingresosAnuales),
+          egresosAnuales: '$' + formatNumber(egresosAnuales),
           porcentajeAhorro: porcentajeAhorro.toFixed(2) + '%'
         },
         seguro: {
