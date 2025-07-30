@@ -21,6 +21,8 @@
       --danger: #ff5252;
       --shadow: 0 4px 12px rgba(2, 12, 27, 0.2);
       --transition: all 0.3s ease;
+      --purple: #7e57c2;
+      --pink: #ec407a;
     }
     
     * {
@@ -155,7 +157,8 @@
     input[type="text"],
     input[type="number"],
     input[type="email"],
-    select {
+    select,
+    textarea {
       width: 100%;
       padding: 12px 15px;
       border: 1px solid #cbd5e0;
@@ -165,10 +168,16 @@
       background: #fff;
     }
     
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
     input[type="text"]:focus,
     input[type="number"]:focus,
     input[type="email"]:focus,
-    select:focus {
+    select:focus,
+    textarea:focus {
       border-color: var(--teal);
       outline: none;
       box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
@@ -508,6 +517,57 @@
       margin-top: 15px;
       text-align: center;
     }
+    
+    .family-section {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f9f0ff;
+      border-radius: 8px;
+      border-left: 4px solid var(--purple);
+    }
+    
+    .family-section h3 {
+      color: var(--purple);
+      border-bottom: 2px solid var(--pink);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .family-section h3 i {
+      color: var(--pink);
+    }
+    
+    .question-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .question-group .insurance-question {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .insurance-answers {
+      margin-top: 20px;
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .insurance-answers h4 {
+      color: var(--navy);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -644,58 +704,110 @@
           <input type="number" id="edad" min="18" max="80" placeholder="Ej: 35">
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-smoking"></i> ¿Fuma regularmente?</label>
-          <select id="fuma">
-            <option value="no">No</option>
-            <option value="si">Sí</option>
-            <option value="ocasional">Ocasionalmente</option>
-          </select>
+        <div class="question-group">
+          <div class="insurance-question">
+            <label><i class="fas fa-smoking"></i> ¿Fuma regularmente?</label>
+            <select id="fuma">
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+              <option value="ocasional">Ocasionalmente</option>
+            </select>
+          </div>
+          
+          <div class="insurance-question">
+            <label><i class="fas fa-wine-glass-alt"></i> ¿Consume alcohol regularmente?</label>
+            <select id="alcohol">
+              <option value="no">No</option>
+              <option value="moderado">Moderadamente</option>
+              <option value="frecuente">Frecuentemente</option>
+            </select>
+          </div>
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-wine-glass-alt"></i> ¿Consume alcohol regularmente?</label>
-          <select id="alcohol">
-            <option value="no">No</option>
-            <option value="moderado">Moderadamente</option>
-            <option value="frecuente">Frecuentemente</option>
-          </select>
+        <div class="question-group">
+          <div class="insurance-question">
+            <label><i class="fas fa-running"></i> ¿Realiza actividad física?</label>
+            <select id="actividadFisica">
+              <option value="regular">Regularmente (3+ veces/semana)</option>
+              <option value="ocasional">Ocasionalmente</option>
+              <option value="poco">Poco o nada</option>
+            </select>
+          </div>
+          
+          <div class="insurance-question">
+            <label><i class="fas fa-stethoscope"></i> ¿Tiene condiciones médicas preexistentes?</label>
+            <select id="condicionesMedicas">
+              <option value="no">No</option>
+              <option value="leves">Leves (hipertensión, etc.)</option>
+              <option value="graves">Graves (diabetes, cáncer, etc.)</option>
+            </select>
+          </div>
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-running"></i> ¿Realiza actividad física?</label>
-          <select id="actividadFisica">
-            <option value="regular">Regularmente (3+ veces/semana)</option>
-            <option value="ocasional">Ocasionalmente</option>
-            <option value="poco">Poco o nada</option>
-          </select>
+        <div class="question-group">
+          <div class="insurance-question">
+            <label><i class="fas fa-history"></i> Antecedentes familiares de enfermedades graves:</label>
+            <select id="antecedentesFamiliares">
+              <option value="no">No</option>
+              <option value="algunos">Algunos casos</option>
+              <option value="varios">Varios casos</option>
+            </select>
+          </div>
+          
+          <div class="insurance-question">
+            <label><i class="fas fa-user-md"></i> ¿Visita al médico regularmente?</label>
+            <select id="visitasMedico">
+              <option value="si">Sí, al menos una vez al año</option>
+              <option value="poco">Ocasionalmente</option>
+              <option value="no">Casi nunca</option>
+            </select>
+          </div>
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-stethoscope"></i> ¿Tiene condiciones médicas preexistentes?</label>
-          <select id="condicionesMedicas">
-            <option value="no">No</option>
-            <option value="leves">Leves (hipertensión, etc.)</option>
-            <option value="graves">Graves (diabetes, cáncer, etc.)</option>
-          </select>
+        <!-- Nuevas preguntas solicitadas -->
+        <div class="question-group">
+          <div class="insurance-question">
+            <label><i class="fas fa-heartbeat"></i> ¿Ya cuenta con protección de gastos médicos?</label>
+            <select id="proteccionGastosMedicos">
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+          </div>
+          
+          <div class="insurance-question">
+            <label><i class="fas fa-user-shield"></i> ¿Tiene alguna protección de vida?</label>
+            <select id="proteccionVida">
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+          </div>
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-history"></i> Antecedentes familiares de enfermedades graves:</label>
-          <select id="antecedentesFamiliares">
-            <option value="no">No</option>
-            <option value="algunos">Algunos casos</option>
-            <option value="varios">Varios casos</option>
-          </select>
+        <div class="question-group">
+          <div class="insurance-question">
+            <label><i class="fas fa-piggy-bank"></i> ¿Ya dispone con un plan de retiro?</label>
+            <select id="planRetiro">
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+          </div>
+          
+          <div class="insurance-question">
+            <label><i class="fas fa-child"></i> ¿Tiene hijos?</label>
+            <select id="tieneHijos">
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+          </div>
         </div>
         
-        <div class="insurance-question">
-          <label><i class="fas fa-user-md"></i> ¿Visita al médico regularmente?</label>
-          <select id="visitasMedico">
-            <option value="si">Sí, al menos una vez al año</option>
-            <option value="poco">Ocasionalmente</option>
-            <option value="no">Casi nunca</option>
-          </select>
+        <div class="family-section">
+          <h3><i class="fas fa-child"></i> Protección Familiar</h3>
+          
+          <div class="form-group">
+            <label for="interesHijos"><i class="fas fa-graduation-cap"></i> ¿Cuál es el interés de que tus hijos estén protegidos y vayan a una escuela privada?</label>
+            <textarea id="interesHijos" placeholder="Explique su interés en la protección de sus hijos y su educación..."></textarea>
+          </div>
         </div>
       </div>
     </div>
@@ -798,6 +910,11 @@
           <h3><i class="fas fa-shield-alt"></i> Evaluación para Seguro de Vida</h3>
           <div id="seguroResultado">
             <p>Complete la información de salud y haga clic en calcular para ver la evaluación de seguro de vida.</p>
+          </div>
+          
+          <div class="insurance-answers">
+            <h4><i class="fas fa-clipboard-list"></i> Respuestas sobre Protecciones</h4>
+            <div id="respuestasSeguro"></div>
           </div>
         </div>
         
@@ -1108,6 +1225,41 @@
       
       document.getElementById('seguroResultado').innerHTML = seguroHTML;
       
+      // Capturar respuestas de las nuevas preguntas
+      const proteccionGastosMedicos = document.getElementById('proteccionGastosMedicos').value === 'si' ? 'Sí' : 'No';
+      const proteccionVida = document.getElementById('proteccionVida').value === 'si' ? 'Sí' : 'No';
+      const planRetiro = document.getElementById('planRetiro').value === 'si' ? 'Sí' : 'No';
+      const tieneHijos = document.getElementById('tieneHijos').value === 'si' ? 'Sí' : 'No';
+      const interesHijos = document.getElementById('interesHijos').value || 'No aplica';
+      
+      // Mostrar respuestas en la sección de respuestas
+      const respuestasHTML = `
+        <div class="result-item">
+          <span>Protección de gastos médicos:</span>
+          <span class="result-value">${proteccionGastosMedicos}</span>
+        </div>
+        <div class="result-item">
+          <span>Protección de vida:</span>
+          <span class="result-value">${proteccionVida}</span>
+        </div>
+        <div class="result-item">
+          <span>Plan de retiro:</span>
+          <span class="result-value">${planRetiro}</span>
+        </div>
+        <div class="result-item">
+          <span>Tiene hijos:</span>
+          <span class="result-value">${tieneHijos}</span>
+        </div>
+        ${tieneHijos === 'Sí' ? `
+          <div class="result-item">
+            <span>Interés en protección de hijos:</span>
+            <span class="result-value">"${interesHijos}"</span>
+          </div>
+        ` : ''}
+      `;
+      
+      document.getElementById('respuestasSeguro').innerHTML = respuestasHTML;
+      
       // Fecha para reporte
       const hoy = new Date();
       document.getElementById('fechaReporte').textContent = hoy.toLocaleDateString('es-ES', {
@@ -1140,7 +1292,12 @@
         },
         seguro: {
           evaluacion: document.getElementById('seguroResultado').innerText,
-          nivelRiesgo: document.querySelector('#seguroResultado strong')?.textContent || 'No determinado'
+          nivelRiesgo: document.querySelector('#seguroResultado strong')?.textContent || 'No determinado',
+          proteccionGastosMedicos: proteccionGastosMedicos,
+          proteccionVida: proteccionVida,
+          planRetiro: planRetiro,
+          tieneHijos: tieneHijos,
+          interesHijos: interesHijos
         },
         recomendaciones: recomendacionHTML
       };
