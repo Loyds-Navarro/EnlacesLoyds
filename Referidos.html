@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Seguros | Participa y Gana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c2461, #1e3799);
+            color: #333;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Encabezado con logo */
+        header {
+            background: linear-gradient(to right, #0c2461, #1e3799);
+            color: white;
+            padding: 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #2ecc71;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+        
+        .header-content {
+            flex: 1;
+        }
+        
+        .header-content h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            font-weight: 300;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Objetivo */
+        .objective {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            position: relative;
+        }
+        
+        .objective:before, .objective:after {
+            content: "✦";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+        
+        .objective:before {
+            left: 30px;
+        }
+        
+        .objective:after {
+            right: 30px;
+        }
+        
+        /* Contenedor principal */
+        .form-container {
+            padding: 30px;
+        }
+        
+        /* Secciones */
+        .section-title {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            padding: 16px 25px;
+            border-radius: 8px;
+            margin: 35px 0 25px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #2ecc71;
+        }
+        
+        /* Grupos de formulario */
+        .form-group {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 1.05rem;
+        }
+        
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            background: #f8fafc;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            outline: none;
+            background: #ffffff;
+        }
+        
+        /* Botón de envío */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        /* Sección de premios */
+        .gift-section {
+            background: linear-gradient(to right, #f8f9fa, #ffffff);
+            border: 1px solid #e0e6ed;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .gift-section:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #f39c12;
+        }
+        
+        .gift-icon {
+            font-size: 2.3rem;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+        
+        .gift-text {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .gift-details {
+            font-size: 1.05rem;
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        
+        /* Sección de referidos */
+        .referral-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        .referral-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .referral-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .referral-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: all 0.3s;
+        }
+        
+        .referral-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-color: #3498db;
+        }
+        
+        .referral-card label {
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .counter {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Mensajes */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            background: #ffebee;
+            color: #b71c1c;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            border-left: 5px solid #b71c1c;
+        }
+        
+        .success-message {
+            display: none;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            border-left: 5px solid #2e7d32;
+        }
+        
+        /* Pie de página */
+        footer {
+            background: #0c2461;
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        footer p {
+            margin: 8px 0;
+            opacity: 0.8;
+        }
+        
+        /* Nueva sección de beneficios y recomendaciones */
+        .benefits-section {
+            background: linear-gradient(135deg, #f8f9fa, #eef2f7);
+            padding: 40px 30px;
+            border-top: 1px solid #e0e6ed;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+            color: #0c2461;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e6ed;
+            text-align: center;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3498db, #0c2461);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .benefit-title {
+            font-size: 1.3rem;
+            color: #0c2461;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .benefit-description {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+        
+        .recommendations {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e6ed;
+        }
+        
+        .recommendations h3 {
+            color: #0c2461;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            margin-bottom: 25px;
+            align-items: flex-start;
+        }
+        
+        .recommendation-icon {
+            background: #2ecc71;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .recommendation-content h4 {
+            color: #0c2461;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .recommendation-content p {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+        
+        .cta-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            text-decoration: none;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px auto;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+                padding: 14px 20px;
+            }
+            
+            .form-group {
+                padding: 20px;
+            }
+            
+            .gift-section {
+                padding: 25px;
+            }
+            
+            .referral-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .benefits-section {
+                padding: 30px 20px;
+            }
+            
+            .section-header h2 {
+                font-size: 1.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .objective {
+                padding: 20px 15px;
+                font-size: 1rem;
+            }
+            
+            .benefit-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="logoa.png" alt="Logo de Seguros">
+                </div>
+                <div class="header-content">
+                    <h1>Encuesta de ahorro y protección financiera</h1>
+                    <p class="subtitle">Campaña de referidos Loyds&Navarro</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="objective">
+            <i class="fas fa-bullseye"></i> Objetivo: Conocer tus necesidades de protección financiera y premiar tu participación
+        </div>
+        
+        <!-- CORRECCIÓN: Cambiamos el div por form para permitir .reset() -->
+        <form class="form-container" id="surveyForm">
+            <div class="gift-section">
+                <div class="gift-icon"><i class="fas fa-gift"></i></div>
+                <div class="gift-text">¡POR CADA REFERIDO QUE CONTRATE RECIBIRÁS UN PREMIO!</div>
+                <div class="gift-details">
+                    Los premios incluyen regalos exclusivos como electrodomésticos.<br>
+                    Los referidos deben ser personas reales interesadas en planes de ahorro. Recibirás tu premio cuando contraten alguno de nuestros productos
+                </div>
+            </div>
+            
+            <div class="section-title">
+                <i class="fas fa-user-tie"></i> Tus Datos Personales
+            </div>
+            
+            <div class="form-group">
+                <label for="clientName">Nombre completo</label>
+                <input type="text" id="clientName" name="clientName" placeholder="Nombre y apellidos" required>
+                
+                <label for="clientEmail">Correo electrónico</label>
+                <input type="email" id="clientEmail" name="clientEmail" placeholder="ejemplo@email.com" required>
+                
+                <label for="clientPhone">Teléfono</label>
+                <input type="tel" id="clientPhone" name="clientPhone" placeholder="Número de teléfono" required>
+            </div>
+            
+            <div class="section-title">
+                <i class="fas fa-file-contract"></i> Encuesta de Protección Financiera
+            </div>
+            
+            <!-- Pregunta 1 -->
+            <div class="form-group">
+                <label for="q1">1. ¿Tienes algún tipo de ahorro actualmente?</label>
+                <select id="q1" name="q1" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="emergencias">Sí, tengo un fondo específico para emergencias</option>
+                    <option value="no_emergencias">Sí, pero no está destinado a emergencias</option>
+                    <option value="gustaria">No, pero me gustaría empezar</option>
+                    <option value="no_considero">No, y no lo considero necesario por ahora</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 2 -->
+            <div class="form-group">
+                <label for="q2">2. ¿Cuánto dinero tienes ahorrado para enfrentar un imprevisto?</label>
+                <select id="q2" name="q2" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="menos_1mes">Menos de 1 mes de gastos</option>
+                    <option value="1_3meses">Entre 1 y 3 meses de gastos</option>
+                    <option value="3_6meses">Entre 3 y 6 meses de gastos</option>
+                    <option value="mas_6meses">Más de 6 meses de gastos</option>
+                    <option value="no_ahorro">No tengo un ahorro destinado a eso</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 3 -->
+            <div class="form-group">
+                <label for="q3">3. ¿Con qué frecuencia destinas parte de tus ingresos al ahorro?</label>
+                <select id="q3" name="q3" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="mensual">Mensualmente</option>
+                    <option value="ocasional">De forma ocasional</option>
+                    <option value="sobra">Solo si me sobra algo a fin de mes</option>
+                    <option value="no_ahorro">No ahorro</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 4 -->
+            <div class="form-group">
+                <label for="q4">4. ¿Qué método de ahorro utilizas?</label>
+                <select id="q4" name="q4" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="banco">Cuenta de ahorros en banco</option>
+                    <option value="caja">Caja de ahorro o método informal</option>
+                    <option value="inversiones">Inversiones (fondos, CETES, etc.)</option>
+                    <option value="efectivo">Guardado en efectivo en casa</option>
+                    <option value="no_metodo">No tengo un método específico</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 5 -->
+            <div class="form-group">
+                <label for="q5">5. ¿Qué te impide ahorrar actualmente?</label>
+                <select id="q5" name="q5" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="ingresos">Ingresos insuficientes</option>
+                    <option value="gastos">Gastos imprevistos frecuentes</option>
+                    <option value="disciplina">Falta de disciplina o constancia</option>
+                    <option value="conocimientos">No tengo conocimientos financieros</option>
+                    <option value="otra">Otra razón</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 6 -->
+            <div class="form-group">
+                <label for="q6">6. ¿Has considerado adquirir un plan de ahorro para proteger tu estabilidad financiera?</label>
+                <select id="q6" name="q6" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="tengo_uno">Sí, ya tengo uno o más planes de ahorro</option>
+                    <option value="pensado">Lo he pensado pero no lo he contratado</option>
+                    <option value="no_considero">No lo considero necesario</option>
+                    <option value="no_conozco">No conozco bien cómo funcionan los planes de ahorro</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 7 -->
+            <div class="form-group">
+                <label for="q7">7. ¿Cuál sería tu principal motivación para comenzar a ahorrar?</label>
+                <select id="q7" name="q7" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="seguridad">Seguridad ante emergencias</option>
+                    <option value="metas">Lograr metas personales (casa, viajes, estudios)</option>
+                    <option value="familia">Proteger a mi familia</option>
+                    <option value="dia">Dejar de vivir al día</option>
+                    <option value="otra">Otra motivación</option>
+                </select>
+            </div>
+            
+            <!-- Pregunta 8 -->
+            <div class="form-group">
+                <label for="q8">8. ¿Conoces a alguien dentro de tu red de contactos que esté buscando una estrategia financiera para alcanzar su primer millón mediante el ahorro?</label>
+                <select id="q8" name="q8" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="varias_personas">Sí, conozco varias personas</option>
+                    <option value="algunos">Sí, algunos conocidos</option>
+                    <option value="no">No en este momento</option>
+                </select>
+            </div>
+            
+            <!-- Sección de referidos -->
+            <div class="section-title">
+                <i class="fas fa-users"></i> Referidos para Premios <span class="counter">5</span>
+            </div>
+            
+            <div class="referral-header">
+                <h2>Ingresa los datos de tus referidos</h2>
+                <p>Por cada referido que firme un contrato de seguro, recibirás una compensación o regalo</p>
+            </div>
+            
+            <div class="referral-grid">
+                <!-- Referido 1 -->
+                <div class="referral-card">
+                    <label for="name1">Nombre completo del referido 1</label>
+                    <input type="text" id="name1" name="name1" placeholder="Nombre y apellidos">
+                    <label for="phone1">Teléfono del referido 1</label>
+                    <input type="tel" id="phone1" name="phone1" placeholder="Número de teléfono">
+                    <label for="relation1">Relación con esta persona</label>
+                    <select id="relation1" name="relation1">
+                        <option value="">Selecciona una opción</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="amigo">Amigo</option>
+                        <option value="compañero">Compañero de trabajo</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <!-- Referido 2 -->
+                <div class="referral-card">
+                    <label for="name2">Nombre completo del referido 2</label>
+                    <input type="text" id="name2" name="name2" placeholder="Nombre y apellidos">
+                    <label for="phone2">Teléfono del referido 2</label>
+                    <input type="tel" id="phone2" name="phone2" placeholder="Número de teléfono">
+                    <label for="relation2">Relación con esta persona</label>
+                    <select id="relation2" name="relation2">
+                        <option value="">Selecciona una opción</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="amigo">Amigo</option>
+                        <option value="compañero">Compañero de trabajo</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <!-- Referido 3 -->
+                <div class="referral-card">
+                    <label for="name3">Nombre completo del referido 3</label>
+                    <input type="text" id="name3" name="name3" placeholder="Nombre y apellidos">
+                    <label for="phone3">Teléfono del referido 3</label>
+                    <input type="tel" id="phone3" name="phone3" placeholder="Número de teléfono">
+                    <label for="relation3">Relación con esta persona</label>
+                    <select id="relation3" name="relation3">
+                        <option value="">Selecciona una opción</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="amigo">Amigo</option>
+                        <option value="compañero">Compañero de trabajo</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <!-- Referido 4 -->
+                <div class="referral-card">
+                    <label for="name4">Nombre completo del referido 4</label>
+                    <input type="text" id="name4" name="name4" placeholder="Nombre y apellidos">
+                    <label for="phone4">Teléfono del referido 4</label>
+                    <input type="tel" id="phone4" name="phone4" placeholder="Número de teléfono">
+                    <label for="relation4">Relación con esta persona</label>
+                    <select id="relation4" name="relation4">
+                        <option value="">Selecciona una opción</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="amigo">Amigo</option>
+                        <option value="compañero">Compañero de trabajo</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <!-- Referido 5 -->
+                <div class="referral-card">
+                    <label for="name5">Nombre completo del referido 5</label>
+                    <input type="text" id="name5" name="name5" placeholder="Nombre y apellidos">
+                    <label for="phone5">Teléfono del referido 5</label>
+                    <input type="tel" id="phone5" name="phone5" placeholder="Número de teléfono">
+                    <label for="relation5">Relación con esta persona</label>
+                    <select id="relation5" name="relation5">
+                        <option value="">Selecciona una opción</option>
+                        <option value="familiar">Familiar</option>
+                        <option value="amigo">Amigo</option>
+                        <option value="compañero">Compañero de trabajo</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" id="submitBtn">
+                <i class="fas fa-paper-plane"></i> Enviar Encuesta y Participar
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Enviando datos...</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i> <span id="errorText">Hubo un error al enviar la encuesta. Por favor, inténtalo de nuevo más tarde.</span>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> ¡Encuesta enviada correctamente! Gracias por participar. Nos pondremos en contacto contigo para entregarte tus premios.
+            </div>
+        </form>
+        
+        <!-- Nueva sección de beneficios y recomendaciones -->
+<!-- Sección combinada simplificada -->
+<div class="benefits-section">
+    <div class="section-header">
+        <h2>Plan de Ahorro: Protección y Futuro</h2>
+        <p>La solución inteligente que cuida a tu familia mientras construyes tu patrimonio</p>
+    </div>
+    
+    <div class="benefits-container">
+        <!-- Beneficio 1 + Recomendación -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="benefit-title">Protección Familiar</h3>
+            <p class="benefit-description">Garantiza el futuro económico de tus seres queridos mientras ahorras. <strong>Recomendación:</strong> Calcula un capital que cubra deudas + 3-5 años de gastos familiares.</p>
+        </div>
+        
+        <!-- Beneficio 2 + Recomendación -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-piggy-bank"></i>
+            </div>
+            <h3 class="benefit-title">Ahorro Disciplinado</h3>
+            <p class="benefit-description">Crea patrimonio con aportaciones periódicas. <strong>Recomendación:</strong> Elige primas que puedas mantener a largo plazo sin afectar tu economía básica.</p>
+        </div>
+        
+        <!-- Beneficio 3 + Recomendación -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="benefit-title">Mejores Rendimientos</h3>
+            <p class="benefit-description">Supera el interés bancario tradicional. <strong>Recomendación:</strong> Compara evaluando la proteción con la tranquilidad de rendimientos históricos y con un futuro tanquilo.</p>
+        </div>
+        
+        <!-- Beneficio 4 + Recomendación -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <h3 class="benefit-title">Flexibilidad</h3>
+            <p class="benefit-description">Accede a tus ahorros para emergencias o proyectos. <strong>Recomendación:</strong> Contrata joven para primas más bajas y mayor acumulación de intereses.</p>
+        </div>
+        
+        <!-- Beneficio 5 + Recomendación -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3 class="benefit-title">Beneficios Fiscales</h3>
+            <p class="benefit-description">Aprovecha deducciones impositivas. <strong>Recomendación:</strong> Revisa tu póliza cada 2-3 años para ajustarla a cambios en tu vida.</p>
+        </div>
+        
+        <!-- Beneficio 6 + CTA -->
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3 class="benefit-title">Logra tus Metas</h3>
+            <p class="benefit-description">Planifica educación, vivienda o jubilación con seguridad. <strong>¿Listo para empezar?</strong></p>
+        </div>
+    </div>
+    
+    <div class="cta-container">
+        <a href="https://wa.me/527225886862?text=Hola,%20quiero%20asesoría%20sobre%20seguros%20con%20ahorro" class="cta-btn">
+            <i class="fab fa-whatsapp"></i> Hablar con un Experto
+        </a>
+    </div>
+</div>
+        
+        <footer>
+            <p>© 2023 Seguros Profesionales - Todos los derechos reservados</p>
+            <p>Los premios están sujetos a términos y condiciones. Validación requerida.</p>
+        </footer>
+    </div>
+    
+   <script>
+        // URL de tu Google Apps Script
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvelgHJQ_vhXOmY8NekDFv2GBUDcTAP0NAcADWfdfGbRWu-vJZLmcYethFb4ISLBdnzA/exec';
+        
+        document.getElementById('submitBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            // Validación de campos obligatorios
+            const requiredFields = [
+                {id: 'clientName', name: 'Nombre completo'},
+                {id: 'clientEmail', name: 'Correo electrónico'},
+                {id: 'clientPhone', name: 'Teléfono'},
+                {id: 'q1', name: 'Pregunta 1'},
+                {id: 'q2', name: 'Pregunta 2'},
+                {id: 'q3', name: 'Pregunta 3'},
+                {id: 'q4', name: 'Pregunta 4'},
+                {id: 'q5', name: 'Pregunta 5'},
+                {id: 'q6', name: 'Pregunta 6'},
+                {id: 'q7', name: 'Pregunta 7'},
+                {id: 'q8', name: 'Pregunta 8'}
+            ];
+            
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element.value.trim()) {
+                    showError(`Por favor completa: ${field.name}`);
+                    element.focus();
+                    return;
+                }
+            }
+            
+            // Validar formato de email
+            const email = document.getElementById('clientEmail').value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('Por favor ingresa un correo electrónico válido');
+                return;
+            }
+            
+            // Mostrar estado de carga
+            hideMessages();
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                // Recolectar datos de referidos
+                const referidos = [];
+                for (let i = 1; i <= 5; i++) {
+                    const name = document.getElementById(`name${i}`).value.trim();
+                    const phone = document.getElementById(`phone${i}`).value.trim();
+                    const relation = document.getElementById(`relation${i}`).value;
+                    
+                    if (name || phone) {
+                        referidos.push({
+                            nombre: name || 'No proporcionado',
+                            telefono: phone || 'No proporcionado',
+                            relacion: relation || 'No especificada'
+                        });
+                    }
+                }
+                
+                // Crear objeto con todos los datos
+                const formData = {
+                    timestamp: new Date().toISOString(),
+                    nombre: document.getElementById('clientName').value.trim(),
+                    email: email,
+                    telefono: document.getElementById('clientPhone').value.trim(),
+                    tiene_ahorro: document.getElementById('q1').value,
+                    cantidad_ahorro: document.getElementById('q2').value,
+                    frecuencia_ahorro: document.getElementById('q3').value,
+                    metodo_ahorro: document.getElementById('q4').value,
+                    impide_ahorro: document.getElementById('q5').value,
+                    considera_seguro: document.getElementById('q6').value,
+                    motivacion_ahorro: document.getElementById('q7').value,
+                    conoce_interesados: document.getElementById('q8').value,
+                    referidos: JSON.stringify(referidos),
+                    premios_elegibles: referidos.length > 0 ? 'Sí' : 'No',
+                    estado: 'Pendiente de validación'
+                };
+                
+                // Solución CORS: Usar un proxy o servidor local
+                // Opción 1: Usar un proxy CORS (puede tener limitaciones)
+                // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                // const response = await fetch(proxyUrl + scriptURL, {
+                
+                // Opción 2: Usar directamente con modo 'no-cors' (recomendado para pruebas locales)
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Importante para evitar problemas CORS en local
+                    body: JSON.stringify(formData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                // Como usamos 'no-cors', no podemos leer la respuesta directamente
+                // Pero asumimos que si no hay error, el envío fue exitoso
+                showSuccess();
+                document.getElementById('surveyForm').reset();
+                
+                // Para producción real, deberías:
+                // 1. Subir este HTML a un servidor web (GitHub Pages, Netlify, etc.)
+                // 2. Quitar el mode: 'no-cors'
+                // 3. Procesar la respuesta del servidor
+                
+            } catch (error) {
+                console.error('Error al enviar:', error);
+                showError('Encuesta enviada. Verifica en la hoja de cálculo.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            document.getElementById('errorText').textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showSuccess() {
+            const successElement = document.getElementById('successMessage');
+            successElement.style.display = 'block';
+            successElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
