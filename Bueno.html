@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Financiero Personal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --fijo: #28a745;
+            --lujo: #dc3545;
+            --ahorro: #007bff;
+            --fondo: #f8f9fa;
+            --texto: #212529;
+            --borde: #dee2e6;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--texto);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(90deg, #1a2a6c, #2a4d69);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #2a4d69;
+        }
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2a4d69;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            font-size: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--borde);
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        input[type="number"], 
+        input[type="text"], 
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #4dabf7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.3);
+        }
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-fijo {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .tag-lujo {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .tag-ahorro {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        button {
+            background: linear-gradient(90deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(13, 71, 161, 0.3);
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(13, 71, 161, 0.4);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .result-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .result-header h2 {
+            color: #1a2a6c;
+            font-size: 2rem;
+            border: none;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid;
+        }
+        .card-fijo {
+            border-top-color: var(--fijo);
+        }
+        .card-lujo {
+            border-top-color: var(--lujo);
+        }
+        .card-ahorro {
+            border-top-color: var(--ahorro);
+        }
+        .summary-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #2a4d69;
+        }
+        .summary-card p {
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        .summary-card strong {
+            font-size: 1.3rem;
+            color: #1a2a6c;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .chart-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2a4d69;
+            font-size: 1.4rem;
+        }
+        .progress-container {
+            margin: 25px 0;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .progress-bar-container {
+            height: 30px;
+            background-color: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 15px;
+            position: relative;
+            transition: width 1s ease-in-out;
+        }
+        .progress-label {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .fijo-bar {
+            background: linear-gradient(90deg, #28a745, #218838);
+        }
+        .lujo-bar {
+            background: linear-gradient(90deg, #dc3545, #c82333);
+        }
+        .ahorro-bar {
+            background: linear-gradient(90deg, #007bff, #0069d9);
+        }
+        .recommendation {
+            background: #fff8e1;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+            margin: 30px 0;
+        }
+        .recommendation h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .recommendation p {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+        .recommendation strong {
+            color: #d39e00;
+        }
+        .analysis-section {
+            background: #e8f4fc;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .analysis-section h3 {
+            color: #0c5460;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .analysis-section p {
+            margin: 15px 0;
+            line-height: 1.7;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Análisis Financiero Personal</h1>
+        <p class="subtitle">Completa tus datos financieros para obtener un análisis detallado con gráficos y recomendaciones personalizadas</p>
+    </header>
+    
+    <div class="form-container">
+        <div class="form-section">
+            <h2>Información Personal</h2>
+            <table>
+                <tr>
+                    <td>Nombre:</td>
+                    <td><input type="text" id="nombre" placeholder="Tu nombre completo"></td>
+                </tr>
+                <tr>
+                    <td>Edad:</td>
+                    <td><input type="number" id="edad" placeholder="Tu edad" min="18" max="100"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>1. Ingresos</h2>
+            <table>
+                <tr>
+                    <td>Ingreso principal mensual:</td>
+                    <td><input type="number" id="ingreso_principal" placeholder="$"></td>
+                </tr>
+                <tr>
+                    <td>Ingresos adicionales:</td>
+                    <td><input type="number" id="ingresos_adicionales" placeholder="$"></td>
+                </tr>
+                <tr>
+                    <td>Tipo de ingresos:</td>
+                    <td>
+                        <select id="ingresos_tipo">
+                            <option value="fijo">Fijos</option>
+                            <option value="variable">Varían</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Aguinaldo (anual):</td>
+                    <td><input type="number" id="aguinaldo" placeholder="$"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>2. Gastos Fijos del Hogar</h2>
+            <table>
+                <tr>
+                    <td>Renta o hipoteca:</td>
+                    <td><input type="number" id="renta" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Luz:</td>
+                    <td><input type="number" id="luz" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Agua:</td>
+                    <td><input type="number" id="agua" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Gas:</td>
+                    <td><input type="number" id="gas" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Internet:</td>
+                    <td><input type="number" id="internet" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>3. Transporte y Movilidad</h2>
+            <table>
+                <tr>
+                    <td>Gasolina:</td>
+                    <td><input type="number" id="gasolina" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Auto (mantenimiento/seguro):</td>
+                    <td><input type="number" id="auto_gastos" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Estacionamiento:</td>
+                    <td><input type="number" id="estacionamiento" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>4. Gastos Personales</h2>
+            <table>
+                <tr>
+                    <td>Despensa/Supermercado:</td>
+                    <td><input type="number" id="despensa" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Plan de celular:</td>
+                    <td><input type="number" id="celular" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Mascotas:</td>
+                    <td><input type="number" id="mascotas" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+                <tr>
+                    <td>Streaming (Netflix, etc.):</td>
+                    <td><input type="number" id="streaming" placeholder="$"></td>
+                    <td><span class="tag tag-lujo">Lujo</span></td>
+                </tr>
+                <tr>
+                    <td>Gimnasio/Club:</td>
+                    <td><input type="number" id="gimnasio" placeholder="$"></td>
+                    <td><span class="tag tag-lujo">Lujo</span></td>
+                </tr>
+                <tr>
+                    <td>Belleza:</td>
+                    <td><input type="number" id="belleza" placeholder="$"></td>
+                    <td><span class="tag tag-lujo">Lujo</span></td>
+                </tr>
+                <tr>
+                    <td>Tarjetas de crédito:</td>
+                    <td><input type="number" id="tarjetas" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>5. Finanzas y Obligaciones</h2>
+            <table>
+                <tr>
+                    <td>Seguros:</td>
+                    <td><input type="number" id="seguros" placeholder="$"></td>
+                    <td><span class="tag tag-ahorro">Ahorro</span></td>
+                </tr>
+                <tr>
+                    <td>Ahorro para el retiro:</td>
+                    <td><input type="number" id="ahorro_retiro" placeholder="$"></td>
+                    <td><span class="tag tag-ahorro">Ahorro</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>6. Gastos Variables</h2>
+            <table>
+                <tr>
+                    <td>Shopping (ropa, gadgets):</td>
+                    <td><input type="number" id="shopping" placeholder="$"></td>
+                    <td><span class="tag tag-lujo">Lujo</span></td>
+                </tr>
+                <tr>
+                    <td>Gastos impulsivos:</td>
+                    <td><input type="number" id="gastos_impulsivos" placeholder="$"></td>
+                    <td><span class="tag tag-lujo">Lujo</span></td>
+                </tr>
+                <tr>
+                    <td>Gastos semanales fijos:</td>
+                    <td><input type="number" id="gastos_semanales" placeholder="$"></td>
+                    <td><span class="tag tag-fijo">Fijo</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>7. Ahorro y Metas</h2>
+            <table>
+                <tr>
+                    <td>Ahorro mensual:</td>
+                    <td><input type="number" id="ahorro_mensual" placeholder="$"></td>
+                    <td><span class="tag tag-ahorro">Ahorro</span></td>
+                </tr>
+                <tr>
+                    <td>Meta de ahorro:</td>
+                    <td><input type="text" id="meta_ahorro" placeholder="Ej: Viaje, emergencia"></td>
+                </tr>
+                <tr>
+                    <td>Dónde ahorras:</td>
+                    <td><input type="text" id="donde_ahorra" placeholder="Ej: Banco, inversión"></td>
+                </tr>
+                <tr>
+                    <td>Método de ahorro:</td>
+                    <td>
+                        <select id="cuando_ahorra">
+                            <option value="antes">Antes de gastar</option>
+                            <option value="despues">Después de gastar</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button onclick="calcularPresupuesto()">Generar Presupuesto y Análisis</button>
+    </div>
+
+    <div id="resultados" class="result-section">
+        <div class="result-header">
+            <h2>Resultados Financieros para <span id="nombre_resultado"></span></h2>
+            <p>Análisis completo de tu situación financiera con recomendaciones personalizadas</p>
+        </div>
+        
+        <div class="summary-grid">
+            <div class="summary-card card-fijo">
+                <h3>Gastos Fijos</h3>
+                <p><strong>Total:</strong> $<span id="total_fijo"></span></p>
+                <p><strong>Porcentaje:</strong> <span id="porcentaje_fijo"></span>%</p>
+                <p><strong>Recomendado:</strong> 50%</p>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Progreso</span>
+                        <span id="fijo-progress-label"></span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="fijo-progress" class="progress-bar fijo-bar">
+                            <span class="progress-label"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-card card-lujo">
+                <h3>Gastos de Lujo</h3>
+                <p><strong>Total:</strong> $<span id="total_lujo"></span></p>
+                <p><strong>Porcentaje:</strong> <span id="porcentaje_lujo"></span>%</p>
+                <p><strong>Recomendado:</strong> 20%</p>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Progreso</span>
+                        <span id="lujo-progress-label"></span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="lujo-progress" class="progress-bar lujo-bar">
+                            <span class="progress-label"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-card card-ahorro">
+                <h3>Ahorro e Inversión</h3>
+                <p><strong>Total:</strong> $<span id="total_ahorro"></span></p>
+                <p><strong>Porcentaje:</strong> <span id="porcentaje_ahorro"></span>%</p>
+                <p><strong>Recomendado:</strong> 30%</p>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Progreso</span>
+                        <span id="ahorro-progress-label"></span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="ahorro-progress" class="progress-bar ahorro-bar">
+                            <span class="progress-label"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h3>Resumen General</h3>
+                <p><strong>Total Ingresos:</strong> $<span id="total_ingresos"></span></p>
+                <p><strong>Total Gastos:</strong> $<span id="total_gastos"></span></p>
+                <p><strong>Balance Mensual:</strong> $<span id="balance"></span></p>
+                <p><strong>Capacidad de Ahorro:</strong> <span id="capacidad_ahorro"></span></p>
+            </div>
+            
+            <div class="summary-card">
+                <h3>Distribución Ideal</h3>
+                <div class="chart-box">
+                    <canvas id="distribucionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-box">
+                <div class="chart-title">Desglose de Gastos</div>
+                <canvas id="gastosChart"></canvas>
+            </div>
+            
+            <div class="chart-box">
+                <div class="chart-title">Distribución Actual</div>
+                <canvas id="categoriasChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="recommendation">
+            <h3>Recomendaciones Financieras</h3>
+            <div id="recomendaciones"></div>
+        </div>
+        
+        <div class="analysis-section">
+            <h3>Análisis de Salud Financiera</h3>
+            <p><strong>¿Qué gastos podrías reducir?</strong></p>
+            <p id="gastos_reducir"></p>
+            
+            <p><strong>¿Qué cambiarías para mejorar tu salud financiera?</strong></p>
+            <p id="mejoras"></p>
+            
+            <p><strong>¿Tu presupuesto actual te acerca a tus metas?</strong></p>
+            <p id="metas_analisis"></p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2023 Análisis Financiero Personal | Herramienta basada en el método 50-30-20</p>
+    </div>
+
+    <script>
+        // Variables para almacenar instancias de gráficos
+        let distribucionChart = null;
+        let gastosChart = null;
+        let categoriasChart = null;
+        
+        // Función para parsear valores numéricos (trata vacíos como 0)
+        function parseValor(valor) {
+            const num = parseFloat(valor);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function calcularPresupuesto() {
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value || "Usuario";
+            const edad = document.getElementById('edad').value || "N/A";
+            
+            // Ingresos
+            const ingresoPrincipal = parseValor(document.getElementById('ingreso_principal').value);
+            const ingresosAdicionales = parseValor(document.getElementById('ingresos_adicionales').value);
+            const aguinaldo = parseValor(document.getElementById('aguinaldo').value);
+            const aguinaldoMensual = aguinaldo / 12;
+            const totalIngresos = ingresoPrincipal + ingresosAdicionales + aguinaldoMensual;
+            
+            // Gastos Fijos del Hogar
+            const renta = parseValor(document.getElementById('renta').value);
+            const luz = parseValor(document.getElementById('luz').value);
+            const agua = parseValor(document.getElementById('agua').value);
+            const gas = parseValor(document.getElementById('gas').value);
+            const internet = parseValor(document.getElementById('internet').value);
+            const totalHogar = renta + luz + agua + gas + internet;
+            
+            // Transporte
+            const gasolina = parseValor(document.getElementById('gasolina').value);
+            const autoGastos = parseValor(document.getElementById('auto_gastos').value);
+            const estacionamiento = parseValor(document.getElementById('estacionamiento').value);
+            const totalTransporte = gasolina + autoGastos + estacionamiento;
+            
+            // Gastos Personales
+            const despensa = parseValor(document.getElementById('despensa').value);
+            const celular = parseValor(document.getElementById('celular').value);
+            const mascotas = parseValor(document.getElementById('mascotas').value);
+            const streaming = parseValor(document.getElementById('streaming').value);
+            const gimnasio = parseValor(document.getElementById('gimnasio').value);
+            const belleza = parseValor(document.getElementById('belleza').value);
+            const tarjetas = parseValor(document.getElementById('tarjetas').value);
+            const totalPersonales = despensa + celular + mascotas + streaming + gimnasio + belleza + tarjetas;
+            
+            // Finanzas y Obligaciones
+            const seguros = parseValor(document.getElementById('seguros').value);
+            const ahorroRetiro = parseValor(document.getElementById('ahorro_retiro').value);
+            
+            // Gastos Semanales Fijos (categoría corregida: Fijo)
+            const gastosSemanales = parseValor(document.getElementById('gastos_semanales').value);
+            const gastosSemanalesMensual = gastosSemanales * 4;
+            
+            // Gastos Variables
+            const shopping = parseValor(document.getElementById('shopping').value);
+            const gastosImpulsivos = parseValor(document.getElementById('gastos_impulsivos').value);
+            const totalVariables = shopping + gastosImpulsivos;
+            
+            // Ahorro
+            const ahorroMensual = parseValor(document.getElementById('ahorro_mensual').value);
+            
+            // Calcular totales por categoría
+            const totalFijo = totalHogar + totalTransporte + despensa + celular + mascotas + tarjetas + gastosSemanalesMensual;
+            const totalLujo = streaming + gimnasio + belleza + shopping + gastosImpulsivos;
+            const totalAhorro = seguros + ahorroRetiro + ahorroMensual;
+            
+            const totalGastos = totalFijo + totalLujo + totalAhorro;
+            const balance = totalIngresos - totalGastos;
+            
+            // Porcentajes
+            const porcentajeFijo = totalIngresos > 0 ? (totalFijo / totalIngresos * 100).toFixed(1) : 0;
+            const porcentajeLujo = totalIngresos > 0 ? (totalLujo / totalIngresos * 100).toFixed(1) : 0;
+            const porcentajeAhorro = totalIngresos > 0 ? (totalAhorro / totalIngresos * 100).toFixed(1) : 0;
+            
+            // Mostrar resultados
+            document.getElementById('nombre_resultado').textContent = nombre;
+            document.getElementById('total_ingresos').textContent = totalIngresos.toFixed(2);
+            document.getElementById('total_gastos').textContent = totalGastos.toFixed(2);
+            document.getElementById('balance').textContent = balance.toFixed(2);
+            document.getElementById('capacidad_ahorro').textContent = balance >= 0 ? "Positiva" : "Negativa";
+            
+            document.getElementById('total_fijo').textContent = totalFijo.toFixed(2);
+            document.getElementById('total_lujo').textContent = totalLujo.toFixed(2);
+            document.getElementById('total_ahorro').textContent = totalAhorro.toFixed(2);
+            
+            document.getElementById('porcentaje_fijo').textContent = porcentajeFijo;
+            document.getElementById('porcentaje_lujo').textContent = porcentajeLujo;
+            document.getElementById('porcentaje_ahorro').textContent = porcentajeAhorro;
+            
+            // Actualizar barras de progreso
+            actualizarBarraProgreso('fijo', porcentajeFijo, 50);
+            actualizarBarraProgreso('lujo', porcentajeLujo, 20);
+            actualizarBarraProgreso('ahorro', porcentajeAhorro, 30);
+            
+            // Generar recomendaciones
+            generarRecomendaciones(totalIngresos, totalFijo, totalLujo, totalAhorro, balance);
+            
+            // Mostrar gráficos
+            mostrarGraficos(totalFijo, totalLujo, totalAhorro, totalIngresos);
+            
+            // Mostrar sección de resultados
+            document.getElementById('resultados').style.display = 'block';
+            
+            // Desplazarse a los resultados
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function actualizarBarraProgreso(tipo, valorActual, valorRecomendado) {
+            const barra = document.getElementById(`${tipo}-progress`);
+            const etiqueta = document.getElementById(`${tipo}-progress-label`);
+            const porcentaje = Math.min(100, (valorActual / valorRecomendado) * 100);
+            
+            barra.style.width = `${porcentaje}%`;
+            barra.querySelector('.progress-label').textContent = `${valorActual}%`;
+            etiqueta.textContent = `${valorActual}% de ${valorRecomendado}%`;
+        }
+        
+        function generarRecomendaciones(ingresos, fijo, lujo, ahorro, balance) {
+            const recomendaciones = document.getElementById('recomendaciones');
+            const gastosReducir = document.getElementById('gastos_reducir');
+            const mejoras = document.getElementById('mejoras');
+            const metasAnalisis = document.getElementById('metas_analisis');
+            
+            recomendaciones.innerHTML = '';
+            
+            // Recomendación general
+            if (balance < 0) {
+                recomendaciones.innerHTML += '<p><strong>🚨 Alerta de Déficit:</strong> Tus gastos superan tus ingresos. Estás gastando $' + Math.abs(balance).toFixed(2) + ' más de lo que ganas cada mes.</p>';
+            } else if (balance < (ingresos * 0.1)) {
+                recomendaciones.innerHTML += '<p><strong>⚠️ Advertencia:</strong> Tu capacidad de ahorro es muy baja ($' + balance.toFixed(2) + '). Casi no tienes margen para imprevistos.</p>';
+            } else {
+                recomendaciones.innerHTML += '<p><strong>✅ Buen trabajo:</strong> Tus finanzas están equilibradas con un superávit de $' + balance.toFixed(2) + ' mensuales.</p>';
+            }
+            
+            // Recomendaciones por categoría
+            const porcentajeFijo = ingresos > 0 ? (fijo / ingresos * 100) : 0;
+            const porcentajeLujo = ingresos > 0 ? (lujo / ingresos * 100) : 0;
+            const porcentajeAhorro = ingresos > 0 ? (ahorro / ingresos * 100) : 0;
+            
+            if (porcentajeFijo > 55) {
+                recomendaciones.innerHTML += `<p><strong>🔧 Gastos Fijos (${porcentajeFijo.toFixed(1)}%):</strong> Superas el 50% recomendado. Considera renegociar servicios, buscar vivienda más económica o reducir servicios innecesarios.</p>`;
+            }
+            
+            if (porcentajeLujo > 25) {
+                recomendaciones.innerHTML += `<p><strong>💎 Gastos de Lujo (${porcentajeLujo.toFixed(1)}%):</strong> Tus gastos discrecionales son altos. Identifica áreas donde puedas reducir (entretenimiento, suscripciones, compras impulsivas).</p>`;
+            }
+            
+            if (porcentajeAhorro < 25) {
+                recomendaciones.innerHTML += `<p><strong>💰 Ahorro (${porcentajeAhorro.toFixed(1)}%):</strong> Estás ahorrando menos del 30% recomendado. Automatiza tus ahorros y aplica la regla 50-30-20.</p>`;
+            }
+            
+            // Análisis de gastos reducibles
+            if (porcentajeLujo > 25) {
+                gastosReducir.textContent = "Tus gastos de lujo son el principal área de oportunidad. Considera reducir suscripciones, salidas a restaurantes y compras impulsivas.";
+            } else if (porcentajeFijo > 55) {
+                gastosReducir.textContent = "Tus gastos fijos son demasiado altos. Revisa tus contratos de servicios (luz, agua, internet) y considera opciones más económicas.";
+            } else {
+                gastosReducir.textContent = "Tu distribución de gastos es razonable. Busca pequeñas optimizaciones en servicios que ya utilizas.";
+            }
+            
+            // Sugerencias de mejora
+            const sugerencias = [];
+            if (porcentajeFijo > 55) sugerencias.push("reducir gastos fijos");
+            if (porcentajeLujo > 25) sugerencias.push("establecer un presupuesto de gastos discrecionales");
+            if (porcentajeAhorro < 25) sugerencias.push("automatizar tus ahorros");
+            
+            if (sugerencias.length > 0) {
+                mejoras.textContent = `Podrías ${sugerencias.join(', ')}. También considera:`;
+                mejoras.innerHTML += `<ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Revisar tus contratos de servicios cada 6 meses</li>
+                    <li>Crear un fondo de emergencia de 3-6 meses de gastos</li>
+                    <li>Utilizar apps de seguimiento de gastos</li>
+                </ul>`;
+            } else {
+                mejoras.textContent = "Tus finanzas están bien gestionadas. Continúa con este buen manejo y considera inversiones para hacer crecer tu dinero.";
+            }
+            
+            // Análisis de metas
+            const metaAhorro = document.getElementById('meta_ahorro').value;
+            if (metaAhorro) {
+                metasAnalisis.textContent = `Tu meta de "${metaAhorro}" es alcanzable con tu actual tasa de ahorro. ${
+                    porcentajeAhorro < 25 ? "Sin embargo, podrías acelerar el proceso aumentando tu porcentaje de ahorro." : ""
+                }`;
+            } else {
+                metasAnalisis.textContent = "No has definido una meta de ahorro específica. Establecer una meta te ayudará a mantener la disciplina financiera.";
+            }
+        }
+        
+        function mostrarGraficos(fijo, lujo, ahorro, ingresos) {
+            // Destruir gráficos anteriores si existen
+            if (distribucionChart) distribucionChart.destroy();
+            if (gastosChart) gastosChart.destroy();
+            if (categoriasChart) categoriasChart.destroy();
+            
+            // Gráfico de distribución ideal vs actual
+            const ctx1 = document.getElementById('distribucionChart').getContext('2d');
+            distribucionChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Fijo', 'Lujo', 'Ahorro'],
+                    datasets: [
+                        {
+                            label: 'Recomendado',
+                            data: [50, 20, 30],
+                            backgroundColor: ['#28a74580', '#dc354580', '#007bff80'],
+                            borderColor: ['#28a745', '#dc3545', '#007bff'],
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Actual',
+                            data: [
+                                (fijo / ingresos * 100).toFixed(1),
+                                (lujo / ingresos * 100).toFixed(1),
+                                (ahorro / ingresos * 100).toFixed(1)
+                            ],
+                            backgroundColor: ['#28a745', '#dc3545', '#007bff'],
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución Actual vs Recomendada',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Porcentaje de ingresos'
+                            },
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de desglose de gastos
+            const ctx2 = document.getElementById('gastosChart').getContext('2d');
+            gastosChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fijo', 'Lujo', 'Ahorro'],
+                    datasets: [{
+                        data: [fijo, lujo, ahorro],
+                        backgroundColor: ['#28a745', '#dc3545', '#007bff'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Gastos',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de categorías (ejemplo simplificado)
+            const ctx3 = document.getElementById('categoriasChart').getContext('2d');
+            categoriasChart = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: ['Vivienda', 'Transporte', 'Alimentos', 'Entretenimiento', 'Servicios', 'Ahorros'],
+                    datasets: [{
+                        data: [30, 15, 20, 10, 15, 10],
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ejemplo de Distribución Ideal',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Inicializar valores de ejemplo para demostración
+        window.onload = function() {
+            document.getElementById('nombre').value = "María González";
+            document.getElementById('edad').value = "34";
+            document.getElementById('ingreso_principal').value = "35000";
+            document.getElementById('ingresos_adicionales').value = "5000";
+            document.getElementById('aguinaldo').value = "25000";
+            document.getElementById('renta').value = "12000";
+            document.getElementById('luz').value = "800";
+            document.getElementById('agua').value = "300";
+            document.getElementById('gas').value = "450";
+            document.getElementById('internet').value = "600";
+            document.getElementById('gasolina').value = "2500";
+            document.getElementById('auto_gastos').value = "1800";
+            document.getElementById('despensa').value = "5000";
+            document.getElementById('celular').value = "500";
+            document.getElementById('streaming').value = "500";
+            document.getElementById('gimnasio').value = "800";
+            document.getElementById('belleza').value = "1200";
+            document.getElementById('tarjetas').value = "3500";
+            document.getElementById('seguros').value = "1500";
+            document.getElementById('ahorro_retiro').value = "1500";
+            document.getElementById('gastos_semanales').value = "1000";
+            document.getElementById('shopping').value = "2500";
+            document.getElementById('gastos_impulsivos').value = "1800";
+            document.getElementById('ahorro_mensual').value = "4000";
+            document.getElementById('meta_ahorro').value = "Fondo de emergencia";
+        }
+    </script>
+</body>
+</html>
