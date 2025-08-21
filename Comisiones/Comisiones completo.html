@@ -266,7 +266,7 @@
     <!-- Calculadora (visible después del login) -->
     <div class="calculator-container" id="calculatorScreen">
       <div class="header">
-        <img src="logo.png" alt="Logo" class="logo">
+        <img src="logoa.png" alt="Logo" class="logo">
         <h1 class="title">Calculadora de Comisiones</h1>
       </div>
       <p class="subtitle">Calcula las comisiones por producto de forma rápida y sencilla</p>
@@ -367,96 +367,97 @@
     }
 
     // Función para calcular comisión
-     function calcularComision() {
-    const productoSeleccionado = document.getElementById("producto").value;
-    const montoBase = parseFloat(document.getElementById("monto").value);
-    const multiplicador = parseFloat(document.getElementById("multiplicador").value);
+    function calcularComision() {
+  const productoSeleccionado = document.getElementById("producto").value;
+  const montoBase = parseFloat(document.getElementById("monto").value);
+  const multiplicador = parseFloat(document.getElementById("multiplicador").value);
 
-    if (!productoSeleccionado || isNaN(montoBase) || isNaN(multiplicador)) {
-      document.getElementById("resultado").innerHTML = `
-        <div class="error" style="display: block;">
-          <i class="fas fa-exclamation-circle"></i> Por favor completa todos los campos correctamente.
-        </div>
-      `;
-      return;
-    }
-
-    const producto = productos[productoSeleccionado];
-    if (!producto) {
-      document.getElementById("resultado").innerHTML = `
-        <div class="error" style="display: block;">
-          <i class="fas fa-exclamation-circle"></i> Producto no encontrado.
-        </div>
-      `;
-      return;
-    }
-
-    const montoTotal = montoBase * multiplicador;
-    const comisionTotal = (montoTotal * producto.total) / 100;
-    const comisionCertificado = (montoTotal * producto.certificado) / 100;
-    const comisionProspector = (montoTotal * producto.prospector) / 100;
-
-    // Periodos para dividir
-    const periodos = {
-      "Mensual": 12,
-      "Trimestral": 4,
-      "Semestral": 2,
-      "Anual": 1
-    };
-
-    // Función para generar desglose HTML
-    function desglose(nombre, monto) {
-      let html = `<h4 style="margin-top:15px; color:#2c3e50;">${nombre}</h4>`;
-      for (const [periodo, divisor] of Object.entries(periodos)) {
-        html += `
-          <div class="result-item">
-            <span class="result-label">${periodo}:</span>
-            <span class="result-value">$${(monto / divisor).toFixed(2)}</span>
-          </div>
-        `;
-      }
-      return html;
-    }
-
+  if (!productoSeleccionado || isNaN(montoBase) || isNaN(multiplicador)) {
     document.getElementById("resultado").innerHTML = `
-      <div class="result-container">
-        <h3 class="result-title"><i class="fas fa-chart-pie"></i> Resultados de Comisión</h3>
-        
-        <div class="result-item">
-          <span class="result-label">Producto:</span>
-          <span class="result-value">${productoSeleccionado}</span>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-label">Monto base:</span>
-          <span class="result-value">$${montoBase.toFixed(2)}</span>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-label">Multiplicador:</span>
-          <span class="result-value">${multiplicador}</span>
-        </div>
-        
-        <div class="result-item">
-          <span class="result-label">Monto total:</span>
-          <span class="result-value highlight">$${montoTotal.toFixed(2)}</span>
-        </div>
-        
-        <hr style="margin: 15px 0; border: none; border-top: 1px dashed #ddd;">
-        
-        <h4 style="color:#2c3e50;">Comisión Total (${producto.total}%)</h4>
-        <div class="result-item">
-          <span class="result-label">Anual:</span>
-          <span class="result-value highlight">$${comisionTotal.toFixed(2)}</span>
-        </div>
-        ${desglose("Comisión Total", comisionTotal)}
-
-        ${desglose("Certificado ("+producto.certificado+"%)", comisionCertificado)}
-        
-        ${desglose("Prospector ("+producto.prospector+"%)", comisionProspector)}
+      <div class="error" style="display: block;">
+        <i class="fas fa-exclamation-circle"></i> Por favor completa todos los campos correctamente.
       </div>
     `;
+    return;
   }
+
+  const producto = productos[productoSeleccionado];
+  if (!producto) {
+    document.getElementById("resultado").innerHTML = `
+      <div class="error" style="display: block;">
+        <i class="fas fa-exclamation-circle"></i> Producto no encontrado.
+      </div>
+    `;
+    return;
+  }
+
+  const montoTotal = montoBase * multiplicador;
+  const comisionTotal = (montoTotal * producto.total) / 100;
+  const comisionCertificado = (montoTotal * producto.certificado) / 100;
+  const comisionProspector = (montoTotal * producto.prospector) / 100;
+
+  const formatMXN = monto => monto.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+
+  // Periodos para dividir
+  const periodos = {
+    "Mensual": 12,
+    "Trimestral": 4,
+    "Semestral": 2,
+    "Anual": 1
+  };
+
+  function desglose(nombre, monto) {
+    let html = `<h4 style="margin-top:15px; color:#2c3e50;">${nombre}</h4>`;
+    for (const [periodo, divisor] of Object.entries(periodos)) {
+      html += `
+        <div class="result-item">
+          <span class="result-label">${periodo}:</span>
+          <span class="result-value">${formatMXN(monto / divisor)}</span>
+        </div>
+      `;
+    }
+    return html;
+  }
+
+  document.getElementById("resultado").innerHTML = `
+    <div class="result-container">
+      <h3 class="result-title"><i class="fas fa-chart-pie"></i> Resultados de Comisión</h3>
+      
+      <div class="result-item">
+        <span class="result-label">Producto:</span>
+        <span class="result-value">${productoSeleccionado}</span>
+      </div>
+      
+      <div class="result-item">
+        <span class="result-label">Monto base:</span>
+        <span class="result-value">${formatMXN(montoBase)}</span>
+      </div>
+      
+      <div class="result-item">
+        <span class="result-label">Multiplicador:</span>
+        <span class="result-value">${multiplicador}</span>
+      </div>
+      
+      <div class="result-item">
+        <span class="result-label">Monto total:</span>
+        <span class="result-value highlight">${formatMXN(montoTotal)}</span>
+      </div>
+      
+      <hr style="margin: 15px 0; border: none; border-top: 1px dashed #ddd;">
+      
+      <h4 style="color:#2c3e50;">Comisión Total (${producto.total}%)</h4>
+      <div class="result-item">
+        <span class="result-label">Anual:</span>
+        <span class="result-value highlight">${formatMXN(comisionTotal)}</span>
+      </div>
+
+      ${desglose("Comisión Total", comisionTotal)}
+      ${desglose("Certificado (" + producto.certificado + "%)", comisionCertificado)}
+      ${desglose("Prospector (" + producto.prospector + "%)", comisionProspector)}
+    </div>
+  `;
+}
+
 </script>
 </body>
 </html>
