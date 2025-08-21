@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Comisiones por Producto</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .calculator-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 15px;
+    }
+
+    .logo {
+      height: 70px;
+      width: auto;
+    }
+
+    .title {
+      color: var(--primary);
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: var(--secondary);
+      font-size: 18px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--secondary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-logout {
+      background: var(--accent);
+      color: white;
+      margin-top: 20px;
+    }
+
+    .btn-logout:hover {
+      background: #c0392b;
+    }
+
+    .result-container {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      border-left: 5px solid var(--secondary);
+    }
+
+    .result-title {
+      color: var(--primary);
+      font-size: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .result-value {
+      color: var(--secondary);
+      font-weight: 700;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-size: 1.2em;
+    }
+
+    .error {
+      color: var(--accent);
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 42px;
+      cursor: pointer;
+      color: #7f8c8d;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .login-container, .calculator-container {
+        padding: 20px;
+      }
+      
+      .title {
+        font-size: 24px;
+      }
+      
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Pantalla de Login -->
+    <div class="login-container" id="loginScreen">
+      <div class="header">
+        <img src="logoa.png" alt="Logo" class="logo">
+        <h1 class="title">Calculadora de Comisiones</h1>
+      </div>
+      <p class="subtitle">Ingresa la contraseña para acceder</p>
+      
+      <div class="form-group">
+        <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+        <div class="password-container">
+          <input type="password" id="password" placeholder="Ingresa tu contraseña">
+          <span class="toggle-password" id="togglePassword">
+            <i class="far fa-eye"></i>
+          </span>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" id="loginBtn">Acceder</button>
+      
+      <div class="error" id="errorMsg">Contraseña incorrecta. Intenta de nuevo.</div>
+    </div>
+
+    <!-- Calculadora (visible después del login) -->
+    <div class="calculator-container" id="calculatorScreen">
+      <div class="header">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1 class="title">Calculadora de Comisiones</h1>
+      </div>
+      <p class="subtitle">Calcula las comisiones por producto de forma rápida y sencilla</p>
+      
+    <div class="form-group">
+  <label for="producto"><i class="fas fa-box"></i> Selecciona el producto:</label>
+  <select id="producto">
+    <option value="">-- Selecciona --</option>
+    <option value="Imagina Ser >10 y <20 años">Imagina Ser >10 y <20 años</option>
+    <option value="Imagina Ser >= 20 años">Imagina Ser >= 20 años</option>
+    <option value="Objetivo Vida">Objetivo Vida</option>
+    <option value="Orvi 10 Pagos">Orvi 10 Pagos</option>
+    <option value="Orvi 20 Pagos Suma Asegurada < 1,500,000">Orvi 20 Pagos Suma Asegurada &lt; 1,500,000</option>
+    <option value="Orvi 20Pagos Suma Asegurada >= 1,500,000">Orvi 20Pagos Suma Asegurada &gt;= 1,500,000</option>
+    <option value="Segubeca mayor de 10 años">Segubeca mayor de 10 años</option>
+    <option value="Segubeca menor de 10 años">Segubeca menor de 10 años</option>
+    <option value="Vida mujer">Vida mujer</option>
+  </select>
+</div>
+
+
+      <div class="form-group">
+        <label for="monto"><i class="fas fa-dollar-sign"></i> Monto base del seguro ($):</label>
+        <input type="number" id="monto" placeholder="Ej. 25000">
+      </div>
+
+      <div class="form-group">
+        <label for="multiplicador"><i class="fas fa-calculator"></i> Multiplicador:</label>
+        <input type="number" id="multiplicador" placeholder="Ej. 1, 2, 3, 4">
+      </div>
+
+      <button class="btn btn-primary" onclick="calcularComision()">Calcular Comisión</button>
+      
+      <div id="resultado"></div>
+      
+      <button class="btn btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <script>
+    // Datos de productos y comisiones
+    const productos = {
+      "Segubeca menor de 10 años":       { total: 38, certificado: 22.8, prospector: 15.2 },
+      "Segubeca mayor de 10 años":       { total: 20, certificado: 12,  prospector: 8 },
+      "Vida mujer":                      { total: 38, certificado: 22.8, prospector: 15.2 },
+      "Imagina Ser >= 20 años":          { total: 35, certificado: 21,  prospector: 14 },
+      "Imagina Ser >10 y <20 años":      { total: 30, certificado: 18,  prospector: 12 },
+      "Orvi 10 Pagos":                   { total: 35, certificado: 21,  prospector: 14 },
+      "Orvi 20 Pagos Suma Asegurada < 1,500,000":  { total: 44, certificado: 26.4, prospector: 17.6 },
+      "Orvi 20Pagos Suma Asegurada >= 1,500,000":  { total: 35, certificado: 21,  prospector: 14 },
+      "Objetivo Vida":                   { total: 44, certificado: 26.4, prospector: 17.6 }
+    };
+
+    // Elementos del DOM
+    const loginScreen = document.getElementById('loginScreen');
+    const calculatorScreen = document.getElementById('calculatorScreen');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const togglePassword = document.getElementById('togglePassword');
+
+    // Contraseña de acceso
+    const ACCESS_PASSWORD = "Gabby1234";
+
+    // Función para mostrar/ocultar contraseña
+    togglePassword.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+    });
+
+    // Función de login
+    loginBtn.addEventListener('click', function() {
+      if (passwordInput.value === ACCESS_PASSWORD) {
+        loginScreen.style.display = 'none';
+        calculatorScreen.style.display = 'block';
+        errorMsg.style.display = 'none';
+      } else {
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    // Permitir login con Enter
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+
+    // Función de logout
+    function logout() {
+      loginScreen.style.display = 'block';
+      calculatorScreen.style.display = 'none';
+      passwordInput.value = '';
+      document.getElementById('resultado').innerHTML = '';
+    }
+
+    // Función para calcular comisión
+     function calcularComision() {
+    const productoSeleccionado = document.getElementById("producto").value;
+    const montoBase = parseFloat(document.getElementById("monto").value);
+    const multiplicador = parseFloat(document.getElementById("multiplicador").value);
+
+    if (!productoSeleccionado || isNaN(montoBase) || isNaN(multiplicador)) {
+      document.getElementById("resultado").innerHTML = `
+        <div class="error" style="display: block;">
+          <i class="fas fa-exclamation-circle"></i> Por favor completa todos los campos correctamente.
+        </div>
+      `;
+      return;
+    }
+
+    const producto = productos[productoSeleccionado];
+    if (!producto) {
+      document.getElementById("resultado").innerHTML = `
+        <div class="error" style="display: block;">
+          <i class="fas fa-exclamation-circle"></i> Producto no encontrado.
+        </div>
+      `;
+      return;
+    }
+
+    const montoTotal = montoBase * multiplicador;
+    const comisionTotal = (montoTotal * producto.total) / 100;
+    const comisionCertificado = (montoTotal * producto.certificado) / 100;
+    const comisionProspector = (montoTotal * producto.prospector) / 100;
+
+    // Periodos para dividir
+    const periodos = {
+      "Mensual": 12,
+      "Trimestral": 4,
+      "Semestral": 2,
+      "Anual": 1
+    };
+
+    // Función para generar desglose HTML
+    function desglose(nombre, monto) {
+      let html = `<h4 style="margin-top:15px; color:#2c3e50;">${nombre}</h4>`;
+      for (const [periodo, divisor] of Object.entries(periodos)) {
+        html += `
+          <div class="result-item">
+            <span class="result-label">${periodo}:</span>
+            <span class="result-value">$${(monto / divisor).toFixed(2)}</span>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    document.getElementById("resultado").innerHTML = `
+      <div class="result-container">
+        <h3 class="result-title"><i class="fas fa-chart-pie"></i> Resultados de Comisión</h3>
+        
+        <div class="result-item">
+          <span class="result-label">Producto:</span>
+          <span class="result-value">${productoSeleccionado}</span>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-label">Monto base:</span>
+          <span class="result-value">$${montoBase.toFixed(2)}</span>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-label">Multiplicador:</span>
+          <span class="result-value">${multiplicador}</span>
+        </div>
+        
+        <div class="result-item">
+          <span class="result-label">Monto total:</span>
+          <span class="result-value highlight">$${montoTotal.toFixed(2)}</span>
+        </div>
+        
+        <hr style="margin: 15px 0; border: none; border-top: 1px dashed #ddd;">
+        
+        <h4 style="color:#2c3e50;">Comisión Total (${producto.total}%)</h4>
+        <div class="result-item">
+          <span class="result-label">Anual:</span>
+          <span class="result-value highlight">$${comisionTotal.toFixed(2)}</span>
+        </div>
+        ${desglose("Comisión Total", comisionTotal)}
+
+        ${desglose("Certificado ("+producto.certificado+"%)", comisionCertificado)}
+        
+        ${desglose("Prospector ("+producto.prospector+"%)", comisionProspector)}
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>
