@@ -180,6 +180,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         
         .menu-item::before {
@@ -345,6 +346,155 @@
             70% { box-shadow: 0 0 0 15px rgba(255, 107, 158, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 107, 158, 0); }
         }
+
+        /* Estilos para el modal de video */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: var(--dark);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--primary);
+            color: white;
+        }
+
+        .video-modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-video {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-video:hover {
+            color: var(--accent);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        /* Nueva sección para videos */
+        .video-section {
+            margin-top: 30px;
+        }
+        
+        .video-item {
+            background: linear-gradient(135deg, rgba(0, 68, 204, 0.7), rgba(0, 85, 255, 0.5));
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 85, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .video-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            z-index: 0;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(0, 68, 204, 0.9), rgba(0, 85, 255, 0.7));
+        }
+        
+        .video-item i {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .video-item-content {
+            z-index: 1;
+        }
+        
+        .video-item h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .video-item p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -421,6 +571,37 @@
                 </a>
             </div>
             
+            <!-- Nueva sección para videos -->
+            <div class="section-title">
+                <i class="fas fa-video"></i>
+                Videos Informativos
+            </div>
+            <div class="video-section">
+                <div class="video-item" onclick="openVideoModal('https://loyds-navarro.github.io/EnlacesLoyds/Herramientas/video.mp4', 'Video sobre Pensiones')">
+                    <i class="fas fa-video"></i>
+                    <div class="video-item-content">
+                        <h3>Video sobre Pensiones</h3>
+                        <p>Conoce qué son las pensiones y su importancia</p>
+                    </div>
+                </div>
+                
+                <!--<div class="video-item" onclick="openVideoModal('https://loyds-navarro.github.io/EnlacesLoyds/Herramientas/video2.mp4', 'Seguros de Vida')">
+                    <i class="fas fa-video"></i>
+                    <div class="video-item-content">
+                        <h3>Seguros de Vida</h3>
+                        <p>Todo lo que necesitas saber sobre seguros de vida</p>
+                    </div>
+                </div>
+                
+                <div class="video-item" onclick="openVideoModal('https://loyds-navarro.github.io/EnlacesLoyds/Herramientas/video3.mp4', 'Planificación Financiera')">
+                    <i class="fas fa-video"></i>
+                    <div class="video-item-content">
+                        <h3>Planificación Financiera</h3>
+                        <p>Consejos para una buena planificación financiera</p>
+                    </div>
+                </div>
+            </div> -->
+            
             <div class="section-title">
                 <i class="fas fa-comments"></i>
                 Contáctanos
@@ -486,28 +667,8 @@
                 Herramientas
             </div>
             <div class="menu-grid">
-                <a href="https://loyds-navarro.github.io/EnlacesLoyds/Ingresosclientes.html" target="_blank" class="menu-item">
-                    <i class="fas fa-dollar-sign"></i>
-                    <div class="menu-item-content">
-                        <h3>Calcula tus ingresos y egresos</h3>
-                        <p>Quieres saber los ingresos y egresos que tienes durante el año</p>
-                    </div>
-                </a>
-                           <a href="https://loyds-navarro.github.io/EnlacesLoyds/Calculadora2.html" target="_blank" class="menu-item">
-                    <i class="fas fa-calculator"></i>
-                    <div class="menu-item-content">
-                        <h3>Calculadora de UDI´s ImaginaSer, Orvi, Segubeca, etc</h3>
-                        <p>Proyección enfocada a Udi´s</p>
-                    </div>
-                </a>
-                <a href="https://loyds-navarro.github.io/EnlacesLoyds/CalcVidaMujer.html" target="_blank" class="menu-item pink-highlight pink-pulse">
-                    <i class="fas fa-calculator"></i>
-                    <div class="menu-item-content">
-                        <h3>Calculadora de UDI´s Vida Mujer</h3>
-                        <p>Proyección enfocada a Udi´s</p>
-                    </div>
-                </a>
-   <a href="https://loyds-navarro.github.io/EnlacesLoyds/Cancer.html" target="_blank" class="menu-item pink-highlight pink-pulse">
+                
+                <a href="https://loyds-navarro.github.io/EnlacesLoyds/Cancer.html" target="_blank" class="menu-item pink-highlight pink-pulse">
                     <i class="fas fa-ribbon"></i>
                     <div class="menu-item-content">
                         <h3>Estadistica Vida mujer</h3>
@@ -515,13 +676,6 @@
                     </div>
                 </a>
                 
-                   <a href="https://loyds-navarro.github.io/EnlacesLoyds/Valorudi.html" target="_blank" class="menu-item">
-                    <i class="fas fa-calculator"></i>
-                    <div class="menu-item-content">
-                        <h3>Calcula el Valor de la UDI </h3>
-                        <p>Proyección enfocada a Udi´s por meses y días</p>
-                    </div>
-                </a>
                 <a href="https://loyds-navarro.github.io/EnlacesLoyds/Editor.html" target="_blank" class="menu-item">
                     <i class="fas fa-paint-brush"></i>
                     <div class="menu-item-content">
@@ -529,21 +683,14 @@
                         <p>Oculta cantidades o montos de tus archivos</p>
                     </div>
                 </a>
- <a href="https://loyds-navarro.github.io/EnlacesLoyds/Documentacion.html" target="_blank" class="menu-item">
-                    <i class="fas fa-pen-to-square"></i>
-                    <div class="menu-item-content">
-                        <h3>Modificación de documentos</h3>
-                        <p>Aplicación para realizar modificación de documentso que se envian a Seguros Monterrey</p>
-                    </div>
-                </a>
-                 <a href="https://loyds-navarro.github.io/EnlacesLoyds/Aseguradoras.html" target="_blank" class="menu-item">
+
+                <a href="https://loyds-navarro.github.io/EnlacesLoyds/Herramientas/Herramientas3.html" target="_blank" class="menu-item">
                     <i class="fas fa-lock"></i>
                     <div class="menu-item-content">
-                        <h3>Ranking de Asguradoras</h3>
-                        <p>Comparativa de aseguradoras y beneficios</p>
+                        <h3>Otras Herramientas</h3>
+                        <p>Herramientas de uso interno</p>
                     </div>
                 </a>
-                
             </div>
         </div>
         
@@ -568,10 +715,26 @@
         </div>
     </div>
 
+    <!-- Modal para el video -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3 id="modalTitle">Video</h3>
+                <button class="close-video" onclick="closeVideoModal()">&times;</button>
+            </div>
+            <div class="video-container">
+                <video id="modalVideo" controls>
+                    Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Agregar animaciones de carga
         document.addEventListener('DOMContentLoaded', function() {
             const menuItems = document.querySelectorAll('.menu-item');
+            const videoItems = document.querySelectorAll('.video-item');
             
             // Animación de aparición escalonada
             menuItems.forEach((item, index) => {
@@ -587,8 +750,33 @@
                 }, 100 * index);
             });
             
+            // Animación para los items de video
+            videoItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                    item.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 100 * (index + menuItems.length));
+            });
+            
             // Efecto hover mejorado
             menuItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Efecto hover para items de video
+            videoItems.forEach(item => {
                 item.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px)';
                 });
@@ -607,6 +795,54 @@
             logo.addEventListener('mouseleave', function() {
                 this.style.transform = 'scale(1)';
             });
+        });
+
+        // Funciones para controlar el modal de video
+        function openVideoModal(videoUrl, title) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            // Establecer la fuente del video y el título
+            video.innerHTML = `<source src="${videoUrl}" type="video/mp4">Tu navegador no soporta el elemento de video.`;
+            modalTitle.textContent = title;
+            
+            // Mostrar el modal
+            modal.classList.add('active');
+            
+            // Cargar y reproducir el video
+            video.load();
+            video.play();
+            
+            // Agregar evento para cerrar con la tecla Escape
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            
+            // Ocultar el modal
+            modal.classList.remove('active');
+            
+            // Pausar el video
+            video.pause();
+            
+            // Remover el evento de tecla Escape
+            document.removeEventListener('keydown', handleEscapeKey);
+        }
+
+        function handleEscapeKey(event) {
+            if (event.key === 'Escape') {
+                closeVideoModal();
+            }
+        }
+
+        // Cerrar el modal si se hace clic fuera del contenido
+        document.getElementById('videoModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeVideoModal();
+            }
         });
     </script>
 </body>
