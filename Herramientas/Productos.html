@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparativo de Instrumentos de Inversión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .card-header {
+            font-weight: 600;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .badge-risk {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .risk-low {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .risk-medium {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .risk-high {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .calculator {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .recommendation {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            background-color: #e8f4fc;
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .product-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .feature-list li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: var(--success);
+            position: absolute;
+            left: 0;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .recommendation-detail {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .progress {
+            height: 10px;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1 class="display-4"><i class="fas fa-chart-line me-3"></i>Comparativo de Instrumentos de Inversión</h1>
+            <p class="lead">Encuentra la mejor opción de inversión según tu perfil y objetivos financieros</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="m-0">Comparativo de Instrumentos de Inversión</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Instrumento</th>
+                                        <th>Ventajas</th>
+                                        <th>Desventajas</th>
+                                        <th>Público Objetivo</th>
+                                        <th>Nivel de Riesgo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Seguro Dotal</strong></td>
+                                        <td>Protección + ahorro, garantía de capital, beneficios fiscales</td>
+                                        <td>Rendimientos moderados, poca liquidez</td>
+                                        <td>Familias con metas específicas</td>
+                                        <td><span class="badge-risk risk-low">Bajo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CETES</strong></td>
+                                        <td>Máxima seguridad, alta liquidez, accesible</td>
+                                        <td>Rendimientos limitados, vulnerable a inflación</td>
+                                        <td>Inversores conservadores</td>
+                                        <td><span class="badge-risk risk-low">Bajo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Inversión en Bolsa</strong></td>
+                                        <td>Alto potencial de rendimiento, dividendos, diversificación</td>
+                                        <td>Alta volatilidad, requiere conocimiento</td>
+                                        <td>Inversores con tolerancia al riesgo</td>
+                                        <td><span class="badge-risk risk-high">Alto</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fondos de Inversión</strong></td>
+                                        <td>Diversificación automática, gestión profesional</td>
+                                        <td>Comisiones de gestión, rendimientos variables</td>
+                                        <td>Inversores que buscan diversificación</td>
+                                        <td><span class="badge-risk risk-medium">Medio</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ETFs</strong></td>
+                                        <td>Diversificación a bajo costo, flexibilidad</td>
+                                        <td>Riesgo de mercado, comisiones de corretaje</td>
+                                        <td>Inversores con estrategias pasivas</td>
+                                        <td><span class="badge-risk risk-medium">Medio</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="m-0">Recomendaciones por Perfil de Inversor</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div class="product-icon">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <h4>Perfil Conservador</h4>
+                                        <p>Prioriza seguridad sobre rendimiento</p>
+                                        <ul class="feature-list">
+                                            <li>CETES</li>
+                                            <li>Seguros Dotal</li>
+                                            <li>Fondos de deuda</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div class="product-icon">
+                                            <i class="fas fa-balance-scale"></i>
+                                        </div>
+                                        <h4>Perfil Moderado</h4>
+                                        <p>Balance entre riesgo y rendimiento</p>
+                                        <ul class="feature-list">
+                                            <li>Fondos diversificados</li>
+                                            <li>ETFs</li>
+                                            <li>Combinación CETES + Acciones</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div class="product-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <h4>Perfil Agresivo</h4>
+                                        <p>Busca máximo rendimiento aceptando riesgo</p>
+                                        <ul class="feature-list">
+                                            <li>Acciones individuales</li>
+                                            <li>ETFs sectoriales</li>
+                                            <li>Derivados</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div class="product-icon">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <h4>Familias</h4>
+                                        <p>Protección y ahorro para metas</p>
+                                        <ul class="feature-list">
+                                            <li>Seguros Dotal</li>
+                                            <li>Combinación con Fondos</li>
+                                            <li>Planes educativos</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="calculator">
+                    <h3 class="mb-4">Recomendador de Inversiones</h3>
+                    <p class="text-muted">Complete el formulario para obtener una recomendación personalizada</p>
+                    
+                    <div class="mb-3">
+                        <label for="ingresos" class="form-label">Ingresos Mensuales (MXN)</label>
+                        <input type="range" class="form-range" min="5000" max="100000" step="5000" id="ingresos">
+                        <div class="d-flex justify-content-between">
+                            <small>$5,000</small>
+                            <small id="ingresos-value">$50,000</small>
+                            <small>$100,000+</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="gastos" class="form-label">Gastos Mensuales (MXN)</label>
+                        <input type="range" class="form-range" min="0" max="90000" step="1000" id="gastos">
+                        <div class="d-flex justify-content-between">
+                            <small>$0</small>
+                            <small id="gastos-value">$25,000</small>
+                            <small>$90,000</small>
+                        </div>
+                        <small id="porcentaje-gastos" class="text-muted">50% de tus ingresos</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mentalidad" class="form-label">Mentalidad de Inversión</label>
+                        <select class="form-select" id="mentalidad">
+                            <option value="conservador">Conservador (Prefiero seguridad)</option>
+                            <option value="moderado" selected>Moderado (Balanceado)</option>
+                            <option value="agresivo">Agresivo (Busco máximo rendimiento)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="objetivo" class="form-label">Objetivo Principal</label>
+                        <select class="form-select" id="objetivo">
+                            <option value="proteccion">Protección y seguridad</option>
+                            <option value="ahorro" selected>Ahorro para metas específicas</option>
+                            <option value="crecimiento">Crecimiento de capital</option>
+                            <option value="jubilacion">Jubilación</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="plazo" class="form-label">Plazo de Inversión</label>
+                        <select class="form-select" id="plazo">
+                            <option value="corto">Corto plazo (1-2 años)</option>
+                            <option value="medio">Medio plazo (3-5 años)</option>
+                            <option value="largo" selected>Largo plazo (5+ años)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100" onclick="calcularRecomendacion()">Obtener Recomendación</button>
+                    
+                    <div id="recomendacion" class="recommendation">
+                        <h4><i class="fas fa-lightbulb me-2"></i>Recomendación Personalizada</h4>
+                        <div id="producto-recomendado"></div>
+                        <div id="detalles-recomendacion"></div>
+                        <p id="explicacion" class="mt-3"></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="m-0">Consejos de Inversión</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li>Diversifica tus inversiones para reducir riesgo</li>
+                            <li>Considera tu horizonte de tiempo al elegir instrumentos</li>
+                            <li>Mantén un fondo de emergencia en instrumentos líquidos</li>
+                            <li>Revisa periódicamente tu portafolio de inversión</li>
+                            <li>Considera el impacto fiscal de tus inversiones</li>
+                            <li>Evita invertir en productos que no comprendes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Comparativo de Instrumentos de Inversión</h5>
+                    <p>Esta herramienta tiene fines informativos y no constituye asesoría financiera profesional. Consulte con un especialista antes de tomar decisiones de inversión.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>© 2023 Análisis Financiero</p>
+                    <p>Información de mercado actualizada</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Actualizar valores de los sliders
+        document.getElementById('ingresos').addEventListener('input', function() {
+            const ingresos = parseInt(this.value);
+            document.getElementById('ingresos-value').textContent = '$' + ingresos.toLocaleString();
+            
+            // Actualizar el máximo de gastos
+            const gastosSlider = document.getElementById('gastos');
+            gastosSlider.max = ingresos;
+            
+            // Si los gastos actuales son mayores que los nuevos ingresos, ajustarlos
+            if (parseInt(gastosSlider.value) > ingresos) {
+                gastosSlider.value = ingresos;
+                actualizarValorGastos();
+            }
+            
+            actualizarPorcentajeGastos();
+        });
+        
+        document.getElementById('gastos').addEventListener('input', function() {
+            actualizarValorGastos();
+            actualizarPorcentajeGastos();
+        });
+        
+        function actualizarValorGastos() {
+            const gastos = parseInt(document.getElementById('gastos').value);
+            document.getElementById('gastos-value').textContent = '$' + gastos.toLocaleString();
+        }
+        
+        function actualizarPorcentajeGastos() {
+            const ingresos = parseInt(document.getElementById('ingresos').value);
+            const gastos = parseInt(document.getElementById('gastos').value);
+            const porcentaje = ingresos > 0 ? Math.round((gastos / ingresos) * 100) : 0;
+            
+            let claseTexto = 'text-success';
+            if (porcentaje > 70) claseTexto = 'text-danger';
+            else if (porcentaje > 50) claseTexto = 'text-warning';
+            
+            document.getElementById('porcentaje-gastos').innerHTML = 
+                `<span class="${claseTexto}">${porcentaje}% de tus ingresos</span>`;
+        }
+        
+        // Inicializar valores
+        actualizarValorGastos();
+        actualizarPorcentajeGastos();
+        
+        // Función para calcular la recomendación
+        function calcularRecomendacion() {
+            const ingresos = parseInt(document.getElementById('ingresos').value);
+            const gastos = parseInt(document.getElementById('gastos').value);
+            const mentalidad = document.getElementById('mentalidad').value;
+            const objetivo = document.getElementById('objetivo').value;
+            const plazo = document.getElementById('plazo').value;
+            
+            // Calcular capacidad de ahorro
+            const capacidadAhorro = ingresos - gastos;
+            const porcentajeAhorro = ingresos > 0 ? Math.round((capacidadAhorro / ingresos) * 100) : 0;
+            
+            // Determinar producto recomendado
+            let producto = "";
+            let explicacion = "";
+            let recomendacionesDetalladas = "";
+            
+            // Evaluar la situación financiera
+            let situacionFinanciera = "";
+            let claseSituacion = "";
+            
+            if (porcentajeAhorro >= 30) {
+                situacionFinanciera = "Excelente! Tienes una alta capacidad de ahorro.";
+                claseSituacion = "text-success";
+            } else if (porcentajeAhorro >= 20) {
+                situacionFinanciera = "Buena. Tienes una capacidad de ahorro adecuada.";
+                claseSituacion = "text-success";
+            } else if (porcentajeAhorro >= 10) {
+                situacionFinanciera = "Regular. Podrías mejorar tu capacidad de ahorro.";
+                claseSituacion = "text-warning";
+            } else {
+                situacionFinanciera = "Crítica. Debes revisar tus gastos para poder ahorrar.";
+                claseSituacion = "text-danger";
+            }
+            
+            // Generar recomendaciones según el perfil
+            if (mentalidad === "conservador") {
+                producto = "CETES y Seguros Dotal";
+                explicacion = "Dada tu preferencia por la seguridad, te recomendamos instrumentos de bajo riesgo como CETES y Seguros Dotal. Estos productos protegen tu capital mientras generan rendimientos estables.";
+                
+                recomendacionesDetalladas = `
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-coins me-2"></i>Distribución Recomendada:</h5>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 60%">60% CETES</div>
+                            <div class="progress-bar bg-info" style="width: 40%">40% Seguro Dotal</div>
+                        </div>
+                        <p><strong>CETES:</strong> Inversión inicial recomendada: $${Math.round(capacidadAhorro * 0.6).toLocaleString()} MXN</p>
+                        <p><strong>Seguro Dotal:</strong> Aproximadamente $${Math.round(capacidadAhorro * 0.4).toLocaleString()} MXN mensuales</p>
+                    </div>
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-calendar-alt me-2"></i>Plan de Acción:</h5>
+                        <ul>
+                            <li>Abre una cuenta en CETES Directo si no tienes una</li>
+                            <li>Cotiza un seguro dotal con al menos 3 aseguradoras diferentes</li>
+                            <li>Establece aportaciones automáticas mensuales</li>
+                            <li>Revisa tu portafolio cada 6 meses</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (mentalidad === "moderado") {
+                producto = "Fondos de Inversión y ETFs";
+                explicacion = "Para equilibrar riesgo y rendimiento, los fondos de inversión y ETFs te permiten diversificar tu portafolio con una gestión profesional y costos accesibles.";
+                
+                recomendacionesDetalladas = `
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-chart-pie me-2"></i>Distribución Recomendada:</h5>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 40%">40% Fondos de deuda</div>
+                            <div class="progress-bar bg-warning" style="width: 30%">30% ETFs internacionales</div>
+                            <div class="progress-bar bg-info" style="width: 30%">30% Fondos indexados</div>
+                        </div>
+                        <p><strong>Fondos de deuda:</strong> $${Math.round(capacidadAhorro * 0.4).toLocaleString()} MXN mensuales</p>
+                        <p><strong>ETFs internacionales:</strong> $${Math.round(capacidadAhorro * 0.3).toLocaleString()} MXN mensuales</p>
+                        <p><strong>Fondos indexados:</strong> $${Math.round(capacidadAhorro * 0.3).toLocaleString()} MXN mensuales</p>
+                    </div>
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-tasks me-2"></i>Acciones Inmediatas:</h5>
+                        <ul>
+                            <li>Abre una cuenta en una casa de bolsa con bajas comisiones</li>
+                            <li>Diversifica entre al menos 3 fondos diferentes</li>
+                            <li>Considera fondos indexados con comisiones menores al 0.5%</li>
+                            <li>Establece un sistema de inversión constante (dollar-cost averaging)</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                producto = "Acciones individuales y ETFs sectoriales";
+                explicacion = "Con tu tolerancia al riesgo, puedes considerar acciones de empresas sólidas y ETFs sectoriales para maximizar tu potencial de rendimiento a largo plazo.";
+                
+                recomendacionesDetalladas = `
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-chart-line me-2"></i>Distribución Recomendada:</h5>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 50%">50% Acciones individuales</div>
+                            <div class="progress-bar bg-warning" style="width: 30%">30% ETFs sectoriales</div>
+                            <div class="progress-bar bg-danger" style="width: 20%">20% Instrumentos de alto riesgo</div>
+                        </div>
+                        <p><strong>Acciones individuales:</strong> $${Math.round(capacidadAhorro * 0.5).toLocaleString()} MXN mensuales</p>
+                        <p><strong>ETFs sectoriales:</strong> $${Math.round(capacidadAhorro * 0.3).toLocaleString()} MXN mensuales</p>
+                        <p><strong>Instrumentos de alto riesgo:</strong> $${Math.round(capacidadAhorro * 0.2).toLocaleString()} MXN mensuales</p>
+                    </div>
+                    <div class="recommendation-detail">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Estrategia Agresiva:</h5>
+                        <ul>
+                            <li>Investiga a fondo cada empresa antes de invertir</li>
+                            <li>Considera sectores con alto potencial de crecimiento (tecnología, energías renovables)</li>
+                            <li>Dedica al menos 5 horas semanales a investigar y monitorear tus inversiones</li>
+                            <li>Establece stops de pérdida para limitar riesgos</li>
+                            <li>Considera asesorarte con un profesional para estrategias complejas</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            // Ajustar según el objetivo
+            if (objetivo === "proteccion") {
+                producto = "Seguro Dotal y CETES";
+                explicacion = "Para priorizar la protección, un Seguro Dotal combinado con CETES ofrece seguridad para tu capital y tus seres queridos.";
+            } else if (objetivo === "jubilacion") {
+                producto = "Plan de retiremento y Fondos Indexados";
+                explicacion = "Para la jubilación, te conviene un plan a largo plazo con fondos indexados que aprovechen el interés compuesto.";
+            }
+            
+            // Ajustar según el plazo
+            if (plazo === "corto") {
+                explicacion += " Para tu horizonte de corto plazo, considera instrumentos con menor volatilidad.";
+            } else if (plazo === "medio") {
+                explicacion += " Con un horizonte de medio plazo, puedes平衡ar entre riesgo y rendimiento.";
+            } else {
+                explicacion += " Tu horizonte de largo plazo te permite asumir más riesgo en busca de mayores rendimientos.";
+            }
+            
+            // Mostrar recomendación
+            document.getElementById('producto-recomendado').innerHTML = `
+                <div class="alert alert-primary">
+                    <h5><i class="fas fa-check-circle me-2"></i>Producto Recomendado: <strong>${producto}</strong></h5>
+                    <p class="mb-1">Capacidad de ahorro mensual: <strong>$${capacidadAhorro.toLocaleString()} MXN</strong></p>
+                    <p class="mb-1"><span class="${claseSituacion}">${situacionFinanciera}</span></p>
+                </div>
+            `;
+            
+            document.getElementById('detalles-recomendacion').innerHTML = recomendacionesDetalladas;
+            document.getElementById('explicacion').textContent = explicacion;
+            document.getElementById('recomendacion').style.display = 'block';
+            
+            // Scroll to recommendation
+            document.getElementById('recomendacion').scrollIntoView({behavior: 'smooth'});
+        }
+    </script>
+</body>
+</html>

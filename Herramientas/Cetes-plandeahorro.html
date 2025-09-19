@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Suma Asegurada en UDIs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #00183c;
+            --primary: #0d47a1;
+            --primary-light: #1976d2;
+            --accent: #0077cc;
+            --light-bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --border-radius: 8px;
+            --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease;
+            --positive: #2e7d32;
+            --negative: #d32f2f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--text-light);
+            text-align: center;
+            padding: 15px 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.15);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+
+        .logo img {
+            max-width: 90%;
+            max-height: 90%;
+            display: block;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin-top: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            max-width: 700px;
+            opacity: 0.9;
+            line-height: 1.4;
+            margin: 0 auto;
+        }
+
+        #udiHoy {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            color: var(--text-light);
+            padding: 8px 15px;
+            border-radius: 16px;
+            font-size: 14px;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 0 0 15px 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        h2 i {
+            color: var(--accent);
+            font-size: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        label i {
+            width: 16px;
+            text-align: center;
+            color: var(--primary-light);
+            font-size: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #c5d8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: #f9fcff;
+        }
+
+        button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .resultado {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-light);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resultado.active {
+            display: block;
+        }
+
+        .result-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .value-badge {
+            background: var(--primary-light);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .compact-result {
+            background: #d4e6ff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            color: var(--primary);
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .comparison-legend {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border: 1px solid #dee2e6;
+        }
+
+        .comparison-legend h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f0f7ff;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pros, .cons {
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .pros {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--positive);
+        }
+
+        .cons {
+            background-color: #ffebee;
+            border-left: 4px solid var(--negative);
+        }
+
+        .pros h4, .cons h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pros ul, .cons ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .pros li, .cons li {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .expanded-pros {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(to bottom, #e8f5e9, #c8e6c9);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--positive);
+        }
+
+        .expanded-pros h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .expanded-pros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .pros-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .pros-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.85rem;
+            }
+            
+            .expanded-pros-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="logo.png" alt="Logo UDI">
+            </div>
+            <h1>Calculadora de Suma Asegurada en UDIs</h1>
+            <p class="subtitle">Calcula el valor de tu protección en pesos mexicanos y compara con otras opciones de inversión</p>
+        </header>
+
+        <div id="udiHoy">
+            <i class="fas fa-coins"></i>
+            <span id="udiText">Consultando UDI...</span>
+            <div class="spinner" id="spinner"></div>
+        </div>
+
+        <section>
+            <h2><i class="fas fa-shield-alt"></i> Suma Asegurada Protección y Beneficios</h2>
+            
+            <div class="input-group">
+                <label for="udiActualSumaAsegurada"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+                <input type="number" id="udiActualSumaAsegurada" step="0.000001" placeholder="Ej: 8.45" />
+            </div>
+            
+            <div class="input-group">
+                <label for="inflacionSumaAsegurada"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
+                <input type="number" value="4.5" id="inflacionSumaAsegurada" step="0.01" placeholder="Ej: 4.5" />
+            </div>
+            
+            <div class="input-group">
+                <label for="aniosSumaAsegurada"><i class="fas fa-clock"></i> Años:</label>
+                <select id="aniosSumaAsegurada"></select>
+            </div>
+            
+            <div class="input-group">
+                <label for="cantidadUdisFallecimiento"><i class="fas fa-cross"></i> Cantidad UDIs por fallecimiento:</label>
+                <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" />
+            </div>
+            
+            <div class="input-group">
+                <label for="cantidadUdisInvalidez"><i class="fas fa-wheelchair"></i> Cantidad UDIs por Invalidez:</label>
+                <input type="number" id="cantidadUdisInvalidez" step="0.01" placeholder="Ej: 8000" />
+            </div>
+            
+            <div class="input-group">
+                <label for="cantidadUdisEnfermedadTerminal"><i class="fas fa-hospital-alt"></i> Cantidad UDIs por enfermedad terminal:</label>
+                <input type="number" id="cantidadUdisEnfermedadTerminal" step="0.01" placeholder="Ej: 5000" />
+            </div>
+
+            <button onclick="calcularSumaAseguradaDetallada()">
+                <i class="fas fa-calculator"></i> Calcular Suma Asegurada
+            </button>
+
+            <div class="resultado" id="resultadoSumaAseguradaDetallada">
+                <div class="result-title"><i class="fas fa-hand-holding-usd"></i> Suma Asegurada Calculada:</div>
+                <div id="sumaAseguradaDetalladaResult"></div>
+            </div>
+        </section>
+
+        <section class="comparison-legend">
+            <h3><i class="fas fa-balance-scale"></i> Comparativa: CETES vs Plan de Ahorro con Protección</h3>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>CETES</th>
+                        <th>Plan de Ahorro con Protección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Objetivo principal</strong></td>
+                        <td>Inversión y ahorro</td>
+                        <td>Protección familiar y acumulación de valor</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rendimiento</strong></td>
+                        <td>8-11% anual (variable)</td>
+                        <td>3-6% anual (crecimiento garantizado + posibles dividendos)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Protección de seguros</strong></td>
+                        <td>No incluye</td>
+                        <td>Protección por fallecimiento, invalidez y enfermedades graves</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Plazo recomendado</strong></td>
+                        <td>Corto a mediano plazo (1-5 años)</td>
+                        <td>Largo plazo (10+ años)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Liquidez</strong></td>
+                        <td>Alta (plazos de 28-364 días)</td>
+                        <td>Media (con posibles penalizaciones por retiro anticipado)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Protección contra inflación</strong></td>
+                        <td>Variable (depende de las tasas establecidas por Banxico)</td>
+                        <td>Protegido (al estar indexado a UDIS o similar)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Beneficios fiscales</strong></td>
+                        <td>Limitados</td>
+                        <td>Posibles deducciones en primas de seguros</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4><i class="fas fa-check-circle" style="color: var(--positive);"></i> Ventajas de CETES</h4>
+                    <ul>
+                        <li>Alta liquidez y flexibilidad</li>
+                        <li>Rendimientos competitivos a corto plazo</li>
+                        <li>Bajo riesgo al estar respaldado por el gobierno</li>
+                        <li>Accesible con montos desde $100 pesos</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4><i class="fas fa-times-circle" style="color: var(--negative);"></i> Desventajas de CETES</h4>
+                    <ul>
+                        <li>No ofrece protección por seguro de vida</li>
+                        <li>Rendimientos variables según condiciones económicas</li>
+                        <li>No proporciona beneficios en caso de fallecimiento o invalidez</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="expanded-pros">
+                <h3><i class="fas fa-star" style="color: var(--positive);"></i> Ventajas y Beneficios del Plan de Ahorro con Protección</h3>
+                
+                <div class="expanded-pros-grid">
+                    <div class="pros-card">
+                        <h4><i class="fas fa-shield-alt"></i> Protección Integral</h4>
+                        <p>Ofrece cobertura completa para fallecimiento, invalidez total y permanente, así como enfermedades graves, brindando seguridad financiera a tu familia en cualquier eventualidad.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-chart-line"></i> Crecimiento Garantizado</h4>
+                        <p>Tu ahorro crece con rendimientos garantizados, protegiéndote de la volatilidad del mercado y asegurando un crecimiento constante de tu inversión.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-money-bill-wave"></i> Protección contra la Inflación</h4>
+                        <p>Al estar indexado a UDIS, tu ahorro mantiene su poder adquisitivo a lo largo del tiempo, protegiéndote contra la devaluación monetaria.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-gift"></i> Beneficios Fiscales</h4>
+                        <p>Las primas pagadas pueden ser deducibles de impuestos, permitiéndote optimizar tu carga fiscal mientras construyes un patrimonio protegido.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-hand-holding-usd"></i> Disciplina de Ahorro</h4>
+                        <p>Fomenta el hábito del ahorro sistemático y constante, ayudándote a acumular un capital significativo con el paso del tiempo.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-user-friends"></i> Seguridad Familiar</h4>
+                        <p>Proporciona tranquilidad al saber que tu familia contará con protección financiera en caso de imprevistos, asegurando su bienestar a largo plazo.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-piggy-bank"></i> Valor de Rescate</h4>
+                        <p>Acumulas un valor en efectivo que puedes utilizar en emergencias, para complementar tu jubilación o como fondo para proyectos futuros.</p>
+                    </div>
+                    
+                    <div class="pros-card">
+                        <h4><i class="fas fa-balance-scale"></i> Herramienta de Planificación Patrimonial</h4>
+                        <p>Facilita la transferencia de patrimonio a tus beneficiarios de manera eficiente y con beneficios fiscales, evitando trámites complicados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 6px;">
+                <h4 style="margin-bottom: 10px; color: var(--primary);"><i class="fas fa-lightbulb"></i> Recomendación</h4>
+                <p style="font-size: 0.9rem; margin: 0;">
+                    <strong>Los CETES</strong> son ideales para objetivos de ahorro a corto plazo y como complemento a tu estrategia de inversión. 
+                    <strong>El plan de ahorro con protección</strong> es la mejor opción para garantizar seguridad financiera a largo plazo para tu familia, especialmente si buscas combinar acumulación de valor con protección contra imprevistos.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2023 Calculadora de Suma Asegurada en UDIs</p>
+        </footer>
+    </div>
+
+    <script>
+        // Inicializar selector de años
+        function inicializarAnios() {
+            const selectAnioSumaAsegurada = document.getElementById("aniosSumaAsegurada");
+            for (let i = 1; i <= 40; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = i + (i > 1 ? " años" : " año");
+                if (i === 5) option.selected = true;
+                selectAnioSumaAsegurada.appendChild(option);
+            }
+        }
+
+        // Obtener valor UDI desde Banxico
+        async function obtenerValorUDI() {
+            const udiText = document.getElementById("udiText");
+            const spinner = document.getElementById("spinner");
+            const fallbackValue = "8.5205"; 
+            const fallbackDate = new Date();
+            
+            try {
+                udiText.textContent = "Consultando...";
+                spinner.style.display = 'inline-block';
+
+                const token = "e0885c34c774f0c6afbd152a65134f76b24d937120e3d01047eba4d9f1beb2e2";
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP68257/datos/${formattedDate}/${formattedDate}?token=${token}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.bmx && data.bmx.series && data.bmx.series[0].datos && data.bmx.series[0].datos.length > 0) {
+                    const datoRaw = data.bmx.series[0].datos[0].dato;
+                    const fechaRaw = data.bmx.series[0].datos[0].fecha;
+                    const valorStr = datoRaw.replace(",", ".");
+                    const valorUDI = parseFloat(valorStr);
+                    const [d, m, a] = fechaRaw.split('/');
+                    const fechaObj = new Date(a, m - 1, d); 
+                    const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
+                    const fechaMostrar = fechaObj.toLocaleDateString('es-MX', opciones);
+                    
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${valorUDI.toFixed(6)}`;
+                    document.getElementById("udiActualSumaAsegurada").value = valorUDI.toFixed(6);
+                } else {
+                    console.warn("No se pudo obtener el valor de la UDI de Banxico. Usando valor predeterminado.");
+                    const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
+                    udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
+                    document.getElementById("udiActualSumaAsegurada").value = fallbackValue;
+                }
+            } catch (error) {
+                console.error("Error al obtener la UDI:", error);
+                const fechaMostrar = `${fallbackDate.getDate().toString().padStart(2, '0')}/${(fallbackDate.getMonth() + 1).toString().padStart(2, '0')}/${fallbackDate.getFullYear()}`;
+                udiText.innerHTML = `UDI (${fechaMostrar}): $${fallbackValue}`;
+                document.getElementById("udiActualSumaAsegurada").value = fallbackValue;
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Calcular suma asegurada
+        function calcularSumaAseguradaDetallada() {
+            const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
+            const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value) / 100;
+            const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
+            const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
+            const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
+            const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
+            const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
+            const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
+
+            // Validaciones
+            if (isNaN(udiActual) || udiActual <= 0) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un valor válido para la UDI actual.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            if (isNaN(inflacion) || inflacion <= 0) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un porcentaje de inflación válido.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            if (isNaN(anios) || anios < 1) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un número válido de años (mayor que 0).</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            // Validar cantidades de UDIs
+            if (isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal)) {
+                sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa cantidades válidas de UDIs.</div>';
+                resultadoDiv.classList.add('active');
+                return;
+            }
+
+            // Calcular UDI futura basada en inflación y años
+            const udiFutura = udiActual * Math.pow(1 + inflacion, anios);
+
+            // Realizar cálculos con UDI actual
+            const montoFallecimientoActual = udiActual * cantidadUdisFallecimiento;
+            const montoFallecimientoTerceroActual = montoFallecimientoActual * 2;
+            const montoInvalidezActual = udiActual * cantidadUdisInvalidez;
+            const montoEnfermedadTerminalActual = udiActual * cantidadUdisEnfermedadTerminal;
+
+            // Realizar cálculos con UDI futura proyectada
+            const montoFallecimientoFuturo = udiFutura * cantidadUdisFallecimiento;
+            const montoFallecimientoTerceroFuturo = montoFallecimientoFuturo * 2;
+            const montoInvalidezFuturo = udiFutura * cantidadUdisInvalidez;
+            const montoEnfermedadTerminalFuturo = udiFutura * cantidadUdisEnfermedadTerminal;
+
+            // Mostrar resultados
+            sumaAseguradaDetalladaResult.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI actual:</strong></div>
+                        <div><span class="value-badge">$${udiActual.toFixed(6)}</span></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Inflación anual:</strong></div>
+                        <div><span class="value-badge">${(inflacion * 100).toFixed(2)}%</span></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI proyectado en ${anios} año${anios > 1 ? 's' : ''}:</strong></div>
+                        <div><span class="value-badge">$${udiFutura.toFixed(6)}</span></div>
+                    </div>
+                </div>
+
+                <div style="background: #f0f7ff; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Cálculos con UDI Actual</div>
+                    
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
+                        <span>$${montoFallecimientoActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
+                        <span>$${montoFallecimientoTerceroActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
+                        <span>$${montoInvalidezActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
+                        <span>$${montoEnfermedadTerminalActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 6px;">
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Proyección en ${anios} año${anios > 1 ? 's' : ''} (con inflación del ${(inflacion * 100).toFixed(2)}%)</div>
+                    
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
+                        <span>$${montoFallecimientoFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
+                        <span>$${montoFallecimientoTerceroFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
+                        <span>$${montoInvalidezFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                    <div class="compact-result" style="margin-top: 10px;">
+                        <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
+                        <span>$${montoEnfermedadTerminalFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle" style="color: #0d47a1;"></i> Los valores proyectados son estimaciones basadas en la inflación proporcionada. El valor real dependerá del comportamiento real de la UDI.
+                </div>
+            `;
+            
+            resultadoDiv.classList.add('active');
+        }
+
+        // Inicializar la aplicación cuando se carga el DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarAnios();
+            obtenerValorUDI();
+            
+            // Valores por defecto para facilitar pruebas
+            document.getElementById("cantidadUdisFallecimiento").value = "10000";
+            document.getElementById("cantidadUdisInvalidez").value = "8000";
+            document.getElementById("cantidadUdisEnfermedadTerminal").value = "5000";
+        });
+    </script>
+</body>
+</html>
