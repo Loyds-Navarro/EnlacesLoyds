@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,19 +10,19 @@
     <style>
         /* Estilos generales */
         :root {
-            --primary-dark: #00183c;
-            --primary: #0d47a1;
-            --primary-light: #1976d2;
-            --accent: #0077cc;
-            --light-bg: #f0f4f8;
-            --card-bg: #ffffff;
-            --text-light: #ffffff;
-            --text-dark: #333333;
+            --primary-dark: #6D4C41;      /* Café oscuro */
+            --primary: #8D6E63;           /* Café medio */
+            --primary-light: #A1887F;     /* Café claro */
+            --accent: #BCAAA4;            /* Café muy claro */
+            --light-bg: #F9F5EB;          /* Crema muy claro */
+            --card-bg: #FFFFFF;           /* Blanco */
+            --text-light: #FFFFFF;        /* Blanco */
+            --text-dark: #4E342E;         /* Café oscuro para texto */
             --border-radius: 8px;
             --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             --transition: all 0.2s ease;
-            --positive: #2e7d32;
-            --negative: #d32f2f;
+            --positive: #7CB342;          /* Verde más suave */
+            --negative: #E57373;          /* Rojo más suave */
         }
 
         * {
@@ -96,7 +95,7 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: var(--text-light);
             padding: 6px 10px;
             border-radius: 16px;
@@ -160,7 +159,7 @@
         }
 
         h2 {
-            color: var(--primary);
+            color: var(--primary-dark);
             margin: 0 0 12px 0;
             font-size: 1.3rem;
             display: flex;
@@ -171,7 +170,7 @@
         }
 
         h2 i {
-            color: var(--accent);
+            color: var(--primary);
             font-size: 16px;
         }
 
@@ -183,7 +182,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 5px;
-            color: var(--primary);
+            color: var(--primary-dark);
             font-size: 0.9rem;
             display: flex;
             align-items: center;
@@ -193,24 +192,24 @@
         label i {
             width: 16px;
             text-align: center;
-            color: var(--primary-light);
+            color: var(--primary);
             font-size: 12px;
         }
 
         input, select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #c5d8f0;
+            border: 1px solid #D7CCC8;
             border-radius: 6px;
             font-size: 0.9rem;
-            background: #f9fcff;
+            background: #FFF8F0;
         }
 
         button {
             margin-top: 10px;
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
             border-radius: 6px;
@@ -232,7 +231,7 @@
         .resultado {
             margin-top: 15px;
             padding: 12px;
-            background: #e3f2fd;
+            background: #F5EBE0;
             border-radius: 6px;
             border-left: 3px solid var(--primary-light);
             display: none;
@@ -250,7 +249,7 @@
 
         .result-title {
             font-weight: 700;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 8px;
             font-size: 1rem;
             display: flex;
@@ -259,7 +258,7 @@
         }
 
         .value-badge {
-            background: var(--primary-light);
+            background: var(--primary);
             color: white;
             padding: 2px 6px;
             border-radius: 3px;
@@ -277,17 +276,17 @@
         }
 
         .frecuencia-card {
-            background: #f0f7ff;
+            background: #F3E5D8;
             padding: 10px;
             border-radius: 6px;
             text-align: center;
-            border: 1px solid #d1e4fa;
+            border: 1px solid #D7CCC8;
             font-size: 0.85rem;
         }
 
         .frecuencia-card .title {
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 5px;
         }
 
@@ -299,7 +298,7 @@
 
         .frecuencia-card .value-pesos {
             font-size: 0.75rem;
-            color: #555;
+            color: #5D4037;
         }
 
         /* Tabla de Proyección */
@@ -311,7 +310,7 @@
         }
 
         .tabla-proyeccion th {
-            background-color: var(--primary-light);
+            background-color: var(--primary);
             color: white;
             padding: 6px;
             text-align: left;
@@ -319,21 +318,21 @@
         }
 
         .tabla-proyeccion tr:nth-child(even) {
-            background-color: #f0f7ff;
+            background-color: #F3E5D8;
         }
 
         .tabla-proyeccion td {
             padding: 6px;
-            border-bottom: 1px solid #d1e4fa;
+            border-bottom: 1px solid #D7CCC8;
         }
 
         .total-row {
             font-weight: 700;
-            background-color: #d4e6ff !important;
+            background-color: #E8D5C4 !important;
         }
 
         .compact-result {
-            background: #d4e6ff;
+            background: #E8D5C4;
             padding: 10px;
             border-radius: 6px;
             margin-top: 8px;
@@ -351,16 +350,16 @@
         }
         
         .comparison-card {
-            background: #f0f7ff;
+            background: #F3E5D8;
             padding: 12px;
             border-radius: 6px;
-            border: 1px solid #d1e4fa;
+            border: 1px solid #D7CCC8;
             text-align: center;
         }
         
         .comparison-title {
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 8px;
             font-size: 0.9rem;
         }
@@ -371,7 +370,7 @@
         }
         
         .difference-card {
-            background: #e3f2fd;
+            background: #F5EBE0;
             padding: 15px;
             border-radius: 6px;
             margin-top: 15px;
@@ -403,11 +402,11 @@
         }
         
         .positive-bg {
-            background-color: rgba(46, 125, 50, 0.1);
+            background-color: rgba(124, 179, 66, 0.1);
         }
         
         .negative-bg {
-            background-color: rgba(211, 47, 47, 0.1);
+            background-color: rgba(229, 115, 115, 0.1);
         }
         
         /* Pie de página principal */
@@ -415,7 +414,7 @@
             text-align: center;
             margin-top: 20px;
             padding: 10px;
-            color: var(--primary);
+            color: var(--primary-dark);
             font-size: 0.75rem;
             opacity: 0.8;
         }
@@ -430,7 +429,7 @@
         .chart-title {
             text-align: center;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 10px;
         }
 
@@ -473,9 +472,9 @@
             box-shadow: var(--shadow);
         }
 
-        /* Encabezado del Reporte (con fondo #00183c) */
+        /* Encabezado del Reporte (con fondo #6D4C41) */
         .report-header-section-html { 
-            background: var(--primary-dark); /* Color #00183c */
+            background: var(--primary-dark); /* Color #6D4C41 */
             color: var(--text-light); /* Texto blanco para contraste */
             text-align: center;
             padding: 25px 0;
@@ -521,7 +520,7 @@
 
         hr.report-section-divider-html { 
             border: none;
-            border-top: 1px dashed #ccc; /* Línea divisoria punteada */
+            border-top: 1px dashed #A1887F; /* Línea divisoria punteada en café claro */
             margin: 30px 0;
         }
 
@@ -531,7 +530,7 @@
             padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow); 
-            border-left: 4px solid var(--primary); /* Borde lateral */
+            border-left: 4px solid var(--primary-dark); /* Borde lateral */
             margin-bottom: 30px; /* Espacio entre secciones */
         }
         .report-section-card-html:last-child {
@@ -539,7 +538,7 @@
         }
 
         .report-section-card-html h3 { /* Título de cada sección en el reporte */
-            color: var(--primary);
+            color: var(--primary-dark);
             margin: 0 0 15px 0;
             font-size: 1.6rem; /* Título de sección más grande */
             display: flex;
@@ -549,7 +548,7 @@
             border-bottom: 1px solid var(--primary-light);
         }
         .report-section-card-html h3 i {
-            color: var(--accent);
+            color: var(--primary);
             font-size: 1.2rem;
         }
         
@@ -576,7 +575,7 @@
             margin-top: 40px; 
             padding: 15px; 
             font-size: 0.8rem; 
-            color: var(--primary); 
+            color: var(--primary-dark); 
             opacity: 0.8;
             border-top: 1px solid var(--light-bg);
         }
@@ -603,19 +602,19 @@
         }
 
         .download-button-html.pdf {
-            background: #dc3545; /* Rojo para PDF */
+            background: #8D6E63; /* Café para PDF */
             color: white;
         }
         .download-button-html.pdf:hover {
-            background: #c82333;
+            background: #6D4C41;
         }
 
         .download-button-html.docx {
-            background: #28a745; /* Verde para DOCX */
+            background: #A1887F; /* Café claro para DOCX */
             color: white;
         }
         .download-button-html.docx:hover {
-            background: #218838;
+            background: #8D6E63;
         }
         
         /* Estilos para gráficas en el reporte */
@@ -628,7 +627,7 @@
         .report-chart-title {
             text-align: center;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
@@ -654,35 +653,44 @@
 </div>
 
 <main>
-    <section>
-        <h2><i class="fas fa-exchange-alt"></i> Conversor Pesos a UDIs</h2>
-        
-        <div class="input-group">
-            <label for="nombre">Escribe tu nombre:</label>
-            <input type="text" id="nombre" placeholder="Tu nombre aquí" />
-        </div>
-        
-        <div class="input-group">
-            <label for="valorUdi"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
-            <input type="number" id="valorUdi" step="any" placeholder="Ej: 8.45" />
-        </div>
-        
-        <div class="input-group">
-            <label for="montoAnual"><i class="fas fa-money-bill-wave"></i> Monto anual (MXN):</label>
-            <input type="number" id="montoAnual" step="any" placeholder="Ej: 12000" />
-        </div>
+  <section>
+    <h2><i class="fas fa-exchange-alt"></i> Conversor Pesos a UDIs</h2>
+    
+    <div class="input-group">
+        <label for="nombre"><i class="fas fa-user"></i> Escribe tu nombre:</label>
+        <input type="text" id="nombre" placeholder="Tu nombre aquí" />
+    </div>
+    
+    <div class="input-group">
+        <label for="edad"><i class="fas fa-birthday-cake"></i> Edad:</label>
+        <input type="number" id="edad" placeholder="Tu edad en años" min="18" max="99" />
+    </div>
+    
+    <div class="input-group">
+        <label for="nombreProducto"><i class="fas fa-cube"></i> Nombre del Producto:</label>
+        <input type="text" id="nombreProducto" placeholder="Ej: Plan Protección Familiar" />
+    </div>
+    
+    <div class="input-group">
+        <label for="valorUdi"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+        <input type="number" id="valorUdi" step="any" placeholder="Ej: 8.45" />
+    </div>
+    
+    <div class="input-group">
+        <label for="montoAnual"><i class="fas fa-money-bill-wave"></i> Monto anual (MXN):</label>
+        <input type="number" id="montoAnual" step="any" placeholder="Ej: 12000" />
+    </div>
 
-        <button onclick="calcularUdis()">
-            <i class="fas fa-calculator"></i> Calcular
-        </button>
+    <button onclick="calcularUdis()">
+        <i class="fas fa-calculator"></i> Calcular
+    </button>
 
-        <div class="resultado" id="resultadoUdis">
-            <div class="result-title"><i class="fas fa-chart-bar"></i> Resultados:</div>
-            <div id="conversionResult"></div>
-        </div>
-    </section>
-
-    <section>
+    <div class="resultado" id="resultadoUdis">
+        <div class="result-title"><i class="fas fa-chart-bar"></i> Resultados:</div>
+        <div id="conversionResult"></div>
+    </div>
+</section>
+   <section>
         <h2><i class="fas fa-chart-line"></i> Proyección de Ahorro</h2>
         
         <div class="input-group">
@@ -703,6 +711,12 @@
         <div class="input-group">
             <label for="tasa"><i class="fas fa-percentage"></i> Inflación anual (%):</label>
             <input id="tasa" type="number" value="4.5" step="any" placeholder="Ej: 4.5" />
+        </div>
+        
+        <!-- Nuevo campo para el porcentaje de deducción de impuestos -->
+        <div class="input-group">
+            <label for="impuestos"><i class="fas fa-percentage"></i> % Deducción de impuestos:</label>
+            <input id="impuestos" type="number" value="0" step="any" placeholder="Ej: 10" />
         </div>
 
         <button onclick="calcularProyeccion()">
@@ -754,48 +768,48 @@
     </section>
 
     <section>
-        <h2><i class="fas fa-shield-alt"></i> Suma Asegurada Protección y Beneficios</h2>
-        
-        <div class="input-group">
-            <label for="udiActualSumaAsegurada"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
-            <input type="number" id="udiActualSumaAsegurada" step="0.000001" placeholder="Ej: 8.45" />
-        </div>
-        
-        <div class="input-group">
-            <label for="inflacionSumaAsegurada"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
-            <input type="number" value="4.5" id="inflacionSumaAsegurada" step="0.01" placeholder="Ej: 4.5" />
-        </div>
-        
-        <div class="input-group">
-            <label for="aniosSumaAsegurada"><i class="fas fa-clock"></i> Años:</label>
-            <select id="aniosSumaAsegurada"></select>
-        </div>
-        
-        <div class="input-group">
-            <label for="cantidadUdisFallecimiento"><i class="fas fa-cross"></i> Cantidad UDIs por fallecimiento:</label>
-            <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" />
-        </div>
-        
-        <div class="input-group">
-            <label for="cantidadUdisInvalidez"><i class="fas fa-wheelchair"></i> Cantidad UDIs por Invalidez:</label>
-            <input type="number" id="cantidadUdisInvalidez" step="0.01" placeholder="Ej: 8000" />
-        </div>
-        
-        <div class="input-group">
-            <label for="cantidadUdisEnfermedadTerminal"><i class="fas fa-hospital-alt"></i> Cantidad UDIs por enfermedad terminal:</label>
-            <input type="number" id="cantidadUdisEnfermedadTerminal" step="0.01" placeholder="Ej: 5000" />
-        </div>
-
-        <button onclick="calcularSumaAseguradaDetallada()">
-            <i class="fas fa-calculator"></i> Calcular Suma Asegurada
-        </button>
-
-        <div class="resultado" id="resultadoSumaAseguradaDetallada">
-            <div class="result-title"><i class="fas fa-hand-holding-usd"></i> Suma Asegurada Calculada:</div>
-            <div id="sumaAseguradaDetalladaResult"></div>
-        </div>
-    </section>
+    <h2><i class="fas fa-shield-alt"></i> Suma Asegurada Protección y Beneficios</h2>
     
+    <div class="input-group">
+        <label for="udiActualSumaAsegurada"><i class="fas fa-dollar-sign"></i> Valor UDI actual:</label>
+        <input type="number" id="udiActualSumaAsegurada" step="0.000001" placeholder="Ej: 8.45" />
+    </div>
+    
+    <div class="input-group">
+        <label for="inflacionSumaAsegurada"><i class="fas fa-chart-pie"></i> Inflación anual (%):</label>
+        <input type="number" value="4.5" id="inflacionSumaAsegurada" step="0.01" placeholder="Ej: 4.5" />
+    </div>
+    
+    <div class="input-group">
+        <label for="aniosSumaAsegurada"><i class="fas fa-clock"></i> Años:</label>
+        <select id="aniosSumaAsegurada"></select>
+    </div>
+    
+    <div class="input-group">
+        <label for="cantidadUdisFallecimiento"><i class="fas fa-cross"></i> Cantidad UDIs por fallecimiento:</label>
+        <input type="number" id="cantidadUdisFallecimiento" step="0.01" placeholder="Ej: 10000" />
+    </div>
+    
+    <div class="input-group">
+        <label for="cantidadUdisInvalidez"><i class="fas fa-wheelchair"></i> Cantidad UDIs por Invalidez:</label>
+        <input type="number" id="cantidadUdisInvalidez" step="0.01) placeholder="Ej: 8000" />
+    </div>
+    
+    <div class="input-group">
+        <label for="cantidadUdisEnfermedadTerminal"><i class="fas fa-hospital-alt"></i> Cantidad UDIs por enfermedad terminal:</label>
+        <input type="number" id="cantidadUdisEnfermedadTerminal" step="0.01" placeholder="Ej: 5000" />
+    </div>
+
+    <button onclick="calcularSumaAseguradaDetallada()">
+        <i class="fas fa-calculator"></i> Calcular Suma Asegurada
+    </button>
+
+    <div class="resultado" id="resultadoSumaAseguradaDetallada">
+        <div class="result-title"><i class="fas fa-hand-holding-usd"></i> Suma Asegurada Calculada:</div>
+        <div id="sumaAseguradaDetalladaResult"></div>
+    </div>
+</section>
+
     <section>
         <h2><i class="fas fa-balance-scale"></i> Comparación Proyección vs Recuperación</h2>
         
@@ -806,7 +820,7 @@
         </button>
         
         <button onclick="generarReporteYDescargar()" style="
-            background-color: #0d47a1;
+            background-color: #8D6E63;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -1220,100 +1234,130 @@
     }
     
     // --- Sección 1: Conversión de Pesos a UDIs ---
-    function calcularUdis() {
-        const nombre = document.getElementById('nombre').value.trim();
-        const monto = parseFloat(document.getElementById('montoAnual').value);
-        const udi = parseFloat(document.getElementById('valorUdi').value);
-        const resultadoDiv = document.getElementById('resultadoUdis');
-        const conversionResult = document.getElementById('conversionResult');
-        
-        if (isNaN(monto) || isNaN(udi) || udi === 0) {
-            conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos.</div>';
-            resultadoDiv.classList.add('active');
-            return;
-        }
-        
-        const anual_udis = monto / udi;
-        const semestral_udis = monto / 2 / udi;
-		const trimestral_udis = monto / 4 / udi;
-        const mensual_udis = monto / 12 / udi;
-        const semanal_udis = monto / 52 / udi;
-        const diario_udis = monto / 365 / udi;
-        
-        const semestral_pesos = monto / 2;
-		const trimestral_pesos = monto / 4;
-        const mensual_pesos = monto / 12;
-        const semanal_pesos = monto / 52;
-        const diario_pesos = monto / 365;
-        const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cálculo para: <span style="color:#0d47a1;">${nombre}</span></div>` : '';
-
-        conversionResult.innerHTML = `
-        ${tituloNombre}
-        <div class="frecuencia-grid">
-            <div class="frecuencia-card">
-                <div class="title">Anual</div>
-                <div class="value">${anual_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-            <div class="frecuencia-card">
-                <div class="title">Semestral</div>
-                <div class="value">${semestral_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${semestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-			<div class="frecuencia-card">
-                <div class="title">Trimestral</div>
-                <div class="value">${trimestral_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${trimestral_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-            <div class="frecuencia-card">
-                <div class="title">Mensual</div>
-                <div class="value">${mensual_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${mensual_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-            <div class="frecuencia-card">
-                <div class="title">Semanal</div>
-                <div class="value">${semanal_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${semanal_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-            <div class="frecuencia-card">
-                <div class="title">Diario</div>
-                <div class="value">${diario_udis.toFixed(6)} UDIs</div>
-                <div class="value-pesos">$${diario_pesos.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
-            </div>
-        </div>
-        `;
+function calcularUdis() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const edad = parseInt(document.getElementById('edad').value);
+    const nombreProducto = document.getElementById('nombreProducto').value.trim();
+    const monto = parseFloat(document.getElementById('montoAnual').value);
+    const udi = parseFloat(document.getElementById('valorUdi').value);
+    const resultadoDiv = document.getElementById('resultadoUdis');
+    const conversionResult = document.getElementById('conversionResult');
+    
+    if (isNaN(monto) || isNaN(udi) || udi === 0 || isNaN(edad) || edad < 18 || edad > 99 || nombreProducto === '') {
+        conversionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Completa todos los campos: edad (18-99), nombre del producto y valores numéricos válidos.</div>';
         resultadoDiv.classList.add('active');
+        return;
     }
+    
+    // Aplicar porcentajes adicionales según frecuencia de pago (base al monto anual)
+    const montoSemestral = (monto / 2) * 1; //  semestral
+    const montoTrimestral = (monto / 4) * 1;  // trimestral
+    const montoMensual = (monto / 12) * 1;    // mensual
+    
+    const anual_udis = monto / udi;
+    const semestral_udis = montoSemestral / udi;
+    const trimestral_udis = montoTrimestral / udi;
+    const mensual_udis = montoMensual / udi;
+    const semanal_udis = monto / 52 / udi;
+    const diario_udis = monto / 365 / udi;
+    
+    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cliente: <span style="color:#0d47a1;">${nombre}</span> (${edad} años)</div>` : '';
+    const tituloProducto = `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Producto contratado: <span style="color:#0d47a1;">${nombreProducto}</span></div>`;
 
-    // --- Sección 2: Proyección de ahorro con UDIs ---
+    conversionResult.innerHTML = `
+    ${tituloNombre}
+    ${tituloProducto}
+    <div style="margin-bottom: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <div><i class="fas fa-info-circle"></i> Valor UDI utilizado:</div>
+            <div><strong>$${udi.toFixed(6)}</strong></div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <div><i class="fas fa-info-circle"></i> Monto base anual:</div>
+            <div><strong>$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</strong></div>
+        </div>
+    </div>
+    
+    <div class="frecuencia-grid">
+        <div class="frecuencia-card">
+            <div class="title">Anual</div>
+            <div class="value">${anual_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${monto.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Semestral</div>
+            <div class="value">${semestral_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${montoSemestral.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Trimestral</div>
+            <div class="value">${trimestral_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${montoTrimestral.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Mensual</div>
+            <div class="value">${mensual_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${montoMensual.toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Semanal</div>
+            <div class="value">${semanal_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${(monto/52).toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+        <div class="frecuencia-card">
+            <div class="title">Diario</div>
+            <div class="value">${diario_udis.toFixed(6)} UDIs</div>
+            <div class="value-pesos">$${(monto/365).toLocaleString('es-MX', {minimumFractionDigits: 2})} MXN</div>
+        </div>
+    </div>
+	
+	
+	
+    <div style="margin-top: 15px; padding: 10px; background: #d2e5fa; border-radius: 6px; font-size: 0.85rem;">
+        <i class="fas fa-info-circle"></i> Cuando las aportaciones se realizan en periodos fraccionados del año (en lugar de una sola aportación anual), se aplican porcentajes adicionales al monto anual como sigue:
+<p>
+<p>_____________________________________________________________________________</p>
+<p>* Aportaciones Semestrales: se incrementa el 2.5% sobre el monto anual.</p>
+<p>* Aportaciones Trimestrales: se incrementa el 4% sobre el monto anual.</p>
+<p>* Aportaciones Mensuales: se incrementa el 5% sobre el monto anual.</p>
+<p>_____________________________________________________________________________</p>
+<p> Nota: Estos porcentajes representan un ajuste por la frecuencia de pago y no un cargo adicional, sino una forma de mantener el equilibrio financiero del plan cuando las aportaciones no se hacen de forma anualizada.
+   </p> </div>
+    `;
+    resultadoDiv.classList.add('active');
+}
+    
+      // --- Sección 2: Proyección de ahorro con UDIs ---
     function calcularProyeccion() {
         const udi = parseFloat(document.getElementById("udiProy").value);
         const udis = parseFloat(document.getElementById("udisProy").value);
         const anios = parseInt(document.getElementById("anios").value);
         const tasa = parseFloat(document.getElementById("tasa").value) / 100;
+        const impuestos = parseFloat(document.getElementById("impuestos").value) / 100;
         const resultadoDiv = document.getElementById("resultadoProyeccion");
         const proyeccionResult = document.getElementById("proyeccionResult");
         
-        if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa) || anios < 1) {
+        if (isNaN(udi) || isNaN(udis) || isNaN(anios) || isNaN(tasa) || anios < 1 || isNaN(impuestos)) {
             proyeccionResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Asegúrate de ingresar números válidos y años mayor que cero.</div>';
             resultadoDiv.classList.add('active');
             return;
         }
         
         let total = 0, valor = udi;
-        // Calculation for "Cantidad UDIs por Años"
         const totalUdisPorAnios = udis * anios; 
         
         // Datos para la gráfica
         proyeccionData = [];
         proyeccionLabels = [];
         
+        // Primero calculamos todos los valores sin impuestos
+        const valoresPorAnio = [];
         for (let i = 1; i <= anios; i++) {
             if (i > 1) valor *= (1 + tasa);
             const pesos = udis * valor;
+            valoresPorAnio.push(pesos);
             total += pesos;
             
-            // Almacenar datos para la gráfica
             proyeccionLabels.push(`Año ${i}`);
             proyeccionData.push(pesos);
         }
@@ -1322,6 +1366,7 @@
             <div style="margin-bottom: 8px; font-size: 0.9rem;">
                 <span class="value-badge">${udis.toLocaleString('es-MX')} UDIs</span> 
                 en <span class="value-badge">${anios} año${anios > 1 ? 's' : ''}</span>
+                ${impuestos > 0 ? `con <span class="value-badge">${(impuestos*100).toFixed(2)}%</span> de impuestos` : ''}
             </div>
             
             <div style="overflow-x: auto;">
@@ -1331,22 +1376,36 @@
                             <th>Año</th>
                             <th>UDI</th>
                             <th>Valor (MXN)</th>
+                            <th>Deducción de Impuesto</th>
                         </tr>
                     </thead>
                     <tbody>
         `;
         
-        // Recalculamos para la tabla (podríamos optimizar esto)
+        // Recalculamos para la tabla con el nuevo cálculo de impuestos
         valor = udi;
+        let totalImpuestos = 0;
+        let valorAnterior = 0;
+        
         for (let i = 1; i <= anios; i++) {
             if (i > 1) valor *= (1 + tasa);
             const pesos = udis * valor;
+            let impuesto = 0;
+            
+            // El impuesto se calcula sobre el valor del año anterior
+            if (i > 1) {
+                impuesto = valorAnterior * impuestos;
+                totalImpuestos += impuesto;
+            }
+            
+            valorAnterior = pesos; // Guardamos para el próximo año
             
             html += `
                 <tr>
                     <td>${i}</td>
                     <td>${valor.toFixed(6)}</td>
                     <td>$${pesos.toLocaleString("es-MX", { minimumFractionDigits: 2 })}</td>
+                    <td>$${impuesto.toLocaleString("es-MX", { minimumFractionDigits: 2 })}</td>
                 </tr>
             `;
         }
@@ -1363,6 +1422,13 @@
                 <i class="fas fa-piggy-bank"></i> Total Proyectado: 
                 <span>$${total.toLocaleString("es-MX", { minimumFractionDigits: 2 })} MXN</span>
             </div>
+            ${impuestos > 0 ? `
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-file-invoice-dollar"></i> Beneficio Fiscal: 
+                <span>$${totalImpuestos.toLocaleString("es-MX", { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+
+            ` : ''}
         `;
         
         proyeccionResult.innerHTML = html;
@@ -1563,66 +1629,122 @@
 
     // --- Sección 4: Suma Asegurada Detallada ---
     function calcularSumaAseguradaDetallada() {
-        const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
-        const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value);
-        const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
-        const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
-        const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
-        const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
-        const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
-        const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
+    const udiActual = parseFloat(document.getElementById("udiActualSumaAsegurada").value);
+    const inflacion = parseFloat(document.getElementById("inflacionSumaAsegurada").value) / 100;
+    const anios = parseInt(document.getElementById("aniosSumaAsegurada").value);
+    const cantidadUdisFallecimiento = parseFloat(document.getElementById("cantidadUdisFallecimiento").value);
+    const cantidadUdisInvalidez = parseFloat(document.getElementById("cantidadUdisInvalidez").value);
+    const cantidadUdisEnfermedadTerminal = parseFloat(document.getElementById("cantidadUdisEnfermedadTerminal").value);
+    const resultadoDiv = document.getElementById("resultadoSumaAseguradaDetallada");
+    const sumaAseguradaDetalladaResult = document.getElementById("sumaAseguradaDetalladaResult");
 
-        if (isNaN(udiActual) || isNaN(inflacion) || isNaN(anios) || 
-            isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal) || anios < 1) {
-            sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Valores inválidos. Por favor, ingresa números válidos y años mayor que cero.</div>';
-            resultadoDiv.classList.add('active');
-            return;
-        }
+    // Validaciones
+    if (isNaN(udiActual) || udiActual <= 0) {
+        sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un valor válido para la UDI actual.</div>';
+        resultadoDiv.classList.add('active');
+        return;
+    }
 
-        const udiProyectada = udiActual * Math.pow(1 + inflacion / 100, anios - 1);
-        
-        montoFallecimiento = udiProyectada * cantidadUdisFallecimiento;
-        montoFallecimientoTercero = montoFallecimiento * 2; // Multiplica por 2 el monto por fallecimiento
-        montoInvalidez = udiProyectada * cantidadUdisInvalidez;
-        montoEnfermedadTerminal = udiProyectada * cantidadUdisEnfermedadTerminal;
+    if (isNaN(inflacion) || inflacion <= 0) {
+        sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un porcentaje de inflación válido.</div>';
+        resultadoDiv.classList.add('active');
+        return;
+    }
 
-        sumaAseguradaDetalladaResult.innerHTML = `
-            <div style="margin-bottom: 8px; font-size: 0.9rem;">
-                Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
+    if (isNaN(anios) || anios < 1) {
+        sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa un número válido de años (mayor que 0).</div>';
+        resultadoDiv.classList.add('active');
+        return;
+    }
+
+    // Validar cantidades de UDIs
+    if (isNaN(cantidadUdisFallecimiento) || isNaN(cantidadUdisInvalidez) || isNaN(cantidadUdisEnfermedadTerminal)) {
+        sumaAseguradaDetalladaResult.innerHTML = '<div style="color: #d32f2f; padding: 8px; background: #ffebee; border-radius: 4px; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Por favor ingresa cantidades válidas de UDIs.</div>';
+        resultadoDiv.classList.add('active');
+        return;
+    }
+
+    // Calcular UDI futura basada en inflación y años
+    const udiFutura = udiActual * Math.pow(1 + inflacion, anios);
+
+    // Realizar cálculos con UDI actual
+    const montoFallecimientoActual = udiActual * cantidadUdisFallecimiento;
+    const montoFallecimientoTerceroActual = montoFallecimientoActual * 2;
+    const montoInvalidezActual = udiActual * cantidadUdisInvalidez;
+    const montoEnfermedadTerminalActual = udiActual * cantidadUdisEnfermedadTerminal;
+
+    // Realizar cálculos con UDI futura proyectada
+    const montoFallecimientoFuturo = udiFutura * cantidadUdisFallecimiento;
+    const montoFallecimientoTerceroFuturo = montoFallecimientoFuturo * 2;
+    const montoInvalidezFuturo = udiFutura * cantidadUdisInvalidez;
+    const montoEnfermedadTerminalFuturo = udiFutura * cantidadUdisEnfermedadTerminal;
+
+    // Mostrar resultados
+    sumaAseguradaDetalladaResult.innerHTML = `
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI actual:</strong></div>
+                <div><span class="value-badge">$${udiActual.toFixed(6)}</span></div>
             </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Inflación anual:</strong></div>
+                <div><span class="value-badge">${(inflacion * 100).toFixed(2)}%</span></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI proyectado en ${anios} año${anios > 1 ? 's' : ''}:</strong></div>
+                <div><span class="value-badge">$${udiFutura.toFixed(6)}</span></div>
+            </div>
+        </div>
+
+        <div style="background: #f0f7ff; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Cálculos con UDI Actual</div>
             
-            <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
-                    <div><span class="value-badge">$${udiProyectada.toFixed(6)}</span></div>
-                </div>
-            </div>
-			<div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-sticky-note" style="color: #0d47a1;"></i>Los valores proyectados en el cálculo se basan en una estimación del valor de la UDI de su plan de ahorro. Estos pueden modificarse de acuerdo con el valor real de la UDI en el año en que ocurra el evento.</div>
-                </div>
-            </div>
-
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
-                <span>$${montoFallecimiento.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                <span>$${montoFallecimientoActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
-                <span>$${montoFallecimientoTercero.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                <span>$${montoFallecimientoTerceroActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
-                <span>$${montoInvalidez.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                <span>$${montoInvalidezActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
-                <span>$${montoEnfermedadTerminal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+                <span>$${montoEnfermedadTerminalActual.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
             </div>
-        `;
-        resultadoDiv.classList.add('active');
-    }
+        </div>
 
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 6px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Proyección en ${anios} año${anios > 1 ? 's' : ''} (con inflación del ${(inflacion * 100).toFixed(2)}%)</div>
+            
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
+                <span>$${montoFallecimientoFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-crosshairs"></i> Protección ante eventos provocados por terceros (fallecimiento x2): 
+                <span>$${montoFallecimientoTerceroFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-wheelchair"></i> Respaldo si la vida cambia por una invalidez permanente: 
+                <span>$${montoInvalidezFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+            <div class="compact-result" style="margin-top: 10px;">
+                <i class="fas fa-hospital-alt"></i> Apoyo en momentos críticos (enfermedad terminal): 
+                <span>$${montoEnfermedadTerminalFuturo.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
+            <i class="fas fa-info-circle" style="color: #0d47a1;"></i> Los valores proyectados son estimaciones basadas en la inflación proporcionada. El valor real dependerá del comportamiento real de la UDI.
+        </div>
+    `;
+    
+    resultadoDiv.classList.add('active');
+}
     // --- Sección 5: Comparación Proyección vs Recuperación ---
  function calcularDiferencia() {
         const resultadoDiv = document.getElementById("resultadoComparacion");
@@ -1748,7 +1870,7 @@ function crearGraficaComparacion() {
     function inicializarAnios() {
         // For Recuperación en Pesos
         const selectAnioRecuperacion = document.getElementById("anioRecuperacion");
-        for (let i = 1; i <= 30; i++) {
+        for (let i = 1; i <= 40; i++) {
             const option = document.createElement("option");
             option.value = i;
             option.textContent = i + (i > 1 ? " años" : " año");
@@ -1758,7 +1880,7 @@ function crearGraficaComparacion() {
 
         // For Suma Asegurada Detallada
         const selectAnioSumaAsegurada = document.getElementById("aniosSumaAsegurada");
-        for (let i = 1; i <= 30; i++) {
+        for (let i = 1; i <= 40; i++) {
             const option = document.createElement("option");
             option.value = i;
             option.textContent = i + (i > 1 ? " años" : " año");
