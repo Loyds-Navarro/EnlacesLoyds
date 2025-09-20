@@ -984,7 +984,7 @@
 
                 hr.report-section-divider-html { 
                     border: none;
-                    border-top: 1px dashed #ccc; 
+                    border-top: 1px dashed #A1887F; 
                     margin: 30px 0;
                 }
 
@@ -993,7 +993,7 @@
                     padding: 20px;
                     border-radius: var(--border-radius);
                     box-shadow: var(--shadow); 
-                    border-left: 4px solid var(--primary); 
+                    border-left: 4px solid var(--primary-dark); 
                     margin-bottom: 30px; 
                 }
                 .report-section-card-html:last-child {
@@ -1001,7 +1001,7 @@
                 }
 
                 .report-section-card-html h3 { 
-                    color: var(--primary);
+                    color: var(--primary-dark);
                     margin: 0 0 15px 0;
                     font-size: 1.6rem; 
                     display: flex;
@@ -1011,7 +1011,7 @@
                     border-bottom: 1px solid var(--primary-light);
                 }
                 .report-section-card-html h3 i {
-                    color: var(--accent);
+                    color: var(--primary);
                     font-size: 1.2rem;
                 }
 
@@ -1034,7 +1034,7 @@
                     margin-top: 40px; 
                     padding: 15px; 
                     font-size: 0.8rem; 
-                    color: var(--primary); 
+                    color: var(--primary-dark); 
                     opacity: 0.8;
                     border-top: 1px solid var(--light-bg);
                 }
@@ -1061,19 +1061,19 @@
                 }
 
                 .download-button-html.pdf {
-                    background: #dc3545; 
+                    background: #8D6E63; 
                     color: white;
                 }
                 .download-button-html.pdf:hover {
-                    background: #c82333;
+                    background: #6D4C41;
                 }
 
                 .download-button-html.docx {
-                    background: #28a745; 
+                    background: #A1887F; 
                     color: white;
                 }
                 .download-button-html.docx:hover {
-                    background: #218838;
+                    background: #8D6E63;
                 }
                 
                 /* Estilos para gráficas en el reporte */
@@ -1086,7 +1086,7 @@
                 .report-chart-title {
                     text-align: center;
                     font-weight: 600;
-                    color: var(--primary);
+                    color: var(--primary-dark);
                     margin-bottom: 15px;
                     font-size: 1.1rem;
                 }
@@ -1261,13 +1261,13 @@ function calcularUdis() {
     const semanal_udis = monto / 52 / udi;
     const diario_udis = monto / 365 / udi;
     
-    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cliente: <span style="color:#0d47a1;">${nombre}</span> (${edad} años)</div>` : '';
-    const tituloProducto = `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Producto contratado: <span style="color:#0d47a1;">${nombreProducto}</span></div>`;
+    const tituloNombre = nombre ? `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Cliente: <span style="color:#6D4C41;">${nombre}</span> (${edad} años)</div>` : '';
+    const tituloProducto = `<div style="font-weight:700; margin-bottom:8px; font-size:1.1rem;">Producto contratado: <span style="color:#6D4C41;">${nombreProducto}</span></div>`;
 
     conversionResult.innerHTML = `
     ${tituloNombre}
     ${tituloProducto}
-    <div style="margin-bottom: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px;">
+    <div style="margin-bottom: 15px; padding: 10px; background: #F3E5D8; border-radius: 6px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <div><i class="fas fa-info-circle"></i> Valor UDI utilizado:</div>
             <div><strong>$${udi.toFixed(6)}</strong></div>
@@ -1313,7 +1313,7 @@ function calcularUdis() {
 	
 	
 	
-    <div style="margin-top: 15px; padding: 10px; background: #d2e5fa; border-radius: 6px; font-size: 0.85rem;">
+    <div style="margin-top: 15px; padding: 10px; background: #E8D5C4; border-radius: 6px; font-size: 0.85rem;">
         <i class="fas fa-info-circle"></i> Cuando las aportaciones se realizan en periodos fraccionados del año (en lugar de una sola aportación anual), se aplican porcentajes adicionales al monto anual como sigue:
 <p>
 <p>_____________________________________________________________________________</p>
@@ -1455,8 +1455,8 @@ function calcularUdis() {
                 datasets: [{
                     label: 'Valor Proyectado (MXN)',
                     data: proyeccionData,
-                    backgroundColor: 'rgba(13, 71, 161, 0.2)',
-                    borderColor: 'rgba(13, 71, 161, 1)',
+                    backgroundColor: 'rgba(109, 76, 65, 0.2)',
+                    borderColor: 'rgba(109, 76, 65, 1)',
                     borderWidth: 2,
                     tension: 0.1,
                     fill: true
@@ -1605,14 +1605,14 @@ function calcularUdis() {
                 Proyección a <span class="value-badge">${anios} año${anios > 1 ? "s" : ""}</span>
             </div>
             
-            <div style="background: #f0f7ff; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+            <div style="background: #F3E5D8; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem;">
-                    <div><i class="fas fa-arrow-up" style="color: #0d47a1;"></i> UDI proyectada:</div>
+                    <div><i class="fas fa-arrow-up" style="color: #6D4C41;"></i> UDI proyectada:</div>
                     <div><span class="value-badge">$${udiProyectada.toFixed(6)}</span></div>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                    <div><i class="fas fa-coins" style="color: #0d47a1;"></i> UDIs invertidas:</div>
+                    <div><i class="fas fa-coins" style="color: #6D4C41;"></i> UDIs invertidas:</div>
                     <div><span class="value-badge">${cantidadUdis.toLocaleString('es-MX')}</span></div>
                 </div>
             </div>
@@ -1683,21 +1683,21 @@ function calcularUdis() {
     sumaAseguradaDetalladaResult.innerHTML = `
         <div style="margin-bottom: 15px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI actual:</strong></div>
+                <div><i class="fas fa-info-circle" style="color: #6D4C41;"></i> <strong>Valor UDI actual:</strong></div>
                 <div><span class="value-badge">$${udiActual.toFixed(6)}</span></div>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Inflación anual:</strong></div>
+                <div><i class="fas fa-info-circle" style="color: #6D4C41;"></i> <strong>Inflación anual:</strong></div>
                 <div><span class="value-badge">${(inflacion * 100).toFixed(2)}%</span></div>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <div><i class="fas fa-info-circle" style="color: #0d47a1;"></i> <strong>Valor UDI proyectado en ${anios} año${anios > 1 ? 's' : ''}:</strong></div>
+                <div><i class="fas fa-info-circle" style="color: #6D4C41;"></i> <strong>Valor UDI proyectado en ${anios} año${anios > 1 ? 's' : ''}:</strong></div>
                 <div><span class="value-badge">$${udiFutura.toFixed(6)}</span></div>
             </div>
         </div>
 
-        <div style="background: #f0f7ff; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Cálculos con UDI Actual</div>
+        <div style="background: #F3E5D8; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #6D4C41;">Cálculos con UDI Actual</div>
             
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
@@ -1717,8 +1717,8 @@ function calcularUdis() {
             </div>
         </div>
 
-        <div style="background: #e3f2fd; padding: 15px; border-radius: 6px;">
-            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #0d47a1;">Proyección en ${anios} año${anios > 1 ? 's' : ''} (con inflación del ${(inflacion * 100).toFixed(2)}%)</div>
+        <div style="background: #F5EBE0; padding: 15px; border-radius: 6px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #6D4C41;">Proyección en ${anios} año${anios > 1 ? 's' : ''} (con inflación del ${(inflacion * 100).toFixed(2)}%)</div>
             
             <div class="compact-result" style="margin-top: 10px;">
                 <i class="fas fa-cross"></i> Tranquilidad total por fallecimiento natural o accidental: 
@@ -1738,8 +1738,8 @@ function calcularUdis() {
             </div>
         </div>
 
-        <div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-radius: 6px; font-size: 0.85rem;">
-            <i class="fas fa-info-circle" style="color: #0d47a1;"></i> Los valores proyectados son estimaciones basadas en la inflación proporcionada. El valor real dependerá del comportamiento real de la UDI.
+        <div style="margin-top: 15px; padding: 10px; background: #F3E5D8; border-radius: 6px; font-size: 0.85rem;">
+            <i class="fas fa-info-circle" style="color: #6D4C41;"></i> Los valores proyectados son estimaciones basadas en la inflación proporcionada. El valor real dependerá del comportamiento real de la UDI.
         </div>
     `;
     
@@ -1786,7 +1786,7 @@ function calcularUdis() {
                 <div class="percentage ${bgClase}">${porcentaje.toFixed(2)}% de la Recuperación</div>
             </div>
             
-            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9rem;">
+            <div style="margin-top: 15px; padding: 10px; background: #F5EBE0; border-radius: 6px; font-size: 0.9rem;">
                 <i class="fas fa-info-circle"></i> 
                 ${esPositivo ? 
                     '<i class="fas fa-thumbs-up" style="color: green; margin-right: 5px;"></i>¡Excelente! La Recuperación es mayor o igual que la proyección de ahorro, lo que indica un buen rendimiento.' : 
@@ -1814,12 +1814,12 @@ function crearGraficaComparacion() {
                 label: 'Monto (MXN)',
                 data: [proyeccionTotal, recuperacionTotal],
                 backgroundColor: [
-                    'rgba(13, 71, 161, 0.7)',
-                    'rgba(25, 118, 210, 0.7)'
+                    'rgba(109, 76, 65, 0.7)',
+                    'rgba(141, 110, 99, 0.7)'
                 ],
                 borderColor: [
-                    'rgba(13, 71, 161, 1)',
-                    'rgba(25, 118, 210, 1)'
+                    'rgba(109, 76, 65, 1)',
+                    'rgba(141, 110, 99, 1)'
                 ],
                 borderWidth: 2
             }]
