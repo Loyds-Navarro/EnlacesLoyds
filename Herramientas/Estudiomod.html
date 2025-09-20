@@ -1521,23 +1521,30 @@
             let recomendacionesHTML = '<div class="protection-recommendations">';
             recomendacionesHTML += '<h4><i class="fas fa-lightbulb"></i> Recomendaciones de Protección y Ahorro</h4>';
             
-            // Recomendaciones sobre Gastos Hormiga y Ahorro
-            recomendacionesHTML += '<div class="recommendation-card">';
-            recomendacionesHTML += '<p><i class="fas fa-bug"></i> <strong>Optimización de Gastos Hormiga:</strong></p>';
-            if (gastosHormiga.length > 0) {
-                const totalGH = gastosHormiga.reduce((sum, g) => sum + g.totalMensual, 0);
-                recomendacionesHTML += `<p>Sus gastos hormiga suman un total de **$${formatNumber(totalGH)}** al mes. Reducir estos gastos puede generar un gran impacto en su capacidad de ahorro.</p>`;
-                recomendacionesHTML += '<p><strong>Estrategias recomendadas:</strong></p><ul>';
-                gastosHormiga.forEach(gasto => {
-                    recomendacionesHTML += `<li><i class="fas fa-dollar-sign"></i> Identifique alternativas más económicas para su gasto en **${gasto.descripcion}** ($${formatNumber(gasto.totalMensual)}).</li>`;
-                });
-                recomendacionesHTML += `<li><i class="fas fa-calendar-check"></i> Reduzca la frecuencia de sus compras impulsivas. Puede usar la regla del <strong>"día sin gastos hormiga"</strong>.</li>`;
-                recomendacionesHTML += `<li><i class="fas fa-list-alt"></i> Planifique sus compras con una lista para evitar gastos innecesarios.</li>`;
-                recomendacionesHTML += `<li><i class="fas fa-coins"></i> Considere canalizar el dinero ahorrado de estos gastos a un fondo de inversión o a un plan de retiro.</li></ul>`;
-            } else {
-                recomendacionesHTML += `<p>¡Excelente! Ha declarado no tener gastos hormiga. Esto demuestra una grande disciplina financiera. Mantenga esta práctica y siga monitoreando sus gastos para evitar que aparezcan.</p>`;
-            }
-            recomendacionesHTML += '</div>';
+// Recomendaciones sobre Gastos Hormiga y Ahorro
+recomendacionesHTML += '<div class="recommendation-card">';
+recomendacionesHTML += '<p><i class="fas fa-bug"></i> <strong>Optimización de Gastos Hormiga:</strong></p>';
+if (gastosHormiga.length > 0) {
+    const totalGH = gastosHormiga.reduce((sum, g) => sum + g.totalMensual, 0);
+    const totalGHAnual = totalGH * 12;
+
+    recomendacionesHTML += `<p>Sus gastos hormiga suman un total de <strong>$${formatNumber(totalGH)}</strong> al mes, 
+    lo que equivale a <strong>$${formatNumber(totalGHAnual)}</strong> al año. Reducir estos gastos puede generar un gran impacto en su capacidad de ahorro.</p>`;
+
+    recomendacionesHTML += '<p><strong>Estrategias recomendadas:</strong></p><ul>';
+    gastosHormiga.forEach(gasto => {
+        const gastoAnual = gasto.totalMensual * 12;
+        recomendacionesHTML += `<li><i class="fas fa-dollar-sign"></i> Identifique alternativas más económicas para su gasto en <strong>${gasto.descripcion}</strong> 
+        ($${formatNumber(gasto.totalMensual)} al mes / $${formatNumber(gastoAnual)} al año).</li>`;
+    });
+    recomendacionesHTML += `<li><i class="fas fa-calendar-check"></i> Reduzca la frecuencia de sus compras impulsivas. Puede usar la regla del <strong>"día sin gastos hormiga"</strong>.</li>`;
+    recomendacionesHTML += `<li><i class="fas fa-list-alt"></i> Planifique sus compras con una lista para evitar gastos innecesarios.</li>`;
+    recomendacionesHTML += `<li><i class="fas fa-coins"></i> Considere canalizar el dinero ahorrado de estos gastos a un fondo de inversión o a un plan de retiro.</li></ul>`;
+} else {
+    recomendacionesHTML += `<p>¡Excelente! Ha declarado no tener gastos hormiga. Esto demuestra una grande disciplina financiera. Mantenga esta práctica y siga monitoreando sus gastos para evitar que aparezcan.</p>`;
+}
+recomendacionesHTML += '</div>';
+
             
             // Recomendaciones sobre Ahorro
             recomendacionesHTML += '<div class="recommendation-card">';
