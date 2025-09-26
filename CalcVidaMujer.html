@@ -8,7 +8,206 @@
     <!-- Script para Chart.js y su plugin de datalabels -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+	
     <style>
+	
+	 /* NUEVA SECCIÓN: Comparación de Cálculos */
+    .comparacion-calculadora {
+        grid-column: 1 / -1; /* Ocupa todo el ancho disponible */
+    }
+    
+    .calculos-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .calculo-card {
+        background: #F5EBE0;
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid #D7CCC8;
+        position: relative;
+        transition: var(--transition);
+    }
+    
+    .calculo-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .calculo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #D7CCC8;
+    }
+    
+    .calculo-nombre {
+        font-weight: 700;
+        color: var(--primary-dark);
+        font-size: 1.1rem;
+    }
+    
+    .calculo-plazo {
+        background: var(--primary);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .calculo-datos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    
+    .dato-item {
+        background: #F9F5EB;
+        padding: 8px;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .dato-label {
+        font-size: 0.75rem;
+        color: var(--primary-dark);
+        margin-bottom: 3px;
+    }
+    
+    .dato-valor {
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    .beneficio-fiscal {
+        grid-column: 1 / -1;
+        background: #E8F5E8;
+        color: #2E7D32;
+    }
+    
+    .acciones-calculo {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    
+    .btn-accion {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: var(--transition);
+    }
+    
+    .btn-eliminar {
+        background: #FFEBEE;
+        color: #C62828;
+    }
+    
+    .btn-eliminar:hover {
+        background: #FFCDD2;
+    }
+    
+    .btn-comparar {
+        background: #E3F2FD;
+        color: #1565C0;
+    }
+    
+    .btn-comparar:hover {
+        background: #BBDEFB;
+    }
+    
+    .comparacion-resumen {
+        margin-top: 20px;
+        background: #F5EBE0;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #D7CCC8;
+    }
+    
+    .resumen-title {
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .resumen-datos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+    }
+    
+    .resumen-item {
+        background: #F9F5EB;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .resumen-label {
+        font-size: 0.8rem;
+        color: var(--primary-dark);
+        margin-bottom: 5px;
+    }
+    
+    .resumen-valor {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    
+    .mejor-opcion {
+        background: #E8F5E8;
+        border: 2px solid #7CB342;
+    }
+    
+    .recomendaciones {
+        margin-top: 15px;
+        background: #E3F2FD;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+    }
+    
+    .recomendaciones-title {
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #1565C0;
+    }
+    
+    .recomendaciones-lista {
+        padding-left: 20px;
+    }
+    
+    .recomendaciones-lista li {
+        margin-bottom: 5px;
+    }
+
+    /* Media queries para responsividad */
+    @media (max-width: 480px) {
+        .calculos-container {
+            grid-template-columns: 1fr;
+        }
+        .calculo-datos {
+            grid-template-columns: 1fr;
+        }
+        .beneficio-fiscal {
+            grid-column: 1;
+        }
+    }
         /* Estilos generales */
         :root {
             --primary-dark: #8a1c4a;
@@ -910,6 +1109,45 @@
             </div>
         </div>
     </section>
+	<section class="comparacion-calculadora">
+    <h2><i class="fas fa-chart-bar"></i> Comparación de Cálculos</h2>
+    
+    <p style="margin-bottom: 15px; font-size: 0.9rem;">Almacena hasta 6 cálculos y compáralos para tomar la mejor decisión</p>
+    
+    <div class="input-group">
+        <label for="nombreCalculo"><i class="fas fa-tag"></i> Nombre del cálculo:</label>
+        <input type="text" id="nombreCalculo" placeholder="Ej: Plan Ahorro 10 años" />
+    </div>
+    
+    <button onclick="guardarCalculo()">
+        <i class="fas fa-save"></i> Guardar Cálculo Actual
+    </button>
+    
+    <div class="calculos-container" id="calculosContainer">
+        <!-- Aquí se mostrarán los cálculos guardados -->
+    </div>
+    
+    <div class="comparacion-resumen" id="comparacionResumen" style="display: none;">
+        <div class="resumen-title">
+            <i class="fas fa-chart-pie"></i> Resumen de Comparación
+        </div>
+        <div class="resumen-datos" id="resumenDatos">
+            <!-- Aquí se mostrarán los datos de comparación -->
+        </div>
+        <div class="recomendaciones" id="recomendaciones">
+            <div class="recomendaciones-title">
+                <i class="fas fa-lightbulb"></i> Recomendaciones
+            </div>
+            <ul class="recomendaciones-lista" id="recomendacionesLista">
+                <!-- Aquí se mostrarán las recomendaciones -->
+            </ul>
+        </div>
+        <button onclick="generarPDFComparacion()" style="margin-top: 15px;">
+            <i class="fas fa-file-pdf"></i> Generar PDF de Comparación
+        </button>
+    </div>
+</section>
+
 </main>
 
 <footer>
@@ -933,7 +1171,417 @@
     let proyeccionData = [];
     let proyeccionLabels = [];
 
+// Variables para la sección de comparación de cálculos
+    let calculosGuardados = [];
+    let totalImpuestosProyeccion = 0;
 
+    // Función para guardar el cálculo actual
+    function guardarCalculo() {
+        if (calculosGuardados.length >= 6) {
+            alert('Ya has guardado el máximo de 6 cálculos. Elimina uno para guardar otro.');
+            return;
+        }
+        
+        // Verificar que se haya realizado al menos un cálculo de proyección
+        if (proyeccionTotal === 0) {
+            alert('Debes realizar al menos un cálculo de proyección antes de guardar.');
+            return;
+        }
+        
+        const nombreCalculo = document.getElementById('nombreCalculo').value.trim() || `Cálculo ${calculosGuardados.length + 1}`;
+        const plazo = parseInt(document.getElementById('anios').value) || 0;
+        const impuestos = parseFloat(document.getElementById('impuestos').value) || 0;
+        
+        // Calcular beneficio fiscal (aproximado)
+        const beneficioFiscal = totalImpuestosProyeccion;
+        
+        // Crear objeto de cálculo
+        const calculo = {
+            id: Date.now(),
+            nombre: nombreCalculo,
+            plazo: plazo,
+            proyeccion: proyeccionTotal,
+            recuperacion: recuperacionTotal,
+            beneficioFiscal: beneficioFiscal,
+            diferencia: recuperacionTotal - proyeccionTotal,
+            fecha: new Date().toLocaleDateString('es-MX')
+        };
+        
+        // Agregar a la lista
+        calculosGuardados.push(calculo);
+        
+        // Actualizar la interfaz
+        actualizarCalculosGuardados();
+        
+        // Limpiar campo de nombre
+        document.getElementById('nombreCalculo').value = '';
+        
+        // Mostrar mensaje de éxito
+        alert(`Cálculo "${nombreCalculo}" guardado correctamente.`);
+    }
+    
+    // Función para actualizar la lista de cálculos guardados
+    function actualizarCalculosGuardados() {
+        const container = document.getElementById('calculosContainer');
+        container.innerHTML = '';
+        
+        if (calculosGuardados.length === 0) {
+            container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; padding: 20px; color: #8D6E63;">No hay cálculos guardados. Realiza un cálculo y guárdalo para comparar.</p>';
+            document.getElementById('comparacionResumen').style.display = 'none';
+            return;
+        }
+        
+        // Mostrar cada cálculo guardado
+        calculosGuardados.forEach(calculo => {
+            const card = document.createElement('div');
+            card.className = 'calculo-card';
+            card.innerHTML = `
+                <div class="calculo-header">
+                    <div class="calculo-nombre">${calculo.nombre}</div>
+                    <div class="calculo-plazo">${calculo.plazo} años</div>
+                </div>
+                <div class="calculo-datos">
+                    <div class="dato-item">
+                        <div class="dato-label">Proyección</div>
+                        <div class="dato-valor">$${calculo.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                    <div class="dato-item">
+                        <div class="dato-label">Recuperación</div>
+                        <div class="dato-valor">$${calculo.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                    <div class="dato-item">
+                        <div class="dato-label">Diferencia</div>
+                        <div class="dato-valor ${calculo.diferencia >= 0 ? 'positive' : 'negative'}">${calculo.diferencia >= 0 ? '+' : ''}$${Math.abs(calculo.diferencia).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                    <div class="dato-item beneficio-fiscal">
+                        <div class="dato-label">Beneficio Fiscal</div>
+                        <div class="dato-valor">$${calculo.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                </div>
+                <div class="acciones-calculo">
+                    <button class="btn-accion btn-eliminar" onclick="eliminarCalculo(${calculo.id})">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                    <button class="btn-accion btn-comparar" onclick="seleccionarMejorCalculo(${calculo.id})">
+                        <i class="fas fa-star"></i> Mejor Opción
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        
+        // Actualizar resumen de comparación
+        actualizarResumenComparacion();
+        
+        // Mostrar sección de resumen
+        document.getElementById('comparacionResumen').style.display = 'block';
+    }
+    
+    // Función para eliminar un cálculo
+    function eliminarCalculo(id) {
+        calculosGuardados = calculosGuardados.filter(calculo => calculo.id !== id);
+        actualizarCalculosGuardados();
+    }
+    
+    // Función para actualizar el resumen de comparación
+    function actualizarResumenComparacion() {
+        if (calculosGuardados.length === 0) return;
+        
+        const resumenDatos = document.getElementById('resumenDatos');
+        resumenDatos.innerHTML = '';
+        
+        // Encontrar el cálculo con mayor proyección
+        const mejorProyeccion = calculosGuardados.reduce((prev, current) => 
+            (prev.proyeccion > current.proyeccion) ? prev : current
+        );
+        
+        // Encontrar el cálculo con mayor recuperación
+        const mejorRecuperacion = calculosGuardados.reduce((prev, current) => 
+            (prev.recuperacion > current.recuperacion) ? prev : current
+        );
+        
+        // Encontrar el cálculo con mayor beneficio fiscal
+        const mejorBeneficio = calculosGuardados.reduce((prev, current) => 
+            (prev.beneficioFiscal > current.beneficioFiscal) ? prev : current
+        );
+        
+        // Encontrar el cálculo con mejor diferencia (mayor valor positivo)
+        const mejorDiferencia = calculosGuardados.reduce((prev, current) => 
+            (current.diferencia > prev.diferencia) ? current : prev
+        );
+        
+        // Crear elementos de resumen
+        const resumenProyeccion = document.createElement('div');
+        resumenProyeccion.className = 'resumen-item';
+        if (mejorProyeccion.id === mejorProyeccion.id) resumenProyeccion.classList.add('mejor-opcion');
+        resumenProyeccion.innerHTML = `
+            <div class="resumen-label">Mejor Proyección</div>
+            <div class="resumen-valor">$${mejorProyeccion.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+            <div style="font-size: 0.8rem; margin-top: 5px;">${mejorProyeccion.nombre} (${mejorProyeccion.plazo} años)</div>
+        `;
+        
+        const resumenRecuperacion = document.createElement('div');
+        resumenRecuperacion.className = 'resumen-item';
+        if (mejorRecuperacion.id === mejorRecuperacion.id) resumenRecuperacion.classList.add('mejor-opcion');
+        resumenRecuperacion.innerHTML = `
+            <div class="resumen-label">Mejor Recuperación</div>
+            <div class="resumen-valor">$${mejorRecuperacion.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+            <div style="font-size: 0.8rem; margin-top: 5px;">${mejorRecuperacion.nombre} (${mejorRecuperacion.plazo} años)</div>
+        `;
+        
+        const resumenBeneficio = document.createElement('div');
+        resumenBeneficio.className = 'resumen-item';
+        if (mejorBeneficio.id === mejorBeneficio.id) resumenBeneficio.classList.add('mejor-opcion');
+        resumenBeneficio.innerHTML = `
+            <div class="resumen-label">Mejor Beneficio Fiscal</div>
+            <div class="resumen-valor">$${mejorBeneficio.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+            <div style="font-size: 0.8rem; margin-top: 5px;">${mejorBeneficio.nombre} (${mejorBeneficio.plazo} años)</div>
+        `;
+        
+        const resumenDiferencia = document.createElement('div');
+        resumenDiferencia.className = 'resumen-item';
+        if (mejorDiferencia.id === mejorDiferencia.id) resumenDiferencia.classList.add('mejor-opcion');
+        resumenDiferencia.innerHTML = `
+            <div class="resumen-label">Mejor Diferencia</div>
+            <div class="resumen-valor ${mejorDiferencia.diferencia >= 0 ? 'positive' : 'negative'}">${mejorDiferencia.diferencia >= 0 ? '+' : ''}$${Math.abs(mejorDiferencia.diferencia).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+            <div style="font-size: 0.8rem; margin-top: 5px;">${mejorDiferencia.nombre} (${mejorDiferencia.plazo} años)</div>
+        `;
+        
+        resumenDatos.appendChild(resumenProyeccion);
+        resumenDatos.appendChild(resumenRecuperacion);
+        resumenDatos.appendChild(resumenBeneficio);
+        resumenDatos.appendChild(resumenDiferencia);
+        
+        // Actualizar recomendaciones
+        actualizarRecomendaciones();
+    }
+    
+    // Función para actualizar las recomendaciones
+    function actualizarRecomendaciones() {
+        const recomendacionesLista = document.getElementById('recomendacionesLista');
+        recomendacionesLista.innerHTML = '';
+        
+        // Generar recomendaciones basadas en los cálculos
+        const recomendaciones = [];
+        
+        // Recomendación basada en la mejor proyección
+        const mejorProyeccion = calculosGuardados.reduce((prev, current) => 
+            (prev.proyeccion > current.proyeccion) ? prev : current
+        );
+        
+        if (mejorProyeccion.proyeccion > 0) {
+            recomendaciones.push(`El cálculo "${mejorProyeccion.nombre}" ofrece la mejor proyección de ahorro ($${mejorProyeccion.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}). Considera esta opción si tu objetivo es maximizar el crecimiento a largo plazo.`);
+        }
+        
+        // Recomendación basada en la mejor recuperación
+        const mejorRecuperacion = calculosGuardados.reduce((prev, current) => 
+            (prev.recuperacion > current.recuperacion) ? prev : current
+        );
+        
+        if (mejorRecuperacion.recuperacion > 0) {
+            recomendaciones.push(`Para obtener la mayor cantidad al final del período, "${mejorRecuperacion.nombre}" es la mejor opción con $${mejorRecuperacion.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}.`);
+        }
+        
+        // Recomendación basada en el mejor beneficio fiscal
+        const mejorBeneficio = calculosGuardados.reduce((prev, current) => 
+            (prev.beneficioFiscal > current.beneficioFiscal) ? prev : current
+        );
+        
+        if (mejorBeneficio.beneficioFiscal > 0) {
+            recomendaciones.push(`Si buscas maximizar los beneficios fiscales, "${mejorBeneficio.nombre}" te ofrece $${mejorBeneficio.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} en deducciones.`);
+        }
+        
+        // Recomendación basada en la mejor diferencia
+        const mejorDiferencia = calculosGuardados.reduce((prev, current) => 
+            (current.diferencia > prev.diferencia) ? current : prev
+        );
+        
+        if (mejorDiferencia.diferencia > 0) {
+            recomendaciones.push(`"${mejorDiferencia.nombre}" presenta la mejor relación entre recuperación y proyección, con una diferencia positiva de $${mejorDiferencia.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })}.`);
+        } else if (calculosGuardados.some(c => c.diferencia > 0)) {
+            recomendaciones.push('Algunos cálculos muestran una recuperación mayor que la proyección, lo que indica un buen rendimiento.');
+        } else {
+            recomendaciones.push('Todos los cálculos muestran una proyección mayor que la recuperación. Considera ajustar los parámetros para mejorar el rendimiento.');
+        }
+        
+        // Recomendación general basada en el número de cálculos
+        if (calculosGuardados.length >= 3) {
+            recomendaciones.push(`Has comparado ${calculosGuardados.length} escenarios diferentes. Esta variedad te permite tomar una decisión más informada sobre tu plan de ahorro.`);
+        }
+        
+        // Agregar recomendaciones a la lista
+        recomendaciones.forEach(recomendacion => {
+            const li = document.createElement('li');
+            li.textContent = recomendacion;
+            recomendacionesLista.appendChild(li);
+        });
+    }
+    
+    // Función para seleccionar el mejor cálculo
+    function seleccionarMejorCalculo(id) {
+        const calculo = calculosGuardados.find(c => c.id === id);
+        if (calculo) {
+            alert(`Has seleccionado "${calculo.nombre}" como tu mejor opción.\n\nProyección: $${calculo.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nRecuperación: $${calculo.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nDiferencia: $${calculo.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nBeneficio Fiscal: $${calculo.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`);
+        }
+    }
+    
+    // Función para generar PDF de comparación
+    function generarPDFComparacion() {
+        if (calculosGuardados.length === 0) {
+            alert('No hay cálculos para comparar. Guarda al menos un cálculo antes de generar el PDF.');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Título
+        doc.setFontSize(20);
+        doc.setTextColor(109, 76, 65);
+        doc.text('Comparación de Cálculos UDI', 105, 20, { align: 'center' });
+        
+        // Fecha
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Generado el: ${new Date().toLocaleDateString('es-MX')}`, 105, 30, { align: 'center' });
+        
+        let yPos = 50;
+        
+        // Tabla de cálculos
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        
+        // Encabezados de tabla
+        doc.setFillColor(109, 76, 65);
+        doc.setTextColor(255, 255, 255);
+        doc.rect(10, yPos, 190, 10, 'F');
+        doc.text('Nombre', 15, yPos + 7);
+        doc.text('Plazo', 60, yPos + 7);
+        doc.text('Proyección', 85, yPos + 7);
+        doc.text('Recuperación', 125, yPos + 7);
+        doc.text('Diferencia', 165, yPos + 7);
+        
+        yPos += 15;
+        doc.setTextColor(0, 0, 0);
+        
+        // Datos de la tabla
+        calculosGuardados.forEach((calculo, index) => {
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+            
+            // Alternar colores de fila
+            if (index % 2 === 0) {
+                doc.setFillColor(245, 235, 224);
+                doc.rect(10, yPos, 190, 10, 'F');
+            }
+            
+            doc.text(calculo.nombre, 15, yPos + 7);
+            doc.text(`${calculo.plazo} años`, 60, yPos + 7);
+            doc.text(`$${calculo.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 85, yPos + 7);
+            doc.text(`$${calculo.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 125, yPos + 7);
+            
+            // Color para diferencia (verde si positiva, rojo si negativa)
+            if (calculo.diferencia >= 0) {
+                doc.setTextColor(0, 128, 0);
+            } else {
+                doc.setTextColor(255, 0, 0);
+            }
+            doc.text(`$${calculo.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`, 165, yPos + 7);
+            doc.setTextColor(0, 0, 0);
+            
+            yPos += 12;
+        });
+        
+        yPos += 10;
+        
+        // Resumen
+        if (yPos > 250) {
+            doc.addPage();
+            yPos = 20;
+        }
+        
+        doc.setFontSize(14);
+        doc.setTextColor(109, 76, 65);
+        doc.text('Resumen y Recomendaciones', 105, yPos, { align: 'center' });
+        yPos += 15;
+        
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        
+        // Encontrar los mejores cálculos
+        const mejorProyeccion = calculosGuardados.reduce((prev, current) => 
+            (prev.proyeccion > current.proyeccion) ? prev : current
+        );
+        
+        const mejorRecuperacion = calculosGuardados.reduce((prev, current) => 
+            (prev.recuperacion > current.recuperacion) ? prev : current
+        );
+        
+        const mejorBeneficio = calculosGuardados.reduce((prev, current) => 
+            (prev.beneficioFiscal > current.beneficioFiscal) ? prev : current
+        );
+        
+        const mejorDiferencia = calculosGuardados.reduce((prev, current) => 
+            (current.diferencia > prev.diferencia) ? current : prev
+        );
+        
+        // Agregar resumen al PDF
+        const resumenText = [
+            `Mejor proyección: ${mejorProyeccion.nombre} ($${mejorProyeccion.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })})`,
+            `Mejor recuperación: ${mejorRecuperacion.nombre} ($${mejorRecuperacion.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })})`,
+            `Mejor beneficio fiscal: ${mejorBeneficio.nombre} ($${mejorBeneficio.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })})`,
+            `Mejor diferencia: ${mejorDiferencia.nombre} ($${mejorDiferencia.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })})`
+        ];
+        
+        resumenText.forEach(texto => {
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+            doc.text(texto, 15, yPos);
+            yPos += 7;
+        });
+        
+        yPos += 5;
+        
+        // Recomendaciones
+        if (yPos > 250) {
+            doc.addPage();
+            yPos = 20;
+        }
+        
+        doc.setFontSize(12);
+        doc.setTextColor(109, 76, 65);
+        doc.text('Recomendaciones:', 15, yPos);
+        yPos += 10;
+        
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        
+        const recomendaciones = [
+            `Has comparado ${calculosGuardados.length} escenarios diferentes.`,
+            'Considera tus objetivos financieros al seleccionar la mejor opción.',
+            'Recuerda que los cálculos son proyecciones basadas en los parámetros ingresados.',
+            'Consulta con un asesor financiero para tomar la decisión final.'
+        ];
+        
+        recomendaciones.forEach((recomendacion, index) => {
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+            doc.text(`${index + 1}. ${recomendacion}`, 20, yPos);
+            yPos += 7;
+        });
+        
+        // Guardar PDF
+        doc.save('Comparacion_Calculos_UDI.pdf');
+    }
+
+    // Inicializar la sección de comparación de cálculos
+    actualizarCalculosGuardados();
     // --- FUNCIÓN PRINCIPAL para generar el reporte HTML en una nueva ventana con opciones de descarga ---
     function generarReporteYDescargar() {
         const nombre = document.getElementById('nombre').value.trim();
