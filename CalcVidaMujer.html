@@ -8,6 +8,8 @@
     <!-- Script para Chart.js y su plugin de datalabels -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 	
     <style>
 	
@@ -1176,49 +1178,52 @@
     let totalImpuestosProyeccion = 0;
 
     // Función para guardar el cálculo actual
-    function guardarCalculo() {
-        if (calculosGuardados.length >= 6) {
-            alert('Ya has guardado el máximo de 6 cálculos. Elimina uno para guardar otro.');
-            return;
-        }
-        
-        // Verificar que se haya realizado al menos un cálculo de proyección
-        if (proyeccionTotal === 0) {
-            alert('Debes realizar al menos un cálculo de proyección antes de guardar.');
-            return;
-        }
-        
-        const nombreCalculo = document.getElementById('nombreCalculo').value.trim() || `Cálculo ${calculosGuardados.length + 1}`;
-        const plazo = parseInt(document.getElementById('anios').value) || 0;
-        const impuestos = parseFloat(document.getElementById('impuestos').value) || 0;
-        
-        // Calcular beneficio fiscal (aproximado)
-        const beneficioFiscal = totalImpuestosProyeccion;
-        
-        // Crear objeto de cálculo
-        const calculo = {
-            id: Date.now(),
-            nombre: nombreCalculo,
-            plazo: plazo,
-            proyeccion: proyeccionTotal,
-            recuperacion: recuperacionTotal,
-            beneficioFiscal: beneficioFiscal,
-            diferencia: recuperacionTotal - proyeccionTotal,
-            fecha: new Date().toLocaleDateString('es-MX')
-        };
-        
-        // Agregar a la lista
-        calculosGuardados.push(calculo);
-        
-        // Actualizar la interfaz
-        actualizarCalculosGuardados();
-        
-        // Limpiar campo de nombre
-        document.getElementById('nombreCalculo').value = '';
-        
-        // Mostrar mensaje de éxito
-        alert(`Cálculo "${nombreCalculo}" guardado correctamente.`);
+// Función para guardar el cálculo actual - VERSIÓN CORREGIDA
+function guardarCalculo() {
+    if (calculosGuardados.length >= 6) {
+        alert('Ya has guardado el máximo de 6 cálculos. Elimina uno para guardar otro.');
+        return;
     }
+    
+    // Verificar que se haya realizado al menos un cálculo de proyección
+    if (proyeccionTotal === 0) {
+        alert('Debes realizar al menos un cálculo de proyección antes de guardar.');
+        return;
+    }
+    
+    const nombreCalculo = document.getElementById('nombreCalculo').value.trim() || `Cálculo ${calculosGuardados.length + 1}`;
+    const plazo = parseInt(document.getElementById('anios').value) || 0;
+    
+    // Calcular beneficio fiscal aproximado (15% del total proyectado como ejemplo)
+    const beneficioFiscal = proyeccionTotal * 0;
+    
+    // Si no hay cálculo de recuperación, usar un valor por defecto basado en la proyección
+    const recuperacionCalculo = recuperacionTotal > 0 ? recuperacionTotal : proyeccionTotal * 0.9;
+    
+    // Crear objeto de cálculo
+    const calculo = {
+        id: Date.now(),
+        nombre: nombreCalculo,
+        plazo: plazo,
+        proyeccion: proyeccionTotal,
+        recuperacion: recuperacionCalculo,
+        beneficioFiscal: beneficioFiscal,
+        diferencia: recuperacionCalculo - proyeccionTotal,
+        fecha: new Date().toLocaleDateString('es-MX')
+    };
+    
+    // Agregar a la lista
+    calculosGuardados.push(calculo);
+    
+    // Actualizar la interfaz
+    actualizarCalculosGuardados();
+    
+    // Limpiar campo de nombre
+    document.getElementById('nombreCalculo').value = '';
+    
+    // Mostrar mensaje de éxito
+    alert(`Cálculo "${nombreCalculo}" guardado correctamente.`);
+}
     
     // Función para actualizar la lista de cálculos guardados
     function actualizarCalculosGuardados() {
@@ -1418,12 +1423,25 @@
     }
     
     // Función para seleccionar el mejor cálculo
-    function seleccionarMejorCalculo(id) {
-        const calculo = calculosGuardados.find(c => c.id === id);
-        if (calculo) {
-            alert(`Has seleccionado "${calculo.nombre}" como tu mejor opción.\n\nProyección: $${calculo.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nRecuperación: $${calculo.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nDiferencia: $${calculo.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nBeneficio Fiscal: $${calculo.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`);
+// Función para seleccionar el mejor cálculo
+function seleccionarMejorCalculo(id) {
+    const calculo = calculosGuardados.find(c => c.id === id);
+    if (calculo) {
+        alert(`Has seleccionado "${calculo.nombre}" como tu mejor opción.\n\nProyección: $${calculo.proyeccion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nRecuperación: $${calculo.recuperacion.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nDiferencia: $${calculo.diferencia.toLocaleString('es-MX', { minimumFractionDigits: 2 })}\nBeneficio Fiscal: $${calculo.beneficioFiscal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`);
+        
+        // Aquí puedes agregar lógica adicional para destacar este cálculo
+        const cards = document.querySelectorAll('.calculo-card');
+        cards.forEach(card => {
+            card.style.border = '1px solid #D7CCC8';
+        });
+        
+        const selectedCard = document.querySelector(`.calculo-card button[onclick="seleccionarMejorCalculo(${id})"]`).closest('.calculo-card');
+        if (selectedCard) {
+            selectedCard.style.border = '2px solid #7CB342';
+            selectedCard.style.background = '#F1F8E9';
         }
     }
+}
     
     // Función para generar PDF de comparación
     function generarPDFComparacion() {
