@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tríptico - Seguros Monterrey</title>
+<style>
+/* === Estilos Generales === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.print-controls {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.print-controls button {
+    background-color: #1a3d7c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.print-controls button:hover {
+    background-color: #2c5282;
+}
+
+.brochure-container {
+    width: 279mm; /* Cambiado de 297mm a 279mm para carta */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    background: white;
+    margin-bottom: 30px;
+}
+
+.brochure-side {
+    width: 100%;
+    display: flex;
+    page-break-after: always; /* Cada hoja se imprime aparte */
+}
+
+.panel {
+    flex: 1;
+    padding: 10mm; /* Reducido de 15mm a 10mm */
+    border-right: 1px dashed #ccc;
+    min-height: 216mm; /* Cambiado de 210mm a 216mm para carta */
+}
+
+.panel:last-child {
+    border-right: none;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 5mm; /* Reducido de 10mm a 5mm */
+}
+
+.logo img {
+    max-width: 80%;
+    height: auto;
+}
+
+.product-icon {
+    width: 60px; /* Reducido de 70px a 60px */
+    height: 60px; /* Reducido de 70px a 60px */
+    margin: 0 auto 3mm; /* Reducido de 5mm a 3mm */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e6f2ff;
+    border-radius: 50%;
+    font-size: 24px; /* Reducido de 28px a 24px */
+    color: #1a3d7c;
+}
+
+h1 {
+    font-size: 20pt; /* Reducido de 24pt a 20pt */
+    color: #1a3d7c;
+    margin-bottom: 4mm; /* Reducido de 5mm a 4mm */
+    text-align: center;
+}
+
+h2 {
+    font-size: 16pt; /* Reducido de 18pt a 16pt */
+    color: #1a3d7c;
+    margin: 4mm 0 2mm 0; /* Reducido de 6mm/3mm a 4mm/2mm */
+    border-bottom: 1px solid #1a3d7c;
+    padding-bottom: 1mm; /* Reducido de 2mm a 1mm */
+}
+
+h3 {
+    font-size: 12pt; /* Reducido de 14pt a 12pt */
+    color: #2c5282;
+    margin: 3mm 0 1mm 0; /* Reducido de 4mm/2mm a 3mm/1mm */
+}
+
+p, ul {
+    font-size: 9pt; /* Reducido de 10pt a 9pt */
+    line-height: 1.3; /* Reducido de 1.4 a 1.3 */
+    margin-bottom: 2mm; /* Reducido de 3mm a 2mm */
+}
+
+ul {
+    padding-left: 4mm; /* Reducido de 5mm a 4mm */
+}
+
+li {
+    margin-bottom: 1mm; /* Reducido de 2mm a 1mm */
+}
+
+.contact-info {
+    background-color: #f0f7ff;
+    padding: 3mm; /* Reducido de 4mm a 3mm */
+    margin-top: 5mm; /* Reducido de 8mm a 5mm */
+    border-radius: 2mm; /* Reducido de 3mm a 2mm */
+    font-size: 8pt; /* Reducido de 9pt a 8pt */
+}
+
+.highlight {
+    background-color: #fff8e1;
+    padding: 2mm; /* Reducido de 3mm a 2mm */
+    margin: 2mm 0; /* Reducido de 3mm a 2mm */
+    border-left: 3px solid #ffc107;
+}
+
+.product-card {
+    margin-bottom: 4mm; /* Reducido de 6mm a 4mm */
+    padding: 3mm; /* Reducido de 4mm a 3mm */
+    border-radius: 2mm;
+    background-color: #f9f9f9;
+}
+
+.benefits-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.benefits-list li:before {
+    content: "✓ ";
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.back-side-content {
+    background: linear-gradient(to bottom, #050505, #2c5282);
+    color: white;
+    height: 100%;
+    padding: 8mm; /* Reducido de 10mm a 8mm */
+    border-radius: 5px;
+}
+
+.back-side-content h2 {
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+.feature-item {
+    margin-bottom: 3mm;
+    padding-bottom: 2mm;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+/* === Estilos para impresión === */
+@media print {
+    body {
+        width: 279mm; /* Cambiado de 297mm a 279mm para carta */
+        height: 216mm; /* Cambiado de 210mm a 216mm para carta */
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    .print-controls {
+        display: none;
+    }
+
+    .brochure-container {
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .brochure-side {
+        height: 216mm; /* Cambiado de 210mm a 216mm para carta */
+    }
+
+    .panel {
+        border-right: 1px solid #ccc;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    @page {
+        margin: 0;
+        size: letter landscape; /* Cambiado de A4 landscape a letter landscape */
+    }
+}
+</style>
+</head>
+<body>
+<div class="print-controls">
+    <button onclick="printBrochure()">Imprimir Hoja 1 y 2</button>
+    <p><small>Nota: Configure la impresión a doble cara o imprima cada hoja por separado</small></p>
+</div>
+
+<!-- === HOJA 1 (FRENTE - INFORMACIÓN INSTITUCIONAL) === -->
+<div class="brochure-container">
+    <div class="brochure-side">
+        <!-- Panel 1 (Izquierdo - ¿Por qué elegir Seguros Monterrey?) -->
+        <div class="panel">
+            <div class="logo">
+                <img src="SegurosMNYL.png" alt="Loyd´s & Navarro" style="max-width: 150px;">
+            </div>
+            
+            <h2>¿Por qué elegir Seguros Monterrey?</h2>
+            
+            <div class="feature-item">
+                <h3>Más de 50 años de experiencia</h3>
+                <p>Formamos parte de uno de los grupos financieros más sólidos de México, con trayectoria y prestigio en el mercado asegurador.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Solidez y respaldo</h3>
+                <p>Contamos con el respaldo financiero y la solvencia para cumplir con nuestras promesas y compromisos con nuestros clientes.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Cobertura nacional</h3>
+                <p>Estamos presentes en toda la República Mexicana, con una amplia red de agentes y corredores de seguros.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Innovación constante</h3>
+                <p>Desarrollamos productos y servicios innovadores que se adaptan a las cambiantes necesidades de nuestros clientes.</p>
+            </div>
+        </div>
+
+        <!-- Panel 2 (Central - Nuestro Compromiso) -->
+        <div class="panel">
+            <h2>Nuestro Compromiso</h2>
+            
+            <div class="feature-item">
+                <h3>Servicio personalizado</h3>
+                <p>Cada cliente es único, por eso ofrecemos asesoría personalizada para diseñar la solución que mejor se adapte a sus necesidades.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Transparencia</h3>
+                <p>Creemos en relaciones claras y honestas. Explicamos todos los términos, condiciones y beneficios de manera sencilla.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Atención oportuna</h3>
+                <p>En caso de siniestro, nuestro equipo está preparado para brindarle la atención y apoyo que necesita en el momento más crucial.</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3>Valor agregado</h3>
+                <p>Más que un seguro, ofrecemos tranquilidad y protección para su patrimonio y el futuro de su familia.</p>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>¿Por qué es importante protegerse?</strong></p>
+                <p>Porque el amor a su familia trasciende. Crear hábitos financieros heredables. Aportar en años productivos para disfrutar en el futuro.</p>
+            </div>
+        </div>
+
+        <!-- Panel 3 (Derecho - Portada con Logo e Información de Contacto) -->
+        <div class="panel">
+            <div class="logo">
+                <img src="logoa.png" alt="Loyd´s & Navarro" style="max-width: 150px;">
+            </div>
+            <h3>Preservando tu futuro financiero</h3>
+            <p><strong>Estimado cliente:</strong></p>
+            <p>Le presento nuestra selección de planes de Seguros Monterrey, diseñados para brindarle protección y tranquilidad en cada etapa de su vida. Ofrecemos soluciones personalizadas en seguros de Vida, Ahorro y Gastos Médicos Mayores.</p>
+            <p>Mi objetivo es ayudarle a elegir la mejor opción para proteger su patrimonio y el futuro de su familia.</p>
+            
+            <div class="contact-info">
+                <h3>Información de Contacto</h3>
+                <p><strong>Loyd´s & Navarro</strong></p>
+                <p>Agente de Seguros</p>
+                <p>Av. Paseo de la Reforma #342, piso 18, despacho 19</p>
+                <p>Juárez, Cuauhtémoc, 06600, CDMX</p>
+                <br>
+                <p><strong>Teléfonos:</strong> 55 44 68 35 47 / 722 588 6862</p>
+                <p><strong>Correo:</strong> reservamatematica@gmail.com</p>
+                <p><strong>Horario:</strong> Lunes a Viernes 9:00-18:00, Sábados 9:00-14:00</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 5mm;">
+                <p>Visite nuestro sitio y redes sociales</p>
+                <div class="logo">
+                    <img src="QR.png" alt="Loyd´s & Navarro" style="max-width: 100px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- === HOJA 2 (REVERSO - TODOS LOS PRODUCTOS) === -->
+<div class="brochure-container">
+    <div class="brochure-side">
+        <!-- Panel 1 (Izquierdo - Productos) -->
+        <div class="panel">
+            <div class="product-card">
+                <div class="product-icon">🎓</div>
+                <h2>Segubeca</h2>
+                <p><strong>Plan educativo de ahorro programado</strong> para garantizar el futuro académico de sus hijos.</p>
+                <h3>Beneficios principales:</h3>
+                <ul class="benefits-list">
+                    <li>Ahorro programado para educación superior</li>
+                    <li>Protección en caso de fallecimiento o incapacidad</li>
+                    <li>Flexibilidad en montos y plazos</li>
+                    <li>Múltiples beneficiarios</li>
+                </ul>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-icon">👩</div>
+                <h2>Vida Mujer</h2>
+                <p>Combina <strong>protección de vida, salud y ahorro</strong>, diseñado específicamente para mujeres.</p>
+                <h3>Coberturas especializadas:</h3>
+                <ul class="benefits-list">
+                    <li>Protección integral para la mujer</li>
+                    <li>Coberturas ginecológicas</li>
+                    <li>Protección oncológica</li>
+                    <li>Ahorro con propósito</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 2 (Central - Productos) -->
+        <div class="panel">
+            <div class="product-card">
+                <div class="product-icon">👨‍💼</div>
+                <h2>Imagina Ser</h2>
+                <p><strong>Plan personal de ahorro para el retiro</strong>, ideal para profesionistas independientes.</p>
+                <h3>Características:</h3>
+                <ul class="benefits-list">
+                    <li>Ahorro sistemático para el retiro</li>
+                    <li>Protección patrimonial integrada</li>
+                    <li>Flexibilidad en aportaciones</li>
+                    <li>Diversificación de inversiones</li>
+                </ul>
+                <h3>Ventajas fiscales:</h3>
+                <ul class="benefits-list">
+                    <li>Deducción de aportaciones</li>
+                    <li>Crecimiento con diferimiento fiscal</li>
+                    <li>Herencia libre de impuestos</li>
+                </ul>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-icon">🛡️</div>
+                <h2>ORVI 99</h2>
+                <p><strong>Seguro de vida vitalicio</strong> con opción de ahorro mediante aumentos de valor.</p>
+                <ul class="benefits-list">
+                    <li>Protección vitalicia</li>
+                    <li>Componente de ahorro con crecimiento</li>
+                    <li>Posibilidad de rescates parciales</li>
+                    <li>Diversas opciones de pago</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 3 (Derecho - Productos) -->
+        <div class="panel">
+            <div class="product-card">
+                <div class="product-icon">🎯</div>
+                <h2>Objetivo Vida</h2>
+                <p><strong>Seguro de vida con ahorro</strong> que permite construir un capital a futuro.</p>
+                <ul class="benefits-list">
+                    <li>Plazos adaptables: 5, 10, 15, 20 años</li>
+                    <li>Múltiples opciones de beneficiarios</li>
+                    <li>Ajuste de coberturas</li>
+                    <li>Protección y ahorro combinados</li>
+                </ul>
+            </div>
+            
+            <div class="contact-info">
+                <p><strong>¿Tiene preguntas sobre nuestros productos?</strong></p>
+                <p>No dude en contactarnos para una asesoría personalizada sin compromiso.</p>
+                <br>
+                <p><strong>Contacto:</strong></p>
+                <p>Tel: 55 44 68 35 47 - 722 588 6862</p>
+                <p>Email: reservamatematica@gmail.com</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 5mm;">
+                <p>Para más información escanee el código QR</p>
+                <div class="logo">
+                    <img src="QR.png" alt="Loyd´s & Navarro" style="max-width: 100px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function printBrochure() {
+    window.print();
+}
+</script>
+</body>
+</html>
