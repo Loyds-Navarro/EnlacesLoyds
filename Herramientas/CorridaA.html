@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>UDI PRO MAX · Datos visibles · Reporte imprimible</title>
+    <!-- Librerías -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Poppins', Roboto, sans-serif;
+            background: linear-gradient(135deg, #051f32 0%, #0c3e5e 100%);
+            padding: 30px 20px;
+            color: #f0f9ff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(8, 35, 55, 0.88);
+            backdrop-filter: blur(4px);
+            border-radius: 36px;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5);
+            padding: 24px 28px 36px;
+            border: 1px solid rgba(52, 152, 219, 0.5);
+        }
+        .header-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: linear-gradient(95deg, #0a4c6e, #0f6992);
+            border-radius: 60px;
+            padding: 12px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #ffb347;
+        }
+        .logo-left img, .logo-right img {
+            max-height: 70px;
+            max-width: 170px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            /* Fondo azul en lugar de blanco */
+            background: #0a4c6e;
+            border-radius: 16px;
+            padding: 4px;
+        }
+        .titulo-central {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 24px;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+        }
+        .titulo-central i { font-size: 2rem; color: #ffc857; text-shadow: 0 2px 3px black; }
+        h2 {
+            margin: 0;
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #fff, #ffda99);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            background: #125980cc;
+            padding: 16px 24px;
+            border-radius: 56px;
+            margin: 15px 0 20px;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            border: 1px solid #3f9ad0;
+        }
+        .tool-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #136b97dd;
+            padding: 8px 20px;
+            border-radius: 48px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border: 1px solid #68b4e6;
+        }
+        .tool-group label { font-size: 12px; font-weight: 600; color: #ffecb3; letter-spacing: 0.5px; }
+        .tool-group label i { margin-right: 5px; }
+        input, button {
+            border-radius: 40px;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        input {
+            background: #f0f9ff;
+            border: 1px solid #8bc6e5;
+            color: #043349;
+        }
+        button {
+            background: #f5b042;
+            color: #0a2a3b;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            font-weight: 700;
+        }
+        button i { margin-right: 6px; }
+        button:hover { background: #ffca6c; transform: translateY(-2px); }
+        .cliente-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            background: #0b6088cc;
+            padding: 16px 28px;
+            border-radius: 48px;
+            margin-bottom: 25px;
+            border: 1px solid #b8defa;
+        }
+        .cliente-card .tool-group { background: #187daa; flex: 1; min-width: 180px; }
+        .sim-card {
+            background: linear-gradient(105deg, #116d99, #0a557a);
+            border-left: 10px solid #ffba5a;
+            padding: 18px 24px;
+            border-radius: 32px;
+            margin: 20px 0;
+            font-size: 1rem;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+        }
+        .reco-box {
+            background: #1e7fb0;
+            border-left: 6px solid #f9d371;
+            margin-top: 14px;
+            padding: 12px 20px;
+            border-radius: 28px;
+            font-size: 0.9rem;
+        }
+        .table-wrapper {
+            border-radius: 28px;
+            background: #105a7c;
+            padding: 6px;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px black;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        th {
+            background: #1f6f9e;
+            color: white;
+            font-weight: 800;
+            padding: 12px 6px;
+            font-size: 11px;
+        }
+        td {
+            background: #fefefe;
+            color: #043f5c;
+            padding: 8px 5px;
+            font-weight: 500;
+        }
+        .graf-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            margin: 30px 0 20px;
+        }
+        .line-box {
+            flex: 2;
+            min-width: 400px;
+        }
+        .bar-box {
+            flex: 1.5;
+            min-width: 300px;
+        }
+        .line-box, .bar-box, .pie-box {
+            background: #0b4463dd;
+            backdrop-filter: blur(2px);
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+            border: 1px solid #4797c7;
+        }
+        .line-box canvas, .bar-box canvas, .pie-box canvas {
+            background: white;
+            border-radius: 24px;
+            padding: 8px;
+        }
+        #graf {
+            max-height: 350px !important;
+            height: auto;
+            min-height: 300px;
+        }
+        h4 {
+            color: #ffeaaf;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: #f0b429;
+            color: #0a3f57;
+            border-radius: 50px;
+            padding: 5px 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 12px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 12px;
+            color: #cce7ff;
+            border-top: 1px solid #2883b3;
+            padding-top: 18px;
+        }
+        .pie-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #0e577b;
+            padding: 8px 15px;
+            border-radius: 60px;
+            margin-bottom: 15px;
+        }
+        .pie-control label { font-weight: bold; }
+        @media (max-width: 800px) {
+            .container { padding: 15px; }
+            h2 { font-size: 1.4rem; }
+            .line-box { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-logos">
+        <div class="logo-left">
+            <img id="logoIzquierdo" src="https://loydsnavarro.com/path/to/logo-loyds-navarro.png" alt="Loyds Navarro" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%2080%22%3E%3Crect%20width%3D%22200%22%20height%3D%2280%22%20fill%3D%22%23004a7c%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2245%22%20fill%3D%22white%22%20font-size%3D%2216%22%3ELoyds%20Navarro%3C%2Ftext%3E%3C%2Fsvg%3E'">
+        </div>
+        <div class="titulo-central">
+            <i class="fas fa-chart-line"></i>
+            <h2>Corrida actuarial a pesos</h2>
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="logo-right">
+            <img id="logoDerecho" src="https://images.seeklogo.com/logo-png/18/2/seguros-monterrey-new-york-life-logo-png_seeklogo-182696.png" alt="Seguros Monterrey" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%2080%22%3E%3Crect%20width%3D%22200%22%20height%3D%2280%22%20fill%3D%22%23004a7c%22%2F%3E%3Ctext%20x%3D%2210%22%20y%3D%2245%22%20fill%3D%22white%22%20font-size%3D%2212%22%3ESeguros%20Monterrey%3C%2Ftext%3E%3C%2Fsvg%3E'">
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="tool-group">
+            <label><i class="fas fa-file-pdf"></i> Cargar PDF</label>
+            <input type="file" id="pdfFile" accept="application/pdf">
+        </div>
+        <div class="tool-group">
+            <label><i class="fas fa-coins"></i> Valor UDI base ($)</label>
+            <input type="number" id="valorUdi" value="8.5" step="0.0001">
+        </div>
+        <div class="tool-group">
+            <label><i class="fas fa-chart-simple"></i> Inflación %</label>
+            <input type="number" id="inflacion" value="4.5" step="0.1">
+        </div>
+        <div class="tool-group">
+            <button onclick="convertirAPesos()"><i class="fas fa-exchange-alt"></i> Convertir a Pesos</button>
+            <button onclick="resetearAUDIs()" id="btnResetUDI"><i class="fas fa-undo-alt"></i> Volver a UDIs</button>
+            <button onclick="simularCancelacion()"><i class="fas fa-calculator"></i> Simular Cancelación</button>
+            <button onclick="generarReporteImprimible()"><i class="fas fa-print"></i> Reporte Imprimible</button>
+        </div>
+    </div>
+
+    <div class="cliente-card">
+        <div class="tool-group">
+            <label><i class="fas fa-user"></i> Nombre del Cliente</label>
+            <input type="text" id="nombreCliente" placeholder="Ej: Juan Pérez">
+        </div>
+        <div class="tool-group">
+            <label><i class="fas fa-box"></i> Producto / Póliza</label>
+            <input type="text" id="producto" placeholder="UDI Master Plus">
+        </div>
+        <div class="tool-group">
+            <label><i class="fas fa-calendar-alt"></i> Plazo (años)</label>
+            <input type="number" id="plazoAnios" placeholder="20">
+        </div>
+    </div>
+
+    <div id="simResultado" class="sim-card">
+        <i class="fas fa-lightbulb"></i> Simulación con umbral de rentabilidad ≥95% · Datos interactivos.
+    </div>
+
+    <div class="table-wrapper">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Año</th>
+                    <th>Valor UDI (MXN)</th>
+                    <th>Edad</th>
+                    <th>PB</th>
+                    <th>PP</th>
+                    <th>Costo seguro</th>
+                    <th>AF</th>
+                    <th>BMA</th>
+                    <th>Fallec.</th>
+                    <th>Intereses</th>
+                    <th>Fondo</th>
+                    <th>Valor</th>
+                    <th>Aportación</th>
+                    <th>Ahorro</th>
+                    <th>Utilidad</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody id="tb"></tbody>
+        </table>
+    </div>
+
+    <div class="graf-container">
+        <div class="line-box">
+            <h4><i class="fas fa-chart-line"></i> Rentabilidad sobre aportes (%)</h4>
+            <canvas id="graf" width="800" height="350" style="width:100%; height:auto; max-height:350px"></canvas>
+            <div class="badge"><i class="fas fa-percent"></i> % acumulado / aportes totales</div>
+        </div>
+        <div class="bar-box">
+            <h4><i class="fas fa-chart-bar"></i> Comparativa anual</h4>
+            <div class="pie-control" style="justify-content: space-between;">
+                <label><i class="fas fa-calendar-week"></i> Año:</label>
+                <input type="number" id="barYear" min="1" value="1" step="1" style="width:90px;">
+                <span id="monedaHint" style="background:#023b58; padding:3px 12px; border-radius:40px;">UDIs</span>
+            </div>
+            <canvas id="barChartCanvas" width="400" height="250" style="max-height: 250px; width:100%"></canvas>
+            <p style="font-size:11px; text-align:center; margin-top:8px;"><i class="fas fa-info-circle"></i> Costo seguro · Aportación · Ahorro · Utilidad</p>
+        </div>
+    </div>
+
+    <div class="graf-container">
+        <div class="pie-box">
+            <h4><i class="fas fa-chart-pie"></i> Distribución de la Aportación Anual</h4>
+            <div class="pie-control">
+                <label><i class="fas fa-calendar-alt"></i> Año:</label>
+                <input type="number" id="pieYear1" min="1" value="1" step="1" style="width:80px;">
+                <span style="font-size:12px;">Costo de seguro vs Ahorro neto</span>
+            </div>
+            <canvas id="pieChartAportacion" width="300" height="230" style="max-height: 230px; width:100%"></canvas>
+        </div>
+        <div class="pie-box">
+            <h4><i class="fas fa-chart-pie"></i> Estructura del Fondo Acumulado</h4>
+            <div class="pie-control">
+                <label><i class="fas fa-calendar-alt"></i> Año:</label>
+                <input type="number" id="pieYear2" min="1" value="1" step="1" style="width:80px;">
+                <span style="font-size:12px;">Aportaciones netas vs Utilidad</span>
+            </div>
+            <canvas id="pieChartFondo" width="300" height="230" style="max-height: 230px; width:100%"></canvas>
+        </div>
+    </div>
+    <footer><i class="fas fa-chart-simple"></i> Números visibles en todas las gráficas · Reporte imprimible con logos garantizados y cabecera azul</footer>
+</div>
+
+<script>
+    // Registrar plugin de datalabels
+    Chart.register(ChartDataLabels);
+    Chart.defaults.set('plugins.datalabels', {
+        color: '#0a2f4a',
+        backgroundColor: 'rgba(255,255,224,0.7)',
+        borderRadius: 4,
+        padding: { left: 4, right: 4, top: 2, bottom: 2 },
+        font: { weight: 'bold', size: 10 },
+        formatter: (value, context) => {
+            if (context.chart.config.type === 'pie') {
+                let total = context.dataset.data.reduce((a,b) => a+b, 0);
+                let percent = ((value / total) * 100).toFixed(1);
+                return `${value.toFixed(0)} (${percent}%)`;
+            }
+            return typeof value === 'number' ? value.toFixed(0) : value;
+        }
+    });
+
+    let tablaData = [], currentData = [], modoPesos = false;
+    let lineChart = null, barChartInstance = null, pieChart1 = null, pieChart2 = null;
+
+    const tbBody = document.getElementById("tb");
+    const barYearInput = document.getElementById("barYear");
+    const pieYear1Input = document.getElementById("pieYear1");
+    const pieYear2Input = document.getElementById("pieYear2");
+    const simResultDiv = document.getElementById("simResultado");
+    const monedaHint = document.getElementById("monedaHint");
+    const btnReset = document.getElementById("btnResetUDI");
+
+    function obtenerFactorUDI(anio) {
+        let udiBase = parseFloat(document.getElementById("valorUdi").value) || 8.5;
+        let inflacion = parseFloat(document.getElementById("inflacion").value) / 100 || 0.045;
+        return udiBase * Math.pow(1 + inflacion, anio - 1);
+    }
+
+    function formatearFactorUDI(factor) {
+        return "$ " + factor.toLocaleString('es-MX', {minimumFractionDigits: 4, maximumFractionDigits: 4});
+    }
+
+    function formatearNumero(valor) {
+        if(modoPesos) return "$ " + valor.toLocaleString('es-MX',{minimumFractionDigits:2, maximumFractionDigits:2});
+        else return valor.toLocaleString('es-MX',{minimumFractionDigits:2, maximumFractionDigits:2}) + " UDI";
+    }
+
+    function renderizarTabla() {
+        tbBody.innerHTML = "";
+        if(!currentData.length) return;
+        currentData.forEach(d => {
+            const factor = obtenerFactorUDI(d.anio);
+            const factorFormateado = formatearFactorUDI(factor);
+            tbBody.innerHTML += `<tr>
+                <td>${d.anio}</td>
+                <td>${factorFormateado}</td>
+                <td>${d.edad}</td>
+                <td>${formatearNumero(d.pb)}</td>
+                <td>${formatearNumero(d.pp)}</td>
+                <td>${formatearNumero(d.costo)}</td>
+                <td>${formatearNumero(d.af)}</td>
+                <td>${formatearNumero(d.bma)}</td>
+                <td>${formatearNumero(d.fallecimiento)}</td>
+                <td>${formatearNumero(d.intereses)}</td>
+                <td>${formatearNumero(d.fondo)}</td>
+                <td>${formatearNumero(d.valor)}</td>
+                <td>${formatearNumero(d.aport)}</td>
+                <td>${formatearNumero(d.ahorro)}</td>
+                <td>${formatearNumero(d.utilidad)}</td>
+                <td>${d.rec.toFixed(2)}%</td>
+            </tr>`;
+        });
+    }
+
+    document.getElementById("pdfFile").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async function(ev) {
+            try {
+                const pdfData = new Uint8Array(ev.target.result);
+                const pdf = await pdfjsLib.getDocument(pdfData).promise;
+                let allTextRows = [];
+                for (let p = 1; p <= pdf.numPages; p++) {
+                    const page = await pdf.getPage(p);
+                    const content = await page.getTextContent();
+                    let linesMap = {};
+                    content.items.forEach(item => {
+                        let y = Math.round(item.transform[5]);
+                        if (!linesMap[y]) linesMap[y] = [];
+                        linesMap[y].push(item.str);
+                    });
+                    Object.keys(linesMap).sort((a,b)=>b-a).forEach(y => allTextRows.push(linesMap[y].join(" ")));
+                }
+                procesarTextoPDF(allTextRows);
+            } catch(err) { alert("Error al leer PDF: "+err.message); }
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+    function procesarTextoPDF(rowsArray) {
+        let data = [], anio = 1, acumAport = 0;
+        for (let row of rowsArray) {
+            row = row.replace(/,/g,"").trim();
+            let nums = row.match(/\d+/g);
+            if (!nums || nums.length<10) continue;
+            let edad = parseInt(nums[0]);
+            if (edad<18 || edad>100) continue;
+            let pb = parseFloat(nums[1])||0, pp = parseFloat(nums[2])||0, costo = parseFloat(nums[3])||0;
+            let af = parseFloat(nums[4])||0, bma = parseFloat(nums[5])||0, fallecimiento = parseFloat(nums[6])||0;
+            let intereses = parseFloat(nums[nums.length-3])||0, fondo = parseFloat(nums[nums.length-2])||0, valor = parseFloat(nums[nums.length-1])||0;
+            let aport = pb+pp, ahorro = aport - costo, utilidad = fondo - ahorro;
+            acumAport += aport;
+            let rec = acumAport>0 ? (valor/acumAport)*100 : 0;
+            if(aport<=0 || valor<=0 || rec<0 || rec>500) continue;
+            data.push({ anio, edad, pb, pp, costo, af, bma, fallecimiento, intereses, fondo, valor, aport, ahorro, utilidad, rec });
+            anio++;
+        }
+        if(!data.length) { alert("PDF inválido o sin datos"); return; }
+        tablaData = JSON.parse(JSON.stringify(data));
+        currentData = JSON.parse(JSON.stringify(data));
+        modoPesos = false;
+        monedaHint.innerText = "UDIs originales";
+        btnReset.disabled = true;
+        renderizarTabla();
+        graficarLineaRec();
+        actualizarBarrasYPies();
+    }
+
+    function graficarLineaRec() {
+        const ctx = document.getElementById("graf").getContext("2d");
+        if(lineChart) lineChart.destroy();
+        if(!currentData.length) return;
+        lineChart = new Chart(ctx, {
+            type: "line",
+            data: { labels: currentData.map(d=>d.anio), datasets: [{ label: "Rentabilidad %", data: currentData.map(d=>d.rec), borderColor: "#f5b042", backgroundColor: "rgba(245,176,66,0.1)", borderWidth: 3, tension: 0.2, fill: true, pointBackgroundColor: "#ffcd7e" }] },
+            options: { 
+                responsive: true, maintainAspectRatio: true,
+                plugins: { 
+                    tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(2)}%` } },
+                    datalabels: { align: 'top', offset: 4, formatter: (value) => value.toFixed(1)+"%" }
+                },
+                scales: { y: { title: { display: true, text: "Porcentaje (%)", color: "#ffeaaf" } }, x: { title: { display: true, text: "Año", color: "#ffeaaf" } } }
+            }
+        });
+    }
+
+    function dibujarBarChart(anio) {
+        if(!currentData.length) return;
+        let reg = currentData.find(d=>d.anio===anio);
+        if(!reg) { reg = currentData[0]; barYearInput.value = reg.anio; }
+        const ctx = document.getElementById("barChartCanvas").getContext("2d");
+        if(barChartInstance) barChartInstance.destroy();
+        barChartInstance = new Chart(ctx, {
+            type: "bar",
+            data: { labels: ["💰 Costo seguro", "📥 Aportación", "🏦 Ahorro", "📈 Utilidad"], datasets: [{ label: `Año ${reg.anio} · ${modoPesos?"Pesos ($)":"UDIs"}`, data: [reg.costo, reg.aport, reg.ahorro, reg.utilidad], backgroundColor: ["#e67e22","#3498db","#2ecc71","#f1c40f"], borderRadius: 10 }] },
+            options: { 
+                responsive: true, maintainAspectRatio: true,
+                plugins: { 
+                    tooltip: { callbacks: { label: ctx => ` ${modoPesos?"$":""}${ctx.raw.toFixed(2)} ${modoPesos?"":"UDI"}` } },
+                    datalabels: { anchor: 'end', align: 'top', offset: 2, formatter: (value) => modoPesos ? "$"+value.toFixed(0) : value.toFixed(0)+" UDI" }
+                },
+                scales: { y: { title: { display: true, text: modoPesos?"Monto en pesos ($)":"Monto en UDIs", color: "#ffeaaf" }, beginAtZero: true } }
+            }
+        });
+    }
+
+    function dibujarPieAportacion(anio) {
+        if(!currentData.length) return;
+        let reg = currentData.find(d=>d.anio===anio) || currentData[0];
+        pieYear1Input.value = reg.anio;
+        const ctx = document.getElementById("pieChartAportacion").getContext("2d");
+        if(pieChart1) pieChart1.destroy();
+        pieChart1 = new Chart(ctx, {
+            type: "pie",
+            data: { labels: ["Costo de seguro", "Ahorro neto (aportación - costo)"], datasets: [{ data: [reg.costo, reg.ahorro], backgroundColor: ["#e67e22","#2ecc71"] }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: ctx => `${ctx.label}: ${modoPesos?"$":""}${ctx.raw.toFixed(2)} ${modoPesos?"":"UDI"}` } } }, legend: { position: "bottom", labels: { color: "white" } } }
+        });
+    }
+
+    function dibujarPieFondo(anio) {
+        if(!currentData.length) return;
+        let reg = currentData.find(d=>d.anio===anio) || currentData[0];
+        pieYear2Input.value = reg.anio;
+        const ctx = document.getElementById("pieChartFondo").getContext("2d");
+        if(pieChart2) pieChart2.destroy();
+        pieChart2 = new Chart(ctx, {
+            type: "pie",
+            data: { labels: ["Aportaciones netas (ahorro)", "Utilidad / Rendimientos"], datasets: [{ data: [Math.max(0,reg.ahorro), Math.max(0,reg.utilidad)], backgroundColor: ["#3498db","#f1c40f"] }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: ctx => `${ctx.label}: ${modoPesos?"$":""}${ctx.raw.toFixed(2)} ${modoPesos?"":"UDI"}` } } }, legend: { position: "bottom", labels: { color: "white" } } }
+        });
+    }
+
+    function actualizarBarrasYPies() {
+        if(!currentData.length) return;
+        let minY = currentData[0].anio, maxY = currentData[currentData.length-1].anio;
+        barYearInput.min = minY; barYearInput.max = maxY;
+        pieYear1Input.min = minY; pieYear2Input.min = minY;
+        pieYear1Input.max = maxY; pieYear2Input.max = maxY;
+        let yearBar = parseInt(barYearInput.value);
+        if(isNaN(yearBar) || yearBar<minY) yearBar = minY;
+        barYearInput.value = yearBar;
+        dibujarBarChart(yearBar);
+        dibujarPieAportacion(parseInt(pieYear1Input.value) || minY);
+        dibujarPieFondo(parseInt(pieYear2Input.value) || minY);
+    }
+    barYearInput.addEventListener("change", ()=> { if(currentData.length) dibujarBarChart(parseInt(barYearInput.value)); });
+    pieYear1Input.addEventListener("change", ()=> { if(currentData.length) dibujarPieAportacion(parseInt(pieYear1Input.value)); });
+    pieYear2Input.addEventListener("change", ()=> { if(currentData.length) dibujarPieFondo(parseInt(pieYear2Input.value)); });
+
+    function convertirAPesos() {
+        if(!tablaData.length) { alert("Cargue un PDF primero"); return; }
+        let udi = parseFloat(document.getElementById("valorUdi").value) || 8.5;
+        let inflacion = parseFloat(document.getElementById("inflacion").value)/100 || 0.045;
+        let newData = [], acum=0;
+        for(let i=0; i<tablaData.length; i++) {
+            const d = tablaData[i];
+            const factor = udi * Math.pow(1+inflacion, i);
+            let conv = {...d};
+            conv.pb = d.pb*factor; conv.pp = d.pp*factor; conv.costo = d.costo*factor;
+            conv.af = d.af*factor; conv.bma = d.bma*factor; conv.fallecimiento = d.fallecimiento*factor;
+            conv.intereses = d.intereses*factor; conv.fondo = d.fondo*factor; conv.valor = d.valor*factor;
+            conv.aport = conv.pb+conv.pp; conv.ahorro = conv.aport - conv.costo;
+            conv.utilidad = conv.fondo - conv.ahorro;
+            acum += conv.aport;
+            conv.rec = (conv.valor/acum)*100;
+            newData.push(conv);
+        }
+        currentData = newData;
+        modoPesos = true;
+        monedaHint.innerText = "Pesos ($) convertidos";
+        btnReset.disabled = false;
+        renderizarTabla();
+        graficarLineaRec();
+        actualizarBarrasYPies();
+    }
+
+    function resetearAUDIs() {
+        if(!tablaData.length) return;
+        currentData = JSON.parse(JSON.stringify(tablaData));
+        modoPesos = false;
+        monedaHint.innerText = "UDIs originales";
+        btnReset.disabled = true;
+        renderizarTabla();
+        graficarLineaRec();
+        actualizarBarrasYPies();
+        simResultDiv.innerHTML = "<i class='fas fa-undo'></i> Se restauraron los valores en UDIs.";
+    }
+
+    function simularCancelacion() {
+        let anioSim = parseInt(document.getElementById("anioSim")?.value);
+        if(!anioSim) {
+            let inp = document.getElementById("anioSim");
+            if(!inp) {
+                let newInp = document.createElement("input");
+                newInp.type = "number"; newInp.id = "anioSim"; newInp.placeholder = "Año"; newInp.style.marginLeft="12px"; newInp.style.borderRadius="40px"; newInp.style.padding="5px 12px";
+                document.querySelector("button[onclick='simularCancelacion()']")?.insertAdjacentElement("afterend", newInp);
+                anioSim = parseInt(prompt("Ingrese año a simular"));
+                if(isNaN(anioSim)) return;
+            } else {
+                anioSim = parseInt(inp.value);
+                if(isNaN(anioSim)) { alert("Año inválido"); return; }
+            }
+        }
+        if(!currentData.length) { simResultDiv.innerHTML = "⚠️ No hay datos"; return; }
+        let reg = currentData.find(d=>d.anio===anioSim);
+        if(!reg) { simResultDiv.innerHTML = `❌ Año ${anioSim} no existe`; return; }
+        let rent = reg.rec, valor = modoPesos ? `$${reg.valor.toFixed(2)}` : `${reg.valor.toFixed(2)} UDI`;
+        let recomendacion = rent>=95 ? "🏆 Excelente (>95%). Mantener maximiza ganancias." : (rent<40 ? "📉 Rentabilidad baja, cancelar es pérdida. Espere." : (rent<70 ? "📈 Potencial de crecimiento, no cancele." : "🚀 Muy cerca del 95%, continúe."));
+        simResultDiv.innerHTML = `<i class="fas fa-chart-simple"></i> <strong>Año ${reg.anio}</strong><br>📍 Valor a recibir: ${valor}<br>📊 Rentabilidad: ${rent.toFixed(2)}%<br><div class="reco-box"><i class="fas fa-comment-dots"></i> ${recomendacion} Evite cancelaciones anticipadas.</div>`;
+    }
+
+    // ========== REPORTE IMPRIMIBLE CON LOGOS DE FONDO AZUL ==========
+    async function generarReporteImprimible() {
+        if (!currentData.length) {
+            alert("No hay datos para generar el reporte.");
+            return;
+        }
+
+        // Obtener los src actuales de los logos (ya tienen fallback)
+        const logoIzqSrc = document.getElementById("logoIzquierdo").src;
+        const logoDerSrc = document.getElementById("logoDerecho").src;
+
+        // Capturar gráficos
+        const canvasLinea = document.getElementById("graf");
+        const canvasBar = document.getElementById("barChartCanvas");
+        const canvasPie1 = document.getElementById("pieChartAportacion");
+        const canvasPie2 = document.getElementById("pieChartFondo");
+        const imgLinea = canvasLinea ? canvasLinea.toDataURL('image/png') : '';
+        const imgBar = canvasBar ? canvasBar.toDataURL('image/png') : '';
+        const imgPie1 = canvasPie1 ? canvasPie1.toDataURL('image/png') : '';
+        const imgPie2 = canvasPie2 ? canvasPie2.toDataURL('image/png') : '';
+
+        const nombreCliente = document.getElementById("nombreCliente").value || "Cliente no especificado";
+        const producto = document.getElementById("producto").value || "No especificado";
+        const plazo = document.getElementById("plazoAnios").value || "N/D";
+        const inflacion = document.getElementById("inflacion").value;
+        const fecha = new Date().toLocaleDateString('es-MX');
+        const monedaActual = modoPesos ? "Pesos Mexicanos ($)" : "UDIs";
+
+        const rowsHtml = currentData.map(d => {
+            const factor = obtenerFactorUDI(d.anio);
+            const factorFormateado = formatearFactorUDI(factor);
+            return `<tr>
+                <td>${d.anio}</td>
+                <td>${factorFormateado}</td>
+                <td>${d.edad}</td>
+                <td>${formatearNumero(d.pb)}</td>
+                <td>${formatearNumero(d.pp)}</td>
+                <td>${formatearNumero(d.costo)}</td>
+                <td>${formatearNumero(d.af)}</td>
+                <td>${formatearNumero(d.bma)}</td>
+                <td>${formatearNumero(d.fallecimiento)}</td>
+                <td>${formatearNumero(d.intereses)}</td>
+                <td>${formatearNumero(d.fondo)}</td>
+                <td>${formatearNumero(d.valor)}</td>
+                <td>${formatearNumero(d.aport)}</td>
+                <td>${formatearNumero(d.ahorro)}</td>
+                <td>${formatearNumero(d.utilidad)}</td>
+                <td>${d.rec.toFixed(2)}%</td>
+            </tr>`;
+        }).join('');
+
+        const reportHtml = `<!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"><title>Reporte UDI PRO MAX - ${nombreCliente}</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+            body{font-family:'Segoe UI',Arial,sans-serif;background:#eef2f5;padding:30px;color:#111;}
+            .report-container{max-width:1200px;margin:0 auto;background:#fff;border-radius:32px;box-shadow:0 8px 20px rgba(0,0,0,0.1);overflow:hidden;}
+            /* Encabezado azul */
+            .header{
+                background: linear-gradient(135deg, #0a4c6e, #0f6992);
+                padding: 20px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 20px;
+                border-bottom: 4px solid #ffb347;
+            }
+            .logo-left img, .logo-right img{
+                max-height: 70px;
+                max-width: 170px;
+                background: #0a4c6e;  /* Fondo azul coherente con el header */
+                border-radius: 14px;
+                padding: 6px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            }
+            .titulo-reporte h1{
+                color: #FFE5B4;
+                font-size: 1.7rem;
+                text-shadow: 1px 1px 0 #003d5b;
+                margin-bottom: 5px;
+            }
+            .titulo-reporte p{
+                color: #cce7ff;
+                font-size: 0.8rem;
+            }
+            .info-cliente{
+                background:#eef4fa;
+                padding:16px 24px;
+                margin:25px 30px;
+                border-radius:20px;
+                display:flex;
+                flex-wrap:wrap;
+                justify-content:space-between;
+                border-left:6px solid #ffb347;
+                font-size:0.9rem;
+            }
+            .info-cliente div{ margin: 5px 0; }
+            table{
+                width: calc(100% - 60px);
+                margin: 20px 30px;
+                border-collapse: collapse;
+                font-size: 10px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            th{
+                background: #1f6f9e;
+                color: white;
+                padding: 8px 4px;
+                font-weight: 700;
+            }
+            td,th{
+                border: 1px solid #ccc;
+                padding: 6px 4px;
+                text-align: center;
+            }
+            .graficas{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 25px;
+                margin: 30px;
+            }
+            .grafica{
+                flex: 1;
+                min-width: 280px;
+                background: #f9faff;
+                border-radius: 20px;
+                padding: 15px;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+            .grafica img{
+                max-width: 100%;
+                border-radius: 16px;
+                background: white;
+                border: 1px solid #ddd;
+            }
+            h3{
+                color: #0f6992;
+                margin-bottom: 12px;
+                font-size: 1.2rem;
+            }
+            footer{
+                text-align: center;
+                font-size: 10px;
+                color: #666;
+                border-top: 1px solid #ccc;
+                margin: 20px 30px 25px;
+                padding-top: 15px;
+            }
+            @media print{
+                body{background:white; padding:0;}
+                .report-container{box-shadow:none;}
+                .header{-webkit-print-color-adjust: exact; print-color-adjust: exact;}
+                .logo-left img, .logo-right img{-webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            }
+        </style>
+        </head>
+        <body>
+        <div class="report-container">
+            <div class="header">
+                <div class="logo-left"><img src="${logoIzqSrc}" alt="Loyds Navarro"></div>
+                <div class="titulo-reporte">
+                    <h1>Reporte de Proyección</h1>
+                    <p>Análisis financiero con datos actualizados</p>
+                </div>
+                <div class="logo-right"><img src="${logoDerSrc}" alt="Seguros Monterrey"></div>
+            </div>
+            <div class="info-cliente">
+                <div><strong>Cliente:</strong> ${nombreCliente}</div>
+                <div><strong>Producto:</strong> ${producto}</div>
+                <div><strong>Plazo:</strong> ${plazo} años</div>
+                <div><strong>Fecha:</strong> ${fecha}</div>
+                <div><strong>Inflación:</strong> ${inflacion}%</div>
+                <div><strong>Moneda:</strong> ${monedaActual}</div>
+            </div>
+            <h3 style="margin-left:30px;">📋 Tabla de Proyección</h3>
+            <table>
+                <thead><tr><th>Año</th><th>Valor UDI (MXN)</th><th>Edad</th><th>PB</th><th>PP</th><th>Costo seguro</th><th>AF</th><th>BMA</th><th>Fallec.</th><th>Intereses</th><th>Fondo</th><th>Valor</th><th>Aportación</th><th>Ahorro</th><th>Utilidad</th><th>%</th></tr></thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+            <div class="graficas">
+                <div class="grafica"><h3>📈 Rentabilidad sobre aportes</h3><img src="${imgLinea}"></div>
+                <div class="grafica"><h3>📊 Comparativa anual (año ${barYearInput.value})</h3><img src="${imgBar}"></div>
+            </div>
+            <div class="graficas">
+                <div class="grafica"><h3>🥧 Distribución aportación (año ${pieYear1Input.value})</h3><img src="${imgPie1}"></div>
+                <div class="grafica"><h3>🥧 Estructura del fondo (año ${pieYear2Input.value})</h3><img src="${imgPie2}"></div>
+            </div>
+            <footer>Reporte generado automáticamente por UDI PRO MAX. Los valores se muestran en ${modoPesos ? "pesos mexicanos actualizados por inflación." : "UDIs originales."}</footer>
+        </div>
+        <script>window.onload = () => { window.print(); };<\/script>
+        </body>
+        </html>`;
+
+        const ventana = window.open();
+        if (ventana) {
+            ventana.document.write(reportHtml);
+            ventana.document.close();
+        } else {
+            alert("Permita ventanas emergentes para visualizar el reporte.");
+        }
+    }
+
+    window.convertirAPesos = convertirAPesos;
+    window.resetearAUDIs = resetearAUDIs;
+    window.simularCancelacion = simularCancelacion;
+    window.generarReporteImprimible = generarReporteImprimible;
+
+    if(!document.getElementById("anioSim")) {
+        let inp = document.createElement("input");
+        inp.type = "number"; inp.id = "anioSim"; inp.placeholder = "Año"; inp.style.marginLeft="12px"; inp.style.borderRadius="40px"; inp.style.padding="5px 12px";
+        document.querySelector("button[onclick='simularCancelacion()']")?.insertAdjacentElement("afterend", inp);
+    }
+    btnReset.disabled = true;
+    document.getElementById("valorUdi").addEventListener("input", () => { if(tablaData.length) renderizarTabla(); });
+    document.getElementById("inflacion").addEventListener("input", () => { if(tablaData.length) renderizarTabla(); });
+</script>
+</body>
+</html>
