@@ -8,6 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <!-- SheetJS para exportar a Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,7 +47,6 @@
             max-width: 170px;
             object-fit: contain;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-            /* Fondo azul en lugar de blanco */
             background: #0a4c6e;
             border-radius: 16px;
             padding: 4px;
@@ -173,6 +174,12 @@
             padding: 8px 5px;
             font-weight: 500;
         }
+        tr.fila-proyectada td {
+            background: #d4edda;
+            color: #155724;
+            font-weight: bold;
+            border-top: 2px solid #2ecc71;
+        }
         .graf-container {
             display: flex;
             flex-wrap: wrap;
@@ -191,7 +198,7 @@
             background: #0b4463dd;
             backdrop-filter: blur(2px);
             border-radius: 32px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 12px 24px rgba(0,0,0,0.3);
             border: 1px solid #4797c7;
         }
@@ -245,6 +252,12 @@
             h2 { font-size: 1.4rem; }
             .line-box { min-width: 100%; }
         }
+        .btn-excel {
+            background: #1f8a4c;
+            color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+        .btn-excel:hover { background: #2aa75e; transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -281,6 +294,7 @@
             <button onclick="resetearAUDIs()" id="btnResetUDI"><i class="fas fa-undo-alt"></i> Volver a UDIs</button>
             <button onclick="simularCancelacion()"><i class="fas fa-calculator"></i> Simular Cancelación</button>
             <button onclick="generarReporteImprimible()"><i class="fas fa-print"></i> Reporte Imprimible</button>
+            <button onclick="exportarExcel()" class="btn-excel"><i class="fas fa-file-excel"></i> Descargar Excel</button>
         </div>
     </div>
 
@@ -367,11 +381,10 @@
             <canvas id="pieChartFondo" width="300" height="230" style="max-height: 230px; width:100%"></canvas>
         </div>
     </div>
-    <footer><i class="fas fa-chart-simple"></i> Números visibles en todas las gráficas · Reporte imprimible con logos garantizados y cabecera azul</footer>
+    <footer><i class="fas fa-chart-simple"></i> Porcentajes recalculados automáticamente para los años reales. Fila proyectada: copia exacta de AF, BMA, Fallecimiento, Intereses, Fondo, Valor, Aportación, Ahorro, Utilidad y el % del último año real (sin recalcular).</footer>
 </div>
 
 <script>
-    // Registrar plugin de datalabels
     Chart.register(ChartDataLabels);
     Chart.defaults.set('plugins.datalabels', {
         color: '#0a2f4a',
@@ -410,14 +423,30 @@
         return "$ " + factor.toLocaleString('es-MX', {minimumFractionDigits: 4, maximumFractionDigits: 4});
     }
 
-    function formatearNumero(valor) {
+    function formatearNumero(valor, forcePesos = false) {
+        if (forcePesos) return "$ " + valor.toLocaleString('es-MX',{minimumFractionDigits:2, maximumFractionDigits:2});
         if(modoPesos) return "$ " + valor.toLocaleString('es-MX',{minimumFractionDigits:2, maximumFractionDigits:2});
         else return valor.toLocaleString('es-MX',{minimumFractionDigits:2, maximumFractionDigits:2}) + " UDI";
+    }
+
+    // Recalcula el porcentaje para los años reales (no afecta la fila proyectada)
+    function recalcularPorcentajesReales() {
+        let acumAport = 0;
+        for (let i = 0; i < currentData.length; i++) {
+            acumAport += currentData[i].aport;
+            currentData[i].rec = (currentData[i].valor / acumAport) * 100;
+            if (isNaN(currentData[i].rec) || !isFinite(currentData[i].rec)) currentData[i].rec = 0;
+        }
     }
 
     function renderizarTabla() {
         tbBody.innerHTML = "";
         if(!currentData.length) return;
+
+        // Recalcular porcentajes de las filas reales
+        recalcularPorcentajesReales();
+
+        // Mostrar años reales
         currentData.forEach(d => {
             const factor = obtenerFactorUDI(d.anio);
             const factorFormateado = formatearFactorUDI(factor);
@@ -440,6 +469,72 @@
                 <td>${d.rec.toFixed(2)}%</td>
             </tr>`;
         });
+
+        if (!tablaData.length) return;
+        const ultimoReal = tablaData[tablaData.length - 1]; // datos originales del PDF (siempre en UDIs)
+        const anioProyectado = ultimoReal.anio + 1;
+        const factorProyectado = obtenerFactorUDI(anioProyectado);
+        const factorProyectadoFormateado = formatearFactorUDI(factorProyectado);
+        
+        // Copiar todos los campos del último año real
+        let afBase = ultimoReal.af;
+        let bmaBase = ultimoReal.bma;
+        let fallecimientoBase = ultimoReal.fallecimiento;
+        let interesesBase = ultimoReal.intereses;
+        let fondoBase = ultimoReal.fondo;
+        let valorBase = ultimoReal.valor;
+        let aportBase = ultimoReal.aport;
+        let ahorroBase = ultimoReal.ahorro;
+        let utilidadBase = ultimoReal.utilidad;
+        let porcentajeBase = ultimoReal.rec;   // <--- COPIADO exactamente del PDF
+        
+        let afMostrar, bmaMostrar, fallecimientoMostrar, interesesMostrar, fondoMostrar, valorMostrar, aportMostrar, ahorroMostrar, utilidadMostrar;
+        
+        if (modoPesos) {
+            afMostrar = afBase * factorProyectado;
+            bmaMostrar = bmaBase * factorProyectado;
+            fallecimientoMostrar = fallecimientoBase * factorProyectado;
+            interesesMostrar = interesesBase * factorProyectado;
+            fondoMostrar = fondoBase * factorProyectado;
+            valorMostrar = valorBase * factorProyectado;
+            aportMostrar = aportBase * factorProyectado;
+            ahorroMostrar = ahorroBase * factorProyectado;
+            utilidadMostrar = utilidadBase * factorProyectado;
+        } else {
+            afMostrar = afBase;
+            bmaMostrar = bmaBase;
+            fallecimientoMostrar = fallecimientoBase;
+            interesesMostrar = interesesBase;
+            fondoMostrar = fondoBase;
+            valorMostrar = valorBase;
+            aportMostrar = aportBase;
+            ahorroMostrar = ahorroBase;
+            utilidadMostrar = utilidadBase;
+        }
+        
+        const mostrarNumero = (val) => {
+            if (modoPesos) return "$ " + val.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+            else return val.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}) + " UDI";
+        };
+        
+        tbBody.innerHTML += `<tr class="fila-proyectada">
+            <td>${anioProyectado}</td>
+            <td>${factorProyectadoFormateado}</td>
+            <td>—</td>
+            <td>${mostrarNumero(0)}</td>
+            <td>${mostrarNumero(0)}</td>
+            <td>${mostrarNumero(0)}</td>
+            <td>${mostrarNumero(afMostrar)}</td>
+            <td>${mostrarNumero(bmaMostrar)}</td>
+            <td>${mostrarNumero(fallecimientoMostrar)}</td>
+            <td>${mostrarNumero(interesesMostrar)}</td>
+            <td>${mostrarNumero(fondoMostrar)}</td>
+            <td>${mostrarNumero(valorMostrar)}</td>
+            <td>${mostrarNumero(aportMostrar)}</td>
+            <td>${mostrarNumero(ahorroMostrar)}</td>
+            <td>${mostrarNumero(utilidadMostrar)}</td>
+            <td>${porcentajeBase.toFixed(2)}%</td>   <!-- Porcentaje COPIADO -->
+        </table>`;
     }
 
     document.getElementById("pdfFile").addEventListener("change", async (e) => {
@@ -469,7 +564,7 @@
     });
 
     function procesarTextoPDF(rowsArray) {
-        let data = [], anio = 1, acumAport = 0;
+        let data = [], anio = 1;
         for (let row of rowsArray) {
             row = row.replace(/,/g,"").trim();
             let nums = row.match(/\d+/g);
@@ -480,10 +575,7 @@
             let af = parseFloat(nums[4])||0, bma = parseFloat(nums[5])||0, fallecimiento = parseFloat(nums[6])||0;
             let intereses = parseFloat(nums[nums.length-3])||0, fondo = parseFloat(nums[nums.length-2])||0, valor = parseFloat(nums[nums.length-1])||0;
             let aport = pb+pp, ahorro = aport - costo, utilidad = fondo - ahorro;
-            acumAport += aport;
-            let rec = acumAport>0 ? (valor/acumAport)*100 : 0;
-            if(aport<=0 || valor<=0 || rec<0 || rec>500) continue;
-            data.push({ anio, edad, pb, pp, costo, af, bma, fallecimiento, intereses, fondo, valor, aport, ahorro, utilidad, rec });
+            data.push({ anio, edad, pb, pp, costo, af, bma, fallecimiento, intereses, fondo, valor, aport, ahorro, utilidad, rec: 0 });
             anio++;
         }
         if(!data.length) { alert("PDF inválido o sin datos"); return; }
@@ -492,6 +584,7 @@
         modoPesos = false;
         monedaHint.innerText = "UDIs originales";
         btnReset.disabled = true;
+        recalcularPorcentajesReales();
         renderizarTabla();
         graficarLineaRec();
         actualizarBarrasYPies();
@@ -582,7 +675,7 @@
         if(!tablaData.length) { alert("Cargue un PDF primero"); return; }
         let udi = parseFloat(document.getElementById("valorUdi").value) || 8.5;
         let inflacion = parseFloat(document.getElementById("inflacion").value)/100 || 0.045;
-        let newData = [], acum=0;
+        let newData = [];
         for(let i=0; i<tablaData.length; i++) {
             const d = tablaData[i];
             const factor = udi * Math.pow(1+inflacion, i);
@@ -592,14 +685,13 @@
             conv.intereses = d.intereses*factor; conv.fondo = d.fondo*factor; conv.valor = d.valor*factor;
             conv.aport = conv.pb+conv.pp; conv.ahorro = conv.aport - conv.costo;
             conv.utilidad = conv.fondo - conv.ahorro;
-            acum += conv.aport;
-            conv.rec = (conv.valor/acum)*100;
             newData.push(conv);
         }
         currentData = newData;
         modoPesos = true;
         monedaHint.innerText = "Pesos ($) convertidos";
         btnReset.disabled = false;
+        recalcularPorcentajesReales();
         renderizarTabla();
         graficarLineaRec();
         actualizarBarrasYPies();
@@ -611,6 +703,7 @@
         modoPesos = false;
         monedaHint.innerText = "UDIs originales";
         btnReset.disabled = true;
+        recalcularPorcentajesReales();
         renderizarTabla();
         graficarLineaRec();
         actualizarBarrasYPies();
@@ -640,18 +733,91 @@
         simResultDiv.innerHTML = `<i class="fas fa-chart-simple"></i> <strong>Año ${reg.anio}</strong><br>📍 Valor a recibir: ${valor}<br>📊 Rentabilidad: ${rent.toFixed(2)}%<br><div class="reco-box"><i class="fas fa-comment-dots"></i> ${recomendacion} Evite cancelaciones anticipadas.</div>`;
     }
 
-    // ========== REPORTE IMPRIMIBLE CON LOGOS DE FONDO AZUL ==========
+    function exportarExcel() {
+        if (!currentData.length) {
+            alert("No hay datos cargados para exportar.");
+            return;
+        }
+        recalcularPorcentajesReales();
+        const headers = [
+            "Año", "Valor UDI (MXN)", "Edad", "PB", "PP", "Costo seguro", "AF", "BMA", 
+            "Fallec.", "Intereses", "Fondo", "Valor", "Aportación", "Ahorro", "Utilidad", "%"
+        ];
+        const rows = [];
+        for (let d of currentData) {
+            const factor = obtenerFactorUDI(d.anio);
+            const factorFormateado = formatearFactorUDI(factor);
+            rows.push([
+                d.anio, factorFormateado, d.edad,
+                formatearNumero(d.pb), formatearNumero(d.pp), formatearNumero(d.costo),
+                formatearNumero(d.af), formatearNumero(d.bma), formatearNumero(d.fallecimiento),
+                formatearNumero(d.intereses), formatearNumero(d.fondo), formatearNumero(d.valor),
+                formatearNumero(d.aport), formatearNumero(d.ahorro), formatearNumero(d.utilidad),
+                d.rec.toFixed(2) + "%"
+            ]);
+        }
+        if (tablaData.length) {
+            const ultimoReal = tablaData[tablaData.length-1];
+            const anioProy = ultimoReal.anio + 1;
+            const factorProy = obtenerFactorUDI(anioProy);
+            const factorProyFormateado = formatearFactorUDI(factorProy);
+            let afBase=ultimoReal.af, bmaBase=ultimoReal.bma, falleBase=ultimoReal.fallecimiento, interesesBase=ultimoReal.intereses;
+            let fondoMostrar, valorMostrar, aportMostrar, ahorroMostrar, utilidadMostrar;
+            let afMostrar, bmaMostrar, falleMostrar, interesesMostrar;
+            if (modoPesos) {
+                afMostrar = afBase * factorProy;
+                bmaMostrar = bmaBase * factorProy;
+                falleMostrar = falleBase * factorProy;
+                interesesMostrar = interesesBase * factorProy;
+                fondoMostrar = ultimoReal.fondo * factorProy;
+                valorMostrar = ultimoReal.valor * factorProy;
+                aportMostrar = ultimoReal.aport * factorProy;
+                ahorroMostrar = ultimoReal.ahorro * factorProy;
+                utilidadMostrar = ultimoReal.utilidad * factorProy;
+            } else {
+                afMostrar = afBase;
+                bmaMostrar = bmaBase;
+                falleMostrar = falleBase;
+                interesesMostrar = interesesBase;
+                fondoMostrar = ultimoReal.fondo;
+                valorMostrar = ultimoReal.valor;
+                aportMostrar = ultimoReal.aport;
+                ahorroMostrar = ultimoReal.ahorro;
+                utilidadMostrar = ultimoReal.utilidad;
+            }
+            const formatExcel = (val) => {
+                if (modoPesos) return `$${val.toFixed(2)}`;
+                else return `${val.toFixed(2)} UDI`;
+            };
+            rows.push([
+                anioProy, factorProyFormateado, "—",
+                "$0.00", "$0.00", "$0.00",
+                formatExcel(afMostrar), formatExcel(bmaMostrar), formatExcel(falleMostrar),
+                formatExcel(interesesMostrar),
+                formatExcel(fondoMostrar), formatExcel(valorMostrar),
+                formatExcel(aportMostrar), formatExcel(ahorroMostrar), formatExcel(utilidadMostrar),
+                ultimoReal.rec.toFixed(2) + "%"   // Porcentaje COPIADO
+            ]);
+        }
+        const sheetData = [headers, ...rows];
+        const ws = XLSX.utils.aoa_to_sheet(sheetData);
+        ws['!cols'] = [{wch:6},{wch:16},{wch:6},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:10},{wch:12},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:8}];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Proyección_UDI");
+        const cliente = document.getElementById("nombreCliente").value.replace(/\s+/g, '_') || "reporte";
+        const monedaSufijo = modoPesos ? "Pesos" : "UDIs";
+        const fechaHoy = new Date().toISOString().slice(0,19).replace(/:/g, '-');
+        XLSX.writeFile(wb, `Tabla_UDI_${cliente}_${monedaSufijo}_${fechaHoy}.xlsx`);
+    }
+
     async function generarReporteImprimible() {
         if (!currentData.length) {
             alert("No hay datos para generar el reporte.");
             return;
         }
-
-        // Obtener los src actuales de los logos (ya tienen fallback)
+        recalcularPorcentajesReales();
         const logoIzqSrc = document.getElementById("logoIzquierdo").src;
         const logoDerSrc = document.getElementById("logoDerecho").src;
-
-        // Capturar gráficos
         const canvasLinea = document.getElementById("graf");
         const canvasBar = document.getElementById("barChartCanvas");
         const canvasPie1 = document.getElementById("pieChartAportacion");
@@ -668,7 +834,7 @@
         const fecha = new Date().toLocaleDateString('es-MX');
         const monedaActual = modoPesos ? "Pesos Mexicanos ($)" : "UDIs";
 
-        const rowsHtml = currentData.map(d => {
+        let rowsHtml = currentData.map(d => {
             const factor = obtenerFactorUDI(d.anio);
             const factorFormateado = formatearFactorUDI(factor);
             return `<tr>
@@ -690,6 +856,59 @@
                 <td>${d.rec.toFixed(2)}%</td>
             </tr>`;
         }).join('');
+        
+        if (tablaData.length) {
+            const ultimoReal = tablaData[tablaData.length-1];
+            const anioProy = ultimoReal.anio + 1;
+            const factorProy = obtenerFactorUDI(anioProy);
+            const factorProyFormateado = formatearFactorUDI(factorProy);
+            let afBase=ultimoReal.af, bmaBase=ultimoReal.bma, falleBase=ultimoReal.fallecimiento, interesesBase=ultimoReal.intereses;
+            let fondoMostrar, valorMostrar, aportMostrar, ahorroMostrar, utilidadMostrar;
+            let afMostrar, bmaMostrar, falleMostrar, interesesMostrar;
+            if (modoPesos) {
+                afMostrar = afBase * factorProy;
+                bmaMostrar = bmaBase * factorProy;
+                falleMostrar = falleBase * factorProy;
+                interesesMostrar = interesesBase * factorProy;
+                fondoMostrar = ultimoReal.fondo * factorProy;
+                valorMostrar = ultimoReal.valor * factorProy;
+                aportMostrar = ultimoReal.aport * factorProy;
+                ahorroMostrar = ultimoReal.ahorro * factorProy;
+                utilidadMostrar = ultimoReal.utilidad * factorProy;
+            } else {
+                afMostrar = afBase;
+                bmaMostrar = bmaBase;
+                falleMostrar = falleBase;
+                interesesMostrar = interesesBase;
+                fondoMostrar = ultimoReal.fondo;
+                valorMostrar = ultimoReal.valor;
+                aportMostrar = ultimoReal.aport;
+                ahorroMostrar = ultimoReal.ahorro;
+                utilidadMostrar = ultimoReal.utilidad;
+            }
+            const formatMostrar = (val) => {
+                if (modoPesos) return `$${val.toFixed(2)}`;
+                else return `${val.toFixed(2)} UDI`;
+            };
+            rowsHtml += `<tr style="background:#d4edda; font-weight:bold;">
+                <td>${anioProy}</td>
+                <td>${factorProyFormateado}</td>
+                <td>—</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>${formatMostrar(afMostrar)}</td>
+                <td>${formatMostrar(bmaMostrar)}</td>
+                <td>${formatMostrar(falleMostrar)}</td>
+                <td>${formatMostrar(interesesMostrar)}</td>
+                <td>${formatMostrar(fondoMostrar)}</td>
+                <td>${formatMostrar(valorMostrar)}</td>
+                <td>${formatMostrar(aportMostrar)}</td>
+                <td>${formatMostrar(ahorroMostrar)}</td>
+                <td>${formatMostrar(utilidadMostrar)}</td>
+                <td>${ultimoReal.rec.toFixed(2)}%</td>   <!-- copiado -->
+            </tr>`;
+        }
 
         const reportHtml = `<!DOCTYPE html>
         <html>
@@ -698,116 +917,27 @@
             *{margin:0;padding:0;box-sizing:border-box;}
             body{font-family:'Segoe UI',Arial,sans-serif;background:#eef2f5;padding:30px;color:#111;}
             .report-container{max-width:1200px;margin:0 auto;background:#fff;border-radius:32px;box-shadow:0 8px 20px rgba(0,0,0,0.1);overflow:hidden;}
-            /* Encabezado azul */
-            .header{
-                background: linear-gradient(135deg, #0a4c6e, #0f6992);
-                padding: 20px 30px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 20px;
-                border-bottom: 4px solid #ffb347;
-            }
-            .logo-left img, .logo-right img{
-                max-height: 70px;
-                max-width: 170px;
-                background: #0a4c6e;  /* Fondo azul coherente con el header */
-                border-radius: 14px;
-                padding: 6px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            }
-            .titulo-reporte h1{
-                color: #FFE5B4;
-                font-size: 1.7rem;
-                text-shadow: 1px 1px 0 #003d5b;
-                margin-bottom: 5px;
-            }
-            .titulo-reporte p{
-                color: #cce7ff;
-                font-size: 0.8rem;
-            }
-            .info-cliente{
-                background:#eef4fa;
-                padding:16px 24px;
-                margin:25px 30px;
-                border-radius:20px;
-                display:flex;
-                flex-wrap:wrap;
-                justify-content:space-between;
-                border-left:6px solid #ffb347;
-                font-size:0.9rem;
-            }
-            .info-cliente div{ margin: 5px 0; }
-            table{
-                width: calc(100% - 60px);
-                margin: 20px 30px;
-                border-collapse: collapse;
-                font-size: 10px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            }
-            th{
-                background: #1f6f9e;
-                color: white;
-                padding: 8px 4px;
-                font-weight: 700;
-            }
-            td,th{
-                border: 1px solid #ccc;
-                padding: 6px 4px;
-                text-align: center;
-            }
-            .graficas{
-                display: flex;
-                flex-wrap: wrap;
-                gap: 25px;
-                margin: 30px;
-            }
-            .grafica{
-                flex: 1;
-                min-width: 280px;
-                background: #f9faff;
-                border-radius: 20px;
-                padding: 15px;
-                text-align: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            }
-            .grafica img{
-                max-width: 100%;
-                border-radius: 16px;
-                background: white;
-                border: 1px solid #ddd;
-            }
-            h3{
-                color: #0f6992;
-                margin-bottom: 12px;
-                font-size: 1.2rem;
-            }
-            footer{
-                text-align: center;
-                font-size: 10px;
-                color: #666;
-                border-top: 1px solid #ccc;
-                margin: 20px 30px 25px;
-                padding-top: 15px;
-            }
-            @media print{
-                body{background:white; padding:0;}
-                .report-container{box-shadow:none;}
-                .header{-webkit-print-color-adjust: exact; print-color-adjust: exact;}
-                .logo-left img, .logo-right img{-webkit-print-color-adjust: exact; print-color-adjust: exact;}
-            }
+            .header{background:linear-gradient(135deg,#0a4c6e,#0f6992);padding:20px 30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;border-bottom:4px solid #ffb347;}
+            .logo-left img,.logo-right img{max-height:70px;max-width:170px;background:#0a4c6e;border-radius:14px;padding:6px;}
+            .titulo-reporte h1{color:#ffe5b4;font-size:1.7rem;margin-bottom:5px;}
+            .info-cliente{background:#eef4fa;padding:16px 24px;margin:25px 30px;border-radius:20px;display:flex;flex-wrap:wrap;justify-content:space-between;border-left:6px solid #ffb347;}
+            table{width:calc(100% - 60px);margin:20px 30px;border-collapse:collapse;font-size:10px;}
+            th{background:#1f6f9e;color:white;padding:8px 4px;}
+            td,th{border:1px solid #ccc;padding:6px 4px;text-align:center;}
+            .graficas{display:flex;flex-wrap:wrap;gap:25px;margin:30px;}
+            .grafica{flex:1;min-width:280px;background:#f9faff;border-radius:20px;padding:15px;text-align:center;}
+            .grafica img{max-width:100%;border-radius:16px;}
+            h3{color:#0f6992;margin-bottom:12px;}
+            footer{text-align:center;font-size:10px;color:#666;border-top:1px solid #ccc;margin:20px 30px 25px;padding-top:15px;}
+            @media print{body{background:white;padding:0;} .header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
         </style>
         </head>
         <body>
         <div class="report-container">
             <div class="header">
-                <div class="logo-left"><img src="${logoIzqSrc}" alt="Loyds Navarro"></div>
-                <div class="titulo-reporte">
-                    <h1>Reporte de Proyección</h1>
-                    <p>Análisis financiero con datos actualizados</p>
-                </div>
-                <div class="logo-right"><img src="${logoDerSrc}" alt="Seguros Monterrey"></div>
+                <div class="logo-left"><img src="${logoIzqSrc}"></div>
+                <div class="titulo-reporte"><h1>Reporte de Proyección</h1><p>Análisis financiero con datos actualizados</p></div>
+                <div class="logo-right"><img src="${logoDerSrc}"></div>
             </div>
             <div class="info-cliente">
                 <div><strong>Cliente:</strong> ${nombreCliente}</div>
@@ -818,37 +948,24 @@
                 <div><strong>Moneda:</strong> ${monedaActual}</div>
             </div>
             <h3 style="margin-left:30px;">📋 Tabla de Proyección</h3>
-            <table>
-                <thead><tr><th>Año</th><th>Valor UDI (MXN)</th><th>Edad</th><th>PB</th><th>PP</th><th>Costo seguro</th><th>AF</th><th>BMA</th><th>Fallec.</th><th>Intereses</th><th>Fondo</th><th>Valor</th><th>Aportación</th><th>Ahorro</th><th>Utilidad</th><th>%</th></tr></thead>
-                <tbody>${rowsHtml}</tbody>
-            </table>
-            <div class="graficas">
-                <div class="grafica"><h3>📈 Rentabilidad sobre aportes</h3><img src="${imgLinea}"></div>
-                <div class="grafica"><h3>📊 Comparativa anual (año ${barYearInput.value})</h3><img src="${imgBar}"></div>
-            </div>
-            <div class="graficas">
-                <div class="grafica"><h3>🥧 Distribución aportación (año ${pieYear1Input.value})</h3><img src="${imgPie1}"></div>
-                <div class="grafica"><h3>🥧 Estructura del fondo (año ${pieYear2Input.value})</h3><img src="${imgPie2}"></div>
-            </div>
-            <footer>Reporte generado automáticamente por UDI PRO MAX. Los valores se muestran en ${modoPesos ? "pesos mexicanos actualizados por inflación." : "UDIs originales."}</footer>
+            <table><thead><tr><th>Año</th><th>Valor UDI (MXN)</th><th>Edad</th><th>PB</th><th>PP</th><th>Costo seguro</th><th>AF</th><th>BMA</th><th>Fallec.</th><th>Intereses</th><th>Fondo</th><th>Valor</th><th>Aportación</th><th>Ahorro</th><th>Utilidad</th><th>%</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+            <div class="graficas"><div class="grafica"><h3>📈 Rentabilidad</h3><img src="${imgLinea}"></div><div class="grafica"><h3>📊 Comparativa anual</h3><img src="${imgBar}"></div></div>
+            <div class="graficas"><div class="grafica"><h3>🥧 Distribución aportación</h3><img src="${imgPie1}"></div><div class="grafica"><h3>🥧 Estructura del fondo</h3><img src="${imgPie2}"></div></div>
+            <footer>Reporte generado por UDI PRO MAX. Fila proyectada: copia exacta de AF, BMA, Fallecimiento, Intereses, Fondo, Valor, Aportación, Ahorro, Utilidad y el % del último año real (sin recalcular).</footer>
         </div>
         <script>window.onload = () => { window.print(); };<\/script>
         </body>
         </html>`;
-
         const ventana = window.open();
-        if (ventana) {
-            ventana.document.write(reportHtml);
-            ventana.document.close();
-        } else {
-            alert("Permita ventanas emergentes para visualizar el reporte.");
-        }
+        if (ventana) { ventana.document.write(reportHtml); ventana.document.close(); }
+        else alert("Permita ventanas emergentes.");
     }
 
     window.convertirAPesos = convertirAPesos;
     window.resetearAUDIs = resetearAUDIs;
     window.simularCancelacion = simularCancelacion;
     window.generarReporteImprimible = generarReporteImprimible;
+    window.exportarExcel = exportarExcel;
 
     if(!document.getElementById("anioSim")) {
         let inp = document.createElement("input");
