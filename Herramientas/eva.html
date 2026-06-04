@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluador Financiero | Loyds Navarro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e1eeff 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(120deg, #0a2b3e 0%, #1a4a6f 100%);
+            color: white;
+            padding: 20px 35px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .logo-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 18px;
+            border-radius: 40px;
+        }
+        .logo-header img { height: 45px; }
+        .logo-header span { font-weight: bold; font-size: 1.1rem; }
+        .floating-badge {
+            background: #e6b91e;
+            color: #0a2b3e;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+        .header-text { flex: 1; }
+        .header-text h1 { font-size: 1.6rem; margin-bottom: 5px; }
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 35px;
+        }
+        @media (max-width: 992px) { .main-content { grid-template-columns: 1fr; } }
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #0a2b3e;
+            border-bottom: 2px solid #e6b91e;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #0a2b3e; box-shadow: 0 0 0 2px rgba(10,43,62,0.1); }
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #0a2b3e;
+            color: white;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+        .btn-primary:hover { background: #1a4a6f; transform: scale(1.01); box-shadow: 0 4px 12px rgba(10,43,62,0.3); }
+        .result-container {
+            margin-top: 35px;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: none;
+            border: 1px solid #eef2f6;
+        }
+        .loading, .success-message, .error-message { display: none; text-align: center; padding: 20px; margin-top: 15px; border-radius: 8px; }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e6b91e;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .success-message { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .error-message { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        footer { text-align: center; padding: 20px; background: #f8f9fa; font-size: 0.85rem; color: #666; }
+        
+        .gastos-hormiga-container { background: #fff8e1; padding: 15px; border-radius: 12px; margin-top: 20px; border: 1px solid #ffe082; }
+        .gasto-hormiga-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; margin-bottom: 15px; }
+        @media (max-width: 768px) { .gasto-hormiga-form { grid-template-columns: 1fr; } }
+        .gasto-hormiga-item { background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-remove { background: #e74c3c; color: white; padding: 4px 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-remove:hover { background: #c0392b; }
+
+        #tempPagina1, #tempPagina2, #tempPagina3 {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 800px;
+            background: white;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo-header">
+            <img src="https://loydsnavarro.com/path/to/logo-loyds-navarro.png" 
+                 alt="Preservando tu futuro financiero" 
+                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23e6b91e\'/%3E%3Ctext x=\'50\' y=\'67\' font-size=\'50\' text-anchor=\'middle\' fill=\'%230a2b3e\'%3ELN%3C/text%3E%3C/svg%3E';">
+            <span></span>
+        </div>
+        <div class="header-text">
+            <h1>Evaluador Financiero Completo</h1>
+            <p>Análisis de ahorro, seguros y recomendaciones personalizadas | Asesor financiero: Gabriela Gómez Navarro</p>
+        </div>
+        <div class="floating-badge">Demo con datos de ejemplo</div>
+    </header>
+
+    <div class="main-content">
+        <!-- Columna izquierda -->
+        <div class="section">
+            <h2><i class="fas fa-user"></i> Datos Personales</h2>
+            <div class="form-group"><label>Nombre completo *</label><input type="text" id="nombre" value="Juan Pérez García"></div>
+            <div class="form-group"><label>Correo electrónico *</label><input type="email" id="email" value="juan.perez@ejemplo.com"></div>
+            <div class="form-group"><label>Teléfono</label><input type="text" id="telefono" value="555-123-4567"></div>
+            <div class="form-group"><label>Ocupación</label><input type="text" id="ocupacion" value="Ingeniero de sistemas"></div>
+            <div class="form-group"><label>Edad *</label><input type="number" id="edad" value="35"></div>
+            <div class="form-group"><label>Número de hijos</label><input type="number" id="numHijos" value="2"></div>
+            <div class="form-group"><label>Metas financieras</label><textarea id="metas">Comprar casa propia en 5 años y jubilarme a los 60.</textarea></div>
+
+            <h2><i class="fas fa-money-bill-wave"></i> Ingresos Mensuales</h2>
+            <div class="form-group"><label>Salario neto *</label><input type="number" id="salario" value="25000"></div>
+            <div class="form-group"><label>Comisiones / Honorarios</label><input type="number" id="comisiones" value="3000"></div>
+            <div class="form-group"><label>Negocio propio</label><input type="number" id="negocio" value="0"></div>
+            <div class="form-group"><label>Arrendamientos</label><input type="number" id="arrendamiento" value="0"></div>
+            <div class="form-group"><label>Pensión</label><input type="number" id="pension" value="0"></div>
+            <div class="form-group"><label>Aguinaldo (anual)</label><input type="number" id="aguinaldo" value="25000"></div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="section">
+            <h2><i class="fas fa-credit-card"></i> Egresos Mensuales</h2>
+            <div class="form-group"><label>Despensa *</label><input type="number" id="despensa" value="5000"></div>
+            <div class="form-group"><label>Servicios básicos</label><input type="number" id="servicios" value="1200"></div>
+            <div class="form-group"><label>Telefonía / Internet</label><input type="number" id="telecom" value="800"></div>
+            <div class="form-group"><label>Transporte / Gasolina</label><input type="number" id="transporte" value="1500"></div>
+            <div class="form-group"><label>Renta o Hipoteca</label><input type="number" id="vivienda" value="8000"></div>
+            <div class="form-group"><label>Colegiaturas (hijos)</label><input type="number" id="colegiaturas" value="3500"></div>
+            <div class="form-group"><label>Créditos / Tarjetas</label><input type="number" id="creditos" value="2000"></div>
+            <div class="form-group"><label>Entretenimiento / Membresías</label><input type="number" id="entretenimiento" value="1500"></div>
+            <div class="form-group"><label>Otros gastos</label><input type="number" id="otrosEgresos" value="1000"></div>
+
+            <div class="gastos-hormiga-container">
+                <h3><i class="fas fa-bug"></i> Gastos Hormiga</h3>
+                <div class="gasto-hormiga-form">
+                    <input type="text" id="gastoHormigaDesc" placeholder="Descripción">
+                    <input type="number" id="gastoHormigaMonto" placeholder="Monto">
+                    <input type="number" id="gastoHormigaFrecuencia" placeholder="Veces/mes">
+                    <button type="button" onclick="agregarGastoHormiga()">+ Agregar</button>
+                </div>
+                <div id="listaGastosHormiga"></div>
+                <div id="totalGastosHormiga" style="margin-top: 10px; font-weight: bold;">Total gastos hormiga: $0.00</div>
+            </div>
+
+            <h2><i class="fas fa-heartbeat"></i> Evaluación de Salud</h2>
+            <div class="form-group"><label>¿Fuma?</label><select id="fuma"><option value="no">No</option><option value="si">Sí</option><option value="ocasional">Ocasional</option></select></div>
+            <div class="form-group"><label>Consumo de alcohol</label><select id="alcohol"><option value="no">No</option><option value="moderado">Moderado</option><option value="frecuente">Frecuente</option></select></div>
+            <div class="form-group"><label>Actividad física</label><select id="actividadFisica"><option value="regular">Regular</option><option value="ocasional">Ocasional</option><option value="poco">Poco/nada</option></select></div>
+            <div class="form-group"><label>Condiciones médicas</label><select id="condicionesMedicas"><option value="no">No</option><option value="leves">Leves</option><option value="graves">Graves</option></select></div>
+            <div class="form-group"><label>¿Tiene seguro de gastos médicos?</label><select id="proteccionGastosMedicos"><option value="no">No</option><option value="si">Sí</option></select></div>
+            <div class="form-group"><label>¿Tiene seguro de vida?</label><select id="proteccionVida"><option value="no">No</option><option value="si">Sí</option></select></div>
+            <div class="form-group"><label>¿Plan de retiro?</label><select id="planRetiro"><option value="no">No</option><option value="si">Sí</option></select></div>
+            <div class="form-group"><label>Interés en protección de hijos</label><textarea id="interesHijos">Deseo que mis hijos estudien en escuela privada y tengan un respaldo financiero.</textarea></div>
+        </div>
+    </div>
+
+    <div style="padding: 0 35px 35px;">
+        <button class="btn-primary" onclick="calcularYEnviar()"><i class="fas fa-calculator"></i> Calcular, Ver Previa y Enviar</button>
+        <div class="result-container" id="resultado"></div>
+        <div class="loading" id="loadingIndicator"><div class="loading-spinner"></div><p>Generando PDF y descargando...</p></div>
+        <div class="success-message" id="successMessage"><i class="fas fa-check-circle"></i> ¡PDF generado y descargado! El reporte también se ha enviado a su correo.</div>
+        <div class="error-message" id="errorMessage"><i class="fas fa-exclamation-triangle"></i> <span id="errorText"></span></div>
+    </div>
+    <footer>© 2025 Loyds & Navarro | Asesoría financiera con propósito</footer>
+</div>
+
+<div id="tempPagina1"></div>
+<div id="tempPagina2"></div>
+<div id="tempPagina3"></div>
+
+<script>
+    Chart.register(ChartDataLabels);
+    let gastosHormiga = [
+        { descripcion: "Café en la mañana", montoPorVez: 35, frecuencia: 20, totalMensual: 700 },
+        { descripcion: "Snacks", montoPorVez: 50, frecuencia: 15, totalMensual: 750 },
+        { descripcion: "Comidas rápidas", montoPorVez: 120, frecuencia: 8, totalMensual: 960 }
+    ];
+    
+    // 🔁 CAMBIA ESTA URL POR LA DE TU APLICACIÓN WEB DE GOOGLE APPS SCRIPT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtZBrZ1P5lkPVpiPzo4EDK5PrRIG-GQ3e-i8suMJGnU33xlAdR7kONty9VnsIMNn4/exec';
+
+    function formatNumber(n) { return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+    function agregarGastoHormiga() {
+        let desc = document.getElementById('gastoHormigaDesc').value;
+        let monto = parseFloat(document.getElementById('gastoHormigaMonto').value);
+        let freq = parseInt(document.getElementById('gastoHormigaFrecuencia').value);
+        if (!desc || isNaN(monto) || monto<=0 || isNaN(freq) || freq<=0) return alert("Complete todos los campos");
+        gastosHormiga.push({ descripcion: desc, montoPorVez: monto, frecuencia: freq, totalMensual: monto*freq });
+        actualizarListaGastosHormiga();
+        document.getElementById('gastoHormigaDesc').value = '';
+        document.getElementById('gastoHormigaMonto').value = '';
+        document.getElementById('gastoHormigaFrecuencia').value = '';
+    }
+    function actualizarListaGastosHormiga() {
+        let lista = document.getElementById('listaGastosHormiga');
+        lista.innerHTML = '';
+        let total = 0;
+        gastosHormiga.forEach((g, idx) => {
+            total += g.totalMensual;
+            let div = document.createElement('div');
+            div.className = 'gasto-hormiga-item';
+            div.innerHTML = `<span><strong>${g.descripcion}</strong> - $${formatNumber(g.montoPorVez)} x ${g.frecuencia} = $${formatNumber(g.totalMensual)}</span>
+                            <button class="btn-remove" onclick="eliminarGastoHormiga(${idx})">✖</button>`;
+            lista.appendChild(div);
+        });
+        document.getElementById('totalGastosHormiga').innerHTML = `Total gastos hormiga: $${formatNumber(total)}`;
+    }
+    function eliminarGastoHormiga(idx) { gastosHormiga.splice(idx,1); actualizarListaGastosHormiga(); }
+    function mostrarError(msg) { document.getElementById('errorText').innerText = msg; document.getElementById('errorMessage').style.display = 'block'; setTimeout(()=> document.getElementById('errorMessage').style.display='none', 8000); }
+
+    window.addEventListener('DOMContentLoaded', () => actualizarListaGastosHormiga());
+
+    function generarRecomendacionesSalud(fuma, alcohol, actividad) {
+        let recs = [];
+        if (fuma === 'si') recs.push("🚭 Dejar de fumar: El tabaco aumenta el riesgo de enfermedades cardiovasculares y cáncer. Busca apoyo profesional o terapias de reemplazo de nicotina para mejorar tu calidad de vida y reducir primas de seguros.");
+        else if (fuma === 'ocasional') recs.push("⚠️ Reducir el consumo de tabaco: Fumar ocasionalmente también daña tus pulmones y corazón. Considera dejarlo por completo para mejorar tu salud y obtener mejores tarifas en seguros de vida.");
+        else recs.push("✅ Mantenerte libre de tabaco: Excelente decisión. Continúa así para preservar tu salud cardiovascular y pulmonar.");
+
+        if (alcohol === 'frecuente') recs.push("🍷 Moderar el consumo de alcohol: Beber frecuentemente afecta el hígado, el sistema nervioso y aumenta el riesgo de accidentes. Limita a 1-2 copas ocasionalmente y considera días libres de alcohol.");
+        else if (alcohol === 'moderado') recs.push("🍺 Controlar el consumo de alcohol: El consumo moderado puede ser aceptable, pero asegúrate de no exceder 1 trago al día (mujeres) o 2 (hombres). Revisa tus hábitos para evitar riesgos a largo plazo.");
+        else recs.push("🌟 Abstinencia de alcohol: Muy saludable. Evitas daños hepáticos y mejoras tu claridad mental. Sigue así.");
+
+        if (actividad === 'poco') recs.push("🏃‍♂️ Aumentar la actividad física: El sedentarismo aumenta el riesgo de obesidad, diabetes y enfermedades del corazón. Comienza con caminatas de 30 minutos diarios y busca rutinas de ejercicio moderado al menos 3 veces por semana.");
+        else if (actividad === 'ocasional') recs.push("📈 Mejorar la consistencia del ejercicio: El ejercicio ocasional es bueno, pero para beneficios óptimos intenta realizar actividad física moderada al menos 150 minutos por semana (ej. caminar rápido, bicicleta o natación).");
+        else recs.push("💪 Mantener tu rutina de ejercicio regular: ¡Felicidades! El ejercicio regular reduce el estrés, fortalece el corazón y mejora la longevidad. Considera añadir entrenamiento de fuerza para complementar.");
+        return recs;
+    }
+
+    function recomendarSeguroPorSalud(fuma, alcohol, actividad, condiciones) {
+        let puntosRiesgo = 0;
+        if (fuma === 'si') puntosRiesgo += 3; else if (fuma === 'ocasional') puntosRiesgo += 1;
+        if (alcohol === 'frecuente') puntosRiesgo += 2; else if (alcohol === 'moderado') puntosRiesgo += 1;
+        if (actividad === 'poco') puntosRiesgo += 2; else if (actividad === 'ocasional') puntosRiesgo += 1;
+        if (condiciones === 'graves') puntosRiesgo += 4; else if (condiciones === 'leves') puntosRiesgo += 2;
+        
+        let tipoSeguro, mensaje;
+        if (puntosRiesgo >= 7) {
+            tipoSeguro = "Seguro de vida con cobertura básica + Gastos Médicos Mayores con deducible alto";
+            mensaje = "Tu perfil presenta factores de riesgo elevados. Te recomendamos un seguro de vida de suma asegurada moderada (ej. 500,000 - 1,000,000 MXN) y un seguro de gastos médicos con deducible alto para que la prima sea accesible. Considera un plan que cubra enfermedades crónicas y rehabilitación.";
+        } else if (puntosRiesgo >= 4) {
+            tipoSeguro = "Seguro de vida con cobertura media + Gastos Médicos Mayores estándar";
+            mensaje = "Tu perfil tiene riesgo moderado. Un seguro de vida con suma asegurada de 1,000,000 a 2,000,000 MXN y un gasto médico con cobertura amplia (sin deducible muy alto) te dará buena protección. Adicionalmente, un plan de ahorro para retiro puede ser beneficioso.";
+        } else {
+            tipoSeguro = "Seguro de vida con cobertura alta + Seguro de gastos médicos premium + Plan de retiro";
+            mensaje = "¡Felicidades! Tu estilo de vida saludable te permite acceder a las mejores primas. Te sugerimos un seguro de vida con suma asegurada de 2,000,000 MXN o más (según tus necesidades), un seguro de gastos médicos con cobertura internacional y un Plan Personal de Retiro (PPR) para maximizar beneficios fiscales.";
+        }
+        return { tipoSeguro, mensaje, puntosRiesgo };
+    }
+
+    async function calcularYEnviar() {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('resultado').style.display = 'none';
+
+        if (!document.getElementById('nombre').value || !document.getElementById('email').value || 
+            !document.getElementById('salario').value || !document.getElementById('despensa').value || 
+            !document.getElementById('edad').value) {
+            alert("Complete todos los campos obligatorios (*)");
+            return;
+        }
+
+        // --- Obtener valores ---
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        const telefono = document.getElementById('telefono').value || 'No proporcionado';
+        const ocupacion = document.getElementById('ocupacion').value || 'No especificada';
+        const edad = parseInt(document.getElementById('edad').value);
+        const numHijos = document.getElementById('numHijos').value || '0';
+        const metas = document.getElementById('metas').value || 'No especificadas';
+        const interesHijos = document.getElementById('interesHijos').value || 'No especificado';
+        const tieneHijos = (parseInt(numHijos) > 0) ? 'Sí' : 'No';
+
+        let salario = parseFloat(document.getElementById('salario').value)||0;
+        let comisiones = parseFloat(document.getElementById('comisiones').value)||0;
+        let negocio = parseFloat(document.getElementById('negocio').value)||0;
+        let arrendamiento = parseFloat(document.getElementById('arrendamiento').value)||0;
+        let pension = parseFloat(document.getElementById('pension').value)||0;
+        let aguinaldo = parseFloat(document.getElementById('aguinaldo').value)||0;
+        let ingresosMensuales = salario + comisiones + negocio + arrendamiento + pension;
+        let ingresosFijos = salario + pension;
+        let ingresosVariables = ingresosMensuales - ingresosFijos;
+
+        let despensa = parseFloat(document.getElementById('despensa').value)||0;
+        let servicios = parseFloat(document.getElementById('servicios').value)||0;
+        let telecom = parseFloat(document.getElementById('telecom').value)||0;
+        let transporte = parseFloat(document.getElementById('transporte').value)||0;
+        let vivienda = parseFloat(document.getElementById('vivienda').value)||0;
+        let colegiaturas = parseFloat(document.getElementById('colegiaturas').value)||0;
+        let creditos = parseFloat(document.getElementById('creditos').value)||0;
+        let entretenimiento = parseFloat(document.getElementById('entretenimiento').value)||0;
+        let otrosEgresos = parseFloat(document.getElementById('otrosEgresos').value)||0;
+        let totalGastosHormiga = gastosHormiga.reduce((s,g)=>s+g.totalMensual,0);
+        let egresosMensuales = despensa+servicios+telecom+transporte+vivienda+colegiaturas+creditos+entretenimiento+otrosEgresos+totalGastosHormiga;
+
+        let balanceMensual = ingresosMensuales - egresosMensuales;
+        let ingresosAnuales = (ingresosMensuales * 12) + aguinaldo;
+        let egresosAnuales = egresosMensuales * 12;
+        let balanceAnual = ingresosAnuales - egresosAnuales;
+        let porcentajeAhorro = ingresosMensuales>0 ? (balanceMensual/ingresosMensuales*100) : 0;
+        let fondoEmergencia = egresosMensuales * 3;
+        let inversion20 = balanceAnual > 0 ? balanceAnual * 0.20 : 0;
+        let inversion10 = balanceAnual > 0 ? balanceAnual * 0.10 : 0;
+
+        // --- Estado financiero y recomendaciones ---
+        let boxColor, alertMessage, recommendations;
+        if (balanceMensual < 0) {
+            boxColor = '#e74c3c';
+            alertMessage = `⚠️ ALERTA: Tu balance mensual es negativo ($${formatNumber(balanceMensual)}). Estás gastando más de lo que ganas. ¡Es urgente tomar acción!`;
+            recommendations = [
+                "1. 🚨 Reduce gastos hormiga inmediatamente: Identifica y elimina al menos el 50% de los $"+formatNumber(totalGastosHormiga)+" mensuales.",
+                "2. 🧾 Reestructura tus deudas: Prioriza liquidar créditos con intereses altos.",
+                "3. 💡 Aumenta ingresos temporalmente: Busca un ingreso extra para cubrir el déficit.",
+                "4. 📉 Negocia gastos fijos: Renta, servicios, colegiaturas.",
+                "5. 🛑 Detén cualquier nuevo compromiso financiero."
+            ];
+        } else if (balanceMensual < (ingresosMensuales * 0.05)) {
+            boxColor = '#f39c12';
+            alertMessage = `⚠️ Atención: Tu ahorro mensual es muy bajo ($${formatNumber(balanceMensual)} = ${porcentajeAhorro.toFixed(2)}% de ingresos). Mejorable.`;
+            recommendations = [
+                "1. 🐜 Control de gastos hormiga: Reducir los $"+formatNumber(totalGastosHormiga)+" mensuales podría duplicar tu ahorro.",
+                "2. 🎯 Establece una meta de ahorro automática.",
+                "3. 📊 Recorta suscripciones y membresías poco usadas.",
+                "4. 🛠️ Aumenta ingresos pasivos.",
+                "5. 📅 Revisión de créditos: Refinancia o liquida intereses altos."
+            ];
+        } else {
+            boxColor = '#2ecc71';
+            alertMessage = `✅ ¡Excelente! Tu ahorro mensual es saludable ($${formatNumber(balanceMensual)} = ${porcentajeAhorro.toFixed(2)}% de ingresos). Sigue así.`;
+            let inversionMsg = (inversion20 > 0) 
+                ? `2. 📈 Invierte el 20% de tu ahorro anual ($${formatNumber(inversion20)}) en instrumentos de renta fija o variable según tu perfil.`
+                : `2. 📉 Por ahora, enfócate en generar ahorro positivo antes de invertir.`;
+            recommendations = [
+                "1. 🌱 Fondo de emergencia: Apunta a acumular $"+formatNumber(fondoEmergencia)+" en una cuenta líquida.",
+                inversionMsg,
+                "3. 🛡️ Protege tu patrimonio: Contrata seguro de vida y gastos médicos mayores si aún no lo tienes.",
+                "4. 🎓 Plan educativo para hijos.",
+                "5. 🧓 Retiro anticipado: Abre un PPR."
+            ];
+        }
+
+        let fuma = document.getElementById('fuma').value;
+        let alcohol = document.getElementById('alcohol').value;
+        let actividad = document.getElementById('actividadFisica').value;
+        let condiciones = document.getElementById('condicionesMedicas').value;
+
+        let riesgo = 0;
+        if(edad>50) riesgo+=3; else if(edad>40) riesgo+=1;
+        if(fuma=='si') riesgo+=3; else if(fuma=='ocasional') riesgo+=1;
+        if(alcohol=='frecuente') riesgo+=2; else if(alcohol=='moderado') riesgo+=1;
+        if(actividad=='poco') riesgo+=2;
+        if(condiciones=='graves') riesgo+=4; else if(condiciones=='leves') riesgo+=2;
+        let seguroText = riesgo<=2 ? "Riesgo Bajo" : (riesgo<=5 ? "Riesgo Moderado" : "Riesgo Alto");
+
+        const recomendacionSeguro = recomendarSeguroPorSalud(fuma, alcohol, actividad, condiciones);
+        const recsSalud = generarRecomendacionesSalud(fuma, alcohol, actividad);
+
+        // --- GRÁFICOS ---
+        const tempChartContainer = document.createElement('div');
+        tempChartContainer.style.position = 'absolute';
+        tempChartContainer.style.left = '-9999px';
+        tempChartContainer.style.top = '0';
+        tempChartContainer.style.width = '480px';
+        tempChartContainer.style.height = '300px';
+        document.body.appendChild(tempChartContainer);
+
+        const canvasDonut = document.createElement('canvas');
+        const canvasBar = document.createElement('canvas');
+        const canvasSaving = document.createElement('canvas');
+        const canvasAnual = document.createElement('canvas');
+        tempChartContainer.append(canvasDonut, canvasBar, canvasSaving, canvasAnual);
+
+        const commonDatalabelsOptions = {
+            color: (ctx) => { let bg = ctx.dataset.backgroundColor; if(Array.isArray(bg)) bg = bg[ctx.dataIndex]; if(bg === '#0a2b3e') return '#fff'; if(bg === '#e6b91e') return '#1a1a1a'; return '#333'; },
+            font: { weight: 'bold', size: 10 },
+            formatter: (value, ctx) => {
+                let sum = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                if(sum === 0) return '';
+                let percentage = ((value*100)/sum).toFixed(0);
+                return '$' + formatNumber(value) + ' (' + percentage + '%)';
+            }
+        };
+        new Chart(canvasDonut, { type: 'doughnut', data: { labels: ['Ingresos Fijos', 'Ingresos Variables'], datasets: [{ data: [ingresosFijos, ingresosVariables], backgroundColor: ['#0a2b3e', '#e6b91e'] }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } }, datalabels: commonDatalabelsOptions } }, plugins: [ChartDataLabels] });
+        new Chart(canvasBar, { type: 'bar', data: { labels: ['Vivienda', 'Colegiaturas', 'Créditos', 'Gastos Hormiga'], datasets: [{ label: 'Monto Mensual (MXN)', data: [vivienda, colegiaturas, creditos, totalGastosHormiga], backgroundColor: '#e6b91e' }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { font: { size: 11 } } }, datalabels: { anchor: 'end', align: 'top', color: '#1a1a1a', font: { weight: 'bold', size: 10 }, formatter: (value) => '$' + formatNumber(value) } }, scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } } }, plugins: [ChartDataLabels] });
+        new Chart(canvasSaving, { type: 'pie', data: { labels: ['Inversión 20% (Recomendado)', 'Inversión 10% (Mínimo)'], datasets: [{ data: [inversion20, inversion10], backgroundColor: ['#0a2b3e', '#e6b91e'] }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { font: { size: 11 } } }, datalabels: commonDatalabelsOptions } }, plugins: [ChartDataLabels] });
+        new Chart(canvasAnual, { type: 'pie', data: { labels: ['Ingresos Anuales', 'Egresos Anuales'], datasets: [{ data: [ingresosAnuales, egresosAnuales], backgroundColor: ['#0a2b3e', '#e6b91e'] }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { font: { size: 11 } } }, datalabels: commonDatalabelsOptions } }, plugins: [ChartDataLabels] });
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const imgDonut = canvasDonut.toDataURL('image/png');
+        const imgBar = canvasBar.toDataURL('image/png');
+        const imgSaving = canvasSaving.toDataURL('image/png');
+        const imgAnual = canvasAnual.toDataURL('image/png');
+        document.body.removeChild(tempChartContainer);
+
+        const fechaActual = new Date().toLocaleDateString();
+
+        // --- Desgloses ---
+        const ahorro12Meses = balanceMensual * 12;
+        const ahorroAnualTotal = ahorro12Meses + aguinaldo;
+        const ingresoAnualTotal = ingresosAnuales;
+        const ingresoFormula = `($${formatNumber(ingresosMensuales)} × 12 meses) + $${formatNumber(aguinaldo)} (aguinaldo) = $${formatNumber(ingresoAnualTotal)}`;
+        const ahorroFormula = `($${formatNumber(balanceMensual)} × 12 meses) + $${formatNumber(aguinaldo)} (aguinaldo) = $${formatNumber(ahorroAnualTotal)}`;
+
+        // --- Página 1 (con ingreso anual y ahorro anual detallados) ---
+        const htmlPagina1 = `<div style="font-family: 'Segoe UI', Inter, sans-serif; padding: 10px 12px; max-width: 8.5in; margin: 0 auto;">
+            <!-- Encabezado compacto -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e6b91e; padding-bottom: 8px; margin-bottom: 16px;">
+                <div><img src="https://raw.githubusercontent.com/Loyds-Navarro/EnlacesLoyds/main/Herramientas/logoa.png" style="height:40px;" onerror="this.src='data:image/svg+xml,...'"></div>
+                <div style="flex:1; text-align:center;"><span style="font-weight:bold; font-size:1.2rem; color:#0a2b3e;">Evaluación financiera</span></div>
+                <div style="text-align:right;"><div style="font-weight:bold; font-size:0.85rem;">Asesora: Gabriela Agente de Seguros</div><div style="font-size:0.8rem;">${fechaActual}</div></div>
+            </div>
+
+            <!-- Alerta destacada -->
+            <div style="background:#e8f5e9; color:#2e7d32; padding:8px 12px; border-radius:6px; margin-bottom:18px; border-left:6px solid ${boxColor}; font-size:0.9rem;">${alertMessage}</div>
+
+            <!-- Datos del cliente -->
+            <div style="background:#f8f9fa; padding:12px 16px; border-radius:8px; margin-bottom:20px;">
+                <h3 style="font-size:1rem; margin:0 0 10px 0;">Datos del Cliente</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; font-size:0.85rem;">
+                    <div><strong>Nombre:</strong> ${nombre}</div>
+                    <div><strong>Email:</strong> ${email}</div>
+                    <div><strong>Teléfono:</strong> ${telefono}</div>
+                    <div><strong>Ocupación:</strong> ${ocupacion}</div>
+                    <div><strong>Edad:</strong> ${edad}</div>
+                    <div><strong>Hijos:</strong> ${numHijos}</div>
+                    <div style="grid-column:span2;"><strong>Metas:</strong> ${metas}</div>
+                    <div style="grid-column:span2;"><strong>Interés hijos:</strong> ${interesHijos}</div>
+                </div>
+            </div>
+
+            <!-- Tarjetas de ingresos, egresos y ahorro -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px;">
+                <div style="border-top:4px solid #0a2b3e; border-radius:8px; background:white; padding:8px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:0.8rem; font-weight:600;">Ingresos Mensuales</div>
+                    <div style="font-size:1.3rem; font-weight:bold;">$${formatNumber(ingresosMensuales)}</div>
+                    <div style="font-size:0.7rem;">Fijos: $${formatNumber(ingresosFijos)} | Variables: $${formatNumber(ingresosVariables)}</div>
+                </div>
+                <div style="border-top:4px solid #0a2b3e; border-radius:8px; background:white; padding:8px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:0.8rem; font-weight:600;">Egresos Mensuales</div>
+                    <div style="font-size:1.3rem; font-weight:bold;">$${formatNumber(egresosMensuales)}</div>
+                    <div style="font-size:0.7rem;">Gastos hormiga: $${formatNumber(totalGastosHormiga)}</div>
+                </div>
+                <div style="border-top:4px solid ${boxColor}; border-radius:8px; background:white; padding:8px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:0.8rem; font-weight:600;">Ahorro Mensual</div>
+                    <div style="font-size:1.3rem; font-weight:bold; color:${boxColor};">$${formatNumber(balanceMensual)}</div>
+                    <div style="font-size:0.7rem;">${porcentajeAhorro.toFixed(2)}% de ingresos</div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de Ingreso anual estimado -->
+            <div style="border-top:4px solid #0a2b3e; border-radius:8px; background:#e9f0f5; padding:12px; text-align:center; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <div style="font-size:0.9rem; font-weight:600;">💰 Ingreso anual estimado</div>
+                <div style="font-size:1.4rem; font-weight:bold; color:#0a2b3e;">${ingresoFormula}</div>
+                <div style="font-size:0.75rem;">(Total de ingresos en 12 meses más aguinaldo)</div>
+            </div>
+
+            <!-- Tarjeta de Ahorro anual estimado con desglose -->
+            <div style="border-top:4px solid #e6b91e; border-radius:8px; background:#fff8e1; padding:12px; text-align:center; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <div style="font-size:0.9rem; font-weight:600;">💰 Ahorro anual estimado</div>
+                <div style="font-size:1.4rem; font-weight:bold; color:#0a2b3e;">${ahorroFormula}</div>
+                <div style="font-size:0.75rem;">(Incluye el ahorro de 12 meses más el aguinaldo anual)</div>
+            </div>
+
+            <!-- Gráficos -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div style="background: white; border-radius: 8px; padding: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 5px 0; font-size:0.75rem; color:#0a2b3e; border-left:3px solid #e6b91e; padding-left:6px; text-align:left;">Distribución de Ingresos</h4>
+                    <img src="${imgDonut}" style="width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;">
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 5px 0; font-size:0.75rem; color:#0a2b3e; border-left:3px solid #e6b91e; padding-left:6px; text-align:left;">Principales Egresos</h4>
+                    <img src="${imgBar}" style="width: 100%; max-width: 320px; height: auto; margin: 0 auto; display: block;">
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 5px 0; font-size:0.75rem; color:#0a2b3e; border-left:3px solid #e6b91e; padding-left:6px; text-align:left;">Distribución del Ahorro Sugerido</h4>
+                    <img src="${imgSaving}" style="width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;">
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 5px 0; font-size:0.75rem; color:#0a2b3e; border-left:3px solid #e6b91e; padding-left:6px; text-align:left;">Ingresos vs Egresos Anuales</h4>
+                    <img src="${imgAnual}" style="width: 100%; max-width: 200px; height: auto; margin: 0 auto; display: block;">
+                </div>
+            </div>
+        </div>`;
+
+        // --- Página 2: Recomendaciones financieras + salud ---
+        const htmlPagina2 = `<div style="font-family:'Segoe UI', sans-serif; padding:20px; max-width:800px; margin:0 auto;">
+            <div style="background:#e8f5e9; padding:20px; border-radius:12px; margin-bottom:20px; border-left:6px solid ${boxColor};">
+                <h3>Análisis de tu situación financiera</h3>
+                <p><strong>${nombre}</strong>, ${balanceMensual < 0 ? 'tus gastos superan tus ingresos.' : (balanceMensual < (ingresosMensuales*0.05) ? 'tu margen de ahorro es reducido.' : 'tus finanzas están encaminadas.')}</p>
+                <p>Ahorro mensual: $${formatNumber(balanceMensual)} (${porcentajeAhorro.toFixed(2)}%).<br>Fondo de emergencia ideal: $${formatNumber(fondoEmergencia)}.</p>
+            </div>
+            <div style="background:white; padding:20px; border-radius:12px; margin-bottom:20px; border:1px solid #e0e0e0;">
+                <h3>5 Recomendaciones financieras personalizadas</h3>
+                <ul>${recommendations.map(rec => `<li style="margin-bottom:12px;">✓ ${rec}</li>`).join('')}</ul>
+                ${tieneHijos === 'Sí' ? '<p><strong>Protección familiar:</strong> Considera un seguro educativo.</p>' : ''}
+            </div>
+            <div style="background:#eef2fa; padding:20px; border-radius:12px; border-left:6px solid #2c7da0;">
+                <h3>3 Recomendaciones de salud</h3>
+                <ul>${recsSalud.map(rec => `<li style="margin-bottom:12px;">🩺 ${rec}</li>`).join('')}</ul>
+            </div>
+        </div>`;
+
+        // --- Página 3: Seguro recomendado y evaluación ---
+        const htmlPagina3 = `<div style="font-family:'Segoe UI', sans-serif; padding:20px; max-width:800px; margin:0 auto;">
+            <div style="background:#fef9e6; padding:20px; border-radius:12px; margin-bottom:20px; border-left:6px solid #e6b91e;">
+                <h3>Seguro recomendado para tu perfil de salud</h3>
+                <p><strong>Puntos de riesgo:</strong> ${recomendacionSeguro.puntosRiesgo} / 12</p>
+                <p><strong>Tipo sugerido:</strong> ${recomendacionSeguro.tipoSeguro}</p>
+                <p>${recomendacionSeguro.mensaje}</p>
+                <small>Factores como tabaquismo, alcohol, sedentarismo y condiciones médicas influyen en las primas.</small>
+            </div>
+            <div style="background:#f0f7ff; padding:20px; border-radius:12px; border-left:6px solid #0a2b3e;">
+                <h3>Evaluación de Seguro de Vida</h3>
+                <p>Perfil de salud: <strong>${seguroText}</strong>.</p>
+                <p>Te recomiendo agendar una asesoría para revisar opciones de seguro de vida, gastos médicos y plan de retiro.</p>
+            </div>
+        </div>`;
+
+        // Mostrar previa
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = htmlPagina1 + `<div style="page-break-before:always; margin-top:30px;">${htmlPagina2}</div><div style="page-break-before:always; margin-top:30px;">${htmlPagina3}</div>`;
+        resultadoDiv.style.display = 'block';
+        resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // Generar PDF
+        document.getElementById('loadingIndicator').style.display = 'block';
+        try {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const margin = 10;
+            const usableWidth = 210 - 2 * margin;
+
+            const tempDiv1 = document.getElementById('tempPagina1');
+            tempDiv1.innerHTML = htmlPagina1;
+            tempDiv1.style.display = 'block';
+            const canvas1 = await html2canvas(tempDiv1, { scale: 1.6, useCORS: true, logging: false, backgroundColor: '#fff' });
+            const imgData1 = canvas1.toDataURL('image/png');
+            const imgHeight1 = (canvas1.height / canvas1.width) * usableWidth;
+            pdf.addImage(imgData1, 'PNG', margin, margin, usableWidth, imgHeight1);
+            tempDiv1.style.display = 'none';
+
+            const tempDiv2 = document.getElementById('tempPagina2');
+            tempDiv2.innerHTML = htmlPagina2;
+            tempDiv2.style.display = 'block';
+            const canvas2 = await html2canvas(tempDiv2, { scale: 1.6, useCORS: true, logging: false, backgroundColor: '#fff' });
+            const imgData2 = canvas2.toDataURL('image/png');
+            const imgHeight2 = (canvas2.height / canvas2.width) * usableWidth;
+            pdf.addPage();
+            pdf.addImage(imgData2, 'PNG', margin, margin, usableWidth, imgHeight2);
+            tempDiv2.style.display = 'none';
+
+            const tempDiv3 = document.getElementById('tempPagina3');
+            tempDiv3.innerHTML = htmlPagina3;
+            tempDiv3.style.display = 'block';
+            const canvas3 = await html2canvas(tempDiv3, { scale: 1.6, useCORS: true, logging: false, backgroundColor: '#fff' });
+            const imgData3 = canvas3.toDataURL('image/png');
+            const imgHeight3 = (canvas3.height / canvas3.width) * usableWidth;
+            pdf.addPage();
+            pdf.addImage(imgData3, 'PNG', margin, margin, usableWidth, imgHeight3);
+            tempDiv3.style.display = 'none';
+
+            pdf.save('Evaluacion_Financiera_Loyds_Navarro.pdf');
+            const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+            // Enviar al script de Google
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nombre, email, telefono, ocupacion, edad, numHijos, metas, interesHijos,
+                    ingresosMensuales: formatNumber(ingresosMensuales), egresosMensuales: formatNumber(egresosMensuales),
+                    balanceMensual: formatNumber(balanceMensual), balanceAnual: formatNumber(balanceAnual),
+                    fondoEmergencia: formatNumber(fondoEmergencia), inversion20: formatNumber(inversion20),
+                    inversion10: formatNumber(inversion10), porcentajeAhorro: porcentajeAhorro.toFixed(2),
+                    ingresosFijos: formatNumber(ingresosFijos), ingresosVariables: formatNumber(ingresosVariables),
+                    totalGastosHormiga: formatNumber(totalGastosHormiga),
+                    recomendaciones: htmlPagina2 + htmlPagina3,
+                    seguro: seguroText, pdfBase64
+                })
+            });
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            setTimeout(() => document.getElementById('successMessage').style.display = 'none', 8000);
+        } catch(e) {
+            console.error(e);
+            document.getElementById('loadingIndicator').style.display = 'none';
+            mostrarError("Error al generar o enviar el PDF. Revisa la consola y la URL del script.");
+        }
+    }
+</script>
+</body>
+</html>
